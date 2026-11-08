@@ -1,0 +1,77 @@
+---
+import { GW2_CHAT_LIMIT } from "../lib/messages";
+import { normalize } from "../scripts/text";
+
+interface Props {
+  text: string;
+}
+const { text } = Astro.props;
+const over = text.length > GW2_CHAT_LIMIT;
+---
+
+<li data-message data-text={text} data-search={normalize(text)}>
+  <button type="button" class="message" data-copy={text} title="Copiar al portapapeles">
+    <span class="text" data-message-text>{text}</span>
+    <span class="meta">
+      <span class="copy-label" data-copy-label>Copiar</span>
+      <span
+        class:list={["count", { over }]}
+        title={over ? "Supera el límite del chat de GW2 y se cortará" : undefined}
+      >
+        {text.length}/{GW2_CHAT_LIMIT}
+      </span>
+    </span>
+  </button>
+</li>
+
+<script>
+  import { initCopyButtons } from "../scripts/clipboard";
+  initCopyButtons();
+</script>
+
+<style>
+  .message {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent-strong);
+    border-radius: .5rem;
+    padding: 1rem 1.1rem;
+    cursor: pointer;
+    transition: background-color .15s, transform .1s, border-color .15s;
+  }
+  .message:hover {
+    background: var(--surface-hover);
+    border-color: var(--accent);
+    border-left-color: var(--accent);
+  }
+  .message:active { transform: scale(.99); }
+  .message:global(.copied) { border-left-color: var(--amber); }
+
+  .text { flex: 1; overflow-wrap: anywhere; }
+  /* <mark> lo crea el buscador en el navegador, por eso es :global */
+  .text :global(mark) {
+    background: var(--amber);
+    color: var(--charcoal);
+    border-radius: .2em;
+    padding: 0 .1em;
+  }
+
+  .meta {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: .25rem;
+    font-size: .8rem;
+    color: var(--muted);
+  }
+  .copy-label { font-weight: 600; color: var(--accent); }
+  .count.over { color: var(--vermilion); font-weight: 600; }
+</style>

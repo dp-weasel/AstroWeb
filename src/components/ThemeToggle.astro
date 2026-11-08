@@ -1,0 +1,28 @@
+<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar a modo claro">
+  <span aria-hidden="true" class="icon-sun">☀</span>
+  <span aria-hidden="true" class="icon-moon">☾</span>
+</button>
+
+<script>
+  import { initThemeToggle } from "../scripts/theme";
+  initThemeToggle(document.getElementById("theme-toggle") as HTMLButtonElement);
+</script>
+
+<style>
+  .theme-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--accent);
+    font-size: 1.25rem;
+    cursor: pointer;
+    z-index: 10;
+  }
+  :global(:root[data-theme="dark"]) .icon-moon,
+  :global(:root[data-theme="light"]) .icon-sun { display: none; }
+</style>

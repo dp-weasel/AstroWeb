@@ -1,0 +1,37 @@
+---
+import "@fontsource-variable/inter";
+import "@fontsource/archivo-black";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "" } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+---
+
+<!doctype html>
+<html lang="es" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <link rel="icon" href={`${base}favicon.ico`} />
+    <script is:inline>
+      // Aplica el tema guardado antes de pintar para evitar el parpadeo.
+      try {
+        const t = localStorage.getItem("theme");
+        if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+      } catch (_) {}
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
