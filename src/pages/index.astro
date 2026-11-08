@@ -1,16 +1,27 @@
 ---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import SearchBox from "../components/SearchBox.astro";
+import Tabs from "../components/Tabs.astro";
+import ThemeToggle from "../components/ThemeToggle.astro";
+import Toast from "../components/Toast.astro";
+import { categories } from "../lib/messages";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Weasel Shiro" description="Mensajes de Guild Wars 2 listos para copiar con un clic.">
+  <ThemeToggle />
+  <Hero title="Weasel Shiro" subtitle="Haz clic en un mensaje para copiarlo y pégalo en el chat de GW2." />
+  <main>
+    <SearchBox />
+    <Tabs categories={categories} />
+  </main>
+  <Toast />
+</BaseLayout>
+
+<style>
+  main {
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: 0 1rem 4rem;
+  }
+</style>
