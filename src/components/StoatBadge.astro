@@ -1,0 +1,107 @@
+---
+// Cara de armiño (Mustela erminea) blanco sonriendo, hecha solo con CSS.
+// Todas las medidas internas están en em: cambiando --size se escala todo.
+interface Props {
+  size?: string;
+}
+const { size = "7.5rem" } = Astro.props;
+---
+
+<div class="badge" style={`--size: ${size}`} role="img" aria-label="Cara de armiño blanco sonriendo">
+  <div class="stoat" aria-hidden="true">
+    <span class="ear left"></span>
+    <span class="ear right"></span>
+    <span class="head"></span>
+    <span class="eye left"></span>
+    <span class="eye right"></span>
+    <span class="nose"></span>
+    <span class="mouth"></span>
+  </div>
+</div>
+
+<style>
+  .badge {
+    width: var(--size);
+    height: var(--size);
+    margin: 0 auto 1.25rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--vermilion), var(--amber));
+    box-shadow: 0 .5rem 1.5rem rgb(230 74 25 / .35);
+    display: grid;
+    place-items: center;
+  }
+  .stoat {
+    position: relative;
+    font-size: calc(var(--size) / 12);
+    width: 8em;
+    height: 7em;
+    margin-top: -.6em;
+  }
+  .stoat > * { position: absolute; }
+
+  /* Orejas: pequeñas, redondas y a los lados, con el interior rosado */
+  .ear {
+    top: 1.45em;
+    width: 1.8em; height: 1.8em;
+    border-radius: 50%;
+    background: #f6c1b3;
+    box-shadow: inset 0 0 0 .4em #fff;
+  }
+  .ear.left  { left: .75em; }
+  .ear.right { right: .75em; }
+
+  /* Cabeza: un cuadrado redondeado girado 45° y aplastado da una cara ancha
+     arriba que termina en un hocico en punta. */
+  .head {
+    left: 1.5em; top: 1.5em;
+    width: 5em; height: 5em;
+    background: #fff;
+    border-radius: 55% 40% 28% 40%;
+    transform: scaleY(.82) rotate(45deg);
+  }
+
+  .eye {
+    top: 3.2em;
+    width: .72em; height: .78em;
+    border-radius: 50%;
+    background: #1a1a1a;
+  }
+  .eye::after { /* brillo */
+    content: "";
+    position: absolute;
+    top: .14em; right: .12em;
+    width: .22em; height: .22em;
+    border-radius: 50%;
+    background: #fff;
+  }
+  .eye.left  { left: 2.5em; }
+  .eye.right { right: 2.5em; }
+
+  .nose {
+    left: 50%; top: 5.05em;
+    width: .8em; height: .55em;
+    transform: translateX(-50%);
+    background: #1a1a1a;
+    border-radius: 45% 45% 50% 50% / 40% 40% 60% 60%;
+  }
+
+  /* Sonrisa "ω": dos arcos que se tocan bajo la nariz */
+  .mouth {
+    left: 50%; top: 5.5em;
+    width: 1.4em; height: .55em;
+    transform: translateX(-50%);
+  }
+  .mouth::before,
+  .mouth::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: .7em; height: .55em;
+    border: .14em solid #1a1a1a;
+    border-top: 0;
+    border-radius: 0 0 .4em .4em;
+    box-sizing: border-box;
+  }
+  .mouth::before { left: 0; }
+  .mouth::after  { right: 0; }
+</style>

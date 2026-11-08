@@ -1,0 +1,36 @@
+---
+import StoatBadge from "./StoatBadge.astro";
+
+interface Props {
+  title: string;
+  subtitle?: string;
+}
+const { title, subtitle } = Astro.props;
+---
+
+<header class="hero">
+  <StoatBadge />
+  <h1>{title}</h1>
+  {subtitle && <p class="subtitle">{subtitle}</p>}
+</header>
+
+<style>
+  .hero {
+    text-align: center;
+    padding: 3rem 1rem 2rem;
+  }
+  h1 {
+    margin: 0;
+    font-family: var(--font-display);
+    /* Archivo Black ya es una fuente "black"; pedir más peso provoca negrita sintética. */
+    font-weight: 400;
+    font-size: clamp(2.75rem, 11vw, 6rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    background: linear-gradient(90deg, var(--accent-strong), var(--amber));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .subtitle { color: var(--muted); margin: 1rem 0 0; }
+</style>

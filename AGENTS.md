@@ -20,3 +20,12 @@ Consult these guides before working on related tasks:
 - [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
 - [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
 - [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+
+## Este proyecto
+
+- El contenido está en `src/data/messages.json` y se valida en `src/lib/messages.ts`.
+- Un componente por archivo en `src/components/`; la lógica del navegador va en `src/scripts/`.
+- Los colores salen de las variables de `src/styles/tokens.css` (temas claro y oscuro).
+- Los enlaces a archivos de `public/` deben usar `import.meta.env.BASE_URL`, porque en GitHub
+  Pages el sitio vive bajo `/AstroWeb/`.
+- Antes de hacer merge: `npm run check && npm run build`.
