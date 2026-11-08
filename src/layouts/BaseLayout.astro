@@ -6,10 +6,19 @@ import "../styles/global.css";
 interface Props {
   title: string;
   description?: string;
+  /** Imagen al compartir el enlace, relativa a public/. 1200×630 recomendado. */
+  image?: string;
 }
 
-const { title, description = "" } = Astro.props;
+const SITE_NAME = "Weasel Shiro";
+const { title, description = "", image = "og.png" } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+
+// Las redes sociales solo aceptan URLs absolutas, que dependen de SITE_URL
+// (ver astro.config.mjs). Sin ella se omiten en vez de publicar URLs rotas.
+const site = Astro.site;
+const canonical = site && new URL(Astro.url.pathname, site).href;
+const imageUrl = site && new URL(`${base}${image}`, site).href;
 ---
 
 <!doctype html>
@@ -21,8 +30,26 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
-    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
-    <link rel="icon" href={`${base}favicon.ico`} />
+    <meta name="theme-color" content="#e64a19" />
+
+    <link rel="icon" href={`${base}favicon.ico`} sizes="48x48" />
+    <link rel="icon" type="image/png" href={`${base}favicon-96.png`} sizes="96x96" />
+    <link rel="apple-touch-icon" href={`${base}apple-touch-icon.png`} />
+
+    <!-- Vista previa al compartir (OpenGraph: Discord, WhatsApp, Facebook; Twitter/X) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    {canonical && <link rel="canonical" href={canonical} />}
+    {canonical && <meta property="og:url" content={canonical} />}
+    {imageUrl && <meta property="og:image" content={imageUrl} />}
+    {imageUrl && <meta property="og:image:width" content="1200" />}
+    {imageUrl && <meta property="og:image:height" content="630" />}
+    {imageUrl && <meta property="og:image:alt" content={`${SITE_NAME}: armiño blanco con auriculares sobre un círculo naranja`} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    {site && <link rel="sitemap" href={`${base}sitemap-index.xml`} />}
     <script is:inline>
       // Aplica el tema guardado antes de pintar para evitar el parpadeo.
       try {

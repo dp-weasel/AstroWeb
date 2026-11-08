@@ -1,5 +1,5 @@
 ---
-import StoatBadge from "./StoatBadge.astro";
+import Logo from "./Logo.astro";
 
 interface Props {
   title: string;
@@ -9,7 +9,7 @@ const { title, subtitle } = Astro.props;
 ---
 
 <header class="hero">
-  <StoatBadge />
+  <Logo />
   <h1>{title}</h1>
   {subtitle && <p class="subtitle">{subtitle}</p>}
 </header>

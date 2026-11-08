@@ -10,7 +10,9 @@
         "check": "astro check",
         "build": "astro build",
         "preview": "astro preview",
-        "astro": "astro"
+        "astro": "astro",
+        "brand:icons": "node scripts/brand/generate-icons.mjs",
+        "brand:og": "node scripts/brand/generate-og.mjs"
     },
     "dependencies": {
         "@fontsource-variable/cinzel": "^5.3.0",
@@ -20,7 +22,9 @@
     },
     "devDependencies": {
         "@astrojs/check": "^0.9.12",
+        "@astrojs/sitemap": "^3.7.4",
         "@types/node": "^26.6.6",
+        "sharp": "^0.35.5",
         "typescript": "^6.0.3",
         "wrangler": "^4.157.0"
     }
