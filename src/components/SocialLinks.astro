@@ -1,0 +1,84 @@
+---
+// Enlaces a las redes de src/data/profile.ts.
+//   variant="buttons": botones grandes con texto (portada); el primero se destaca.
+//   variant="icons":   solo íconos (pie de página).
+import { socials } from "../data/profile";
+
+interface Props {
+  variant?: "buttons" | "icons";
+}
+const { variant = "buttons" } = Astro.props;
+
+// El color de marca de X es negro y no se vería en modo oscuro: usa el del texto.
+const brandColor = (hex: string) => (hex === "000000" ? "currentColor" : `#${hex}`);
+---
+
+<ul class:list={["socials", variant]}>
+  {socials.map((s, i) => (
+    <li>
+      <a
+        href={s.url}
+        target="_blank"
+        rel="noopener me"
+        class:list={{ primary: variant === "buttons" && i === 0 }}
+        style={`--brand: ${brandColor(s.icon.hex)}`}
+        aria-label={variant === "icons" ? `${s.name} (${s.handle})` : undefined}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d={s.icon.path} /></svg>
+        {variant === "buttons" && (
+          <span class="text">
+            <strong>{s.cta}</strong>
+            <span class="handle">{s.name} · {s.handle}</span>
+          </span>
+        )}
+      </a>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .socials { list-style: none; margin: 0; padding: 0; }
+  svg { width: 1.5rem; height: 1.5rem; flex: none; fill: currentColor; }
+
+  /* Botones de la portada */
+  .buttons { display: grid; gap: .75rem; }
+  .buttons a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: .9rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: .9rem;
+    background: var(--surface);
+    color: var(--text);
+    text-decoration: none;
+    transition: background-color .15s, border-color .15s, transform .15s;
+  }
+  .buttons a:hover { background: var(--surface-hover); border-color: var(--accent); transform: translateY(-2px); }
+  .buttons svg { color: var(--brand); }
+  .text { display: flex; flex-direction: column; line-height: 1.25; }
+  .handle { font-size: .875rem; color: var(--muted); }
+
+  .buttons a.primary {
+    background: linear-gradient(135deg, var(--vermilion), var(--amber));
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 .4rem 1.2rem rgb(230 74 25 / .3);
+  }
+  .buttons a.primary svg { color: #fff; }
+  .buttons a.primary .handle { color: rgb(255 255 255 / .85); }
+
+  /* Íconos del pie */
+  .icons { display: flex; justify-content: center; gap: .5rem; }
+  .icons a {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    color: var(--muted);
+    transition: color .15s, background-color .15s;
+  }
+  .icons a:hover { color: var(--accent); background: var(--surface); }
+  .icons svg { width: 1.25rem; height: 1.25rem; }
+</style>

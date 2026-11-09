@@ -1,0 +1,18 @@
+---
+import SocialLinks from "./SocialLinks.astro";
+import { profile } from "../data/profile";
+---
+
+<footer class="site-footer">
+  <SocialLinks variant="icons" />
+  <p>© {new Date().getFullYear()} {profile.name}</p>
+</footer>
+
+<style>
+  .site-footer {
+    padding: 2rem 1rem 2.5rem;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+  p { margin: .75rem 0 0; font-size: .875rem; color: var(--muted); }
+</style>

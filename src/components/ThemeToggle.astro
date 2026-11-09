@@ -10,9 +10,7 @@
 
 <style>
   .theme-toggle {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
+    flex: none;
     width: 2.75rem;
     height: 2.75rem;
     border-radius: 50%;
@@ -21,7 +19,6 @@
     color: var(--accent);
     font-size: 1.25rem;
     cursor: pointer;
-    z-index: 10;
   }
   :global(:root[data-theme="dark"]) .icon-moon,
   :global(:root[data-theme="light"]) .icon-sun { display: none; }
