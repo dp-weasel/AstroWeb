@@ -1,62 +1,43 @@
-// Carga y valida src/data/messages.json en tiempo de compilación.
-// Si el archivo no cumple el esquema, `astro build` falla con un error claro
-// en lugar de publicar una página rota.
-import { z } from "astro/zod";
-import raw from "../data/messages.json";
+// Lee las pestañas de mensajes de la colección `mensajes` (ver src/content.config.ts).
+import { getCollection } from "astro:content";
+import { CUSTOM_TAB, GW2_CHAT_LIMIT } from "./gw2";
 
-/** Límite de caracteres de un mensaje en el chat de Guild Wars 2. */
-export const GW2_CHAT_LIMIT = 199;
-
-const schema = z
-  .record(
-    z.string().trim().min(1, "El nombre de la pestaña no puede estar vacío"),
-    z.array(z.string({ error: "Cada mensaje debe ser un texto entre comillas" }).trim().min(1, "Hay un mensaje vacío"), {
-      error: "Cada pestaña debe ser una lista de mensajes: [\"...\", \"...\"]",
-    }),
-  )
-  .refine((tabs) => Object.keys(tabs).length > 0, "messages.json no tiene pestañas");
+export interface Message {
+  /** "<pestaña>/<clave>": identificador fijo con el que el navegador guarda los cambios de cada persona. */
+  key: string;
+  text: string;
+}
 
 export interface Category {
-  /** Identificador estable para la URL (#fractales) y los ids del DOM. */
+  /** Nombre del archivo sin extensión: se usa en la URL (#fractales) y en los ids del DOM. */
   id: string;
   name: string;
-  messages: string[];
+  messages: Message[];
 }
 
-export function slugify(s: string): string {
-  return s
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-}
+/** Pestañas ordenadas por `orden` y, a igualdad, por nombre. */
+export async function getCategories(): Promise<Category[]> {
+  const entries = await getCollection("mensajes");
 
-function load(): Category[] {
-  const parsed = schema.safeParse(raw);
-  if (!parsed.success) {
-    const detail = parsed.error.issues
-      .map((i) => `  - ${i.path.join(" › ") || "(raíz)"}: ${i.message}`)
-      .join("\n");
-    throw new Error(`messages.json no es válido:\n${detail}`);
+  if (entries.some((e) => e.id === CUSTOM_TAB.id)) {
+    throw new Error(`src/content/mensajes/${CUSTOM_TAB.id}.yaml: ese nombre está reservado para la pestaña de mensajes propios.`);
   }
 
-  const used = new Set<string>();
-  return Object.entries(parsed.data).map(([name, messages]) => {
-    let id = slugify(name) || "pestana";
-    while (used.has(id)) id += "-";
-    used.add(id);
+  entries.sort(
+    (a, b) =>
+      (a.data.orden ?? Infinity) - (b.data.orden ?? Infinity) || a.data.nombre.localeCompare(b.data.nombre, "es"),
+  );
 
-    for (const m of messages) {
-      if (m.length > GW2_CHAT_LIMIT) {
+  return entries.map(({ id, data }) => {
+    const messages = Object.entries(data.mensajes).map(([key, text]) => {
+      if (text.length > GW2_CHAT_LIMIT) {
         console.warn(
-          `[messages.json] «${name}»: un mensaje tiene ${m.length} caracteres ` +
-            `(límite del chat de GW2: ${GW2_CHAT_LIMIT}): "${m.slice(0, 40)}…"`,
+          `[mensajes/${id}] «${key}» tiene ${text.length} caracteres ` +
+            `(límite del chat de GW2: ${GW2_CHAT_LIMIT}): "${text.slice(0, 40)}…"`,
         );
       }
-    }
-    return { id, name, messages };
+      return { key: `${id}/${key}`, text };
+    });
+    return { id, name: data.nombre, messages };
   });
 }
-
-export const categories: Category[] = load();

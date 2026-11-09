@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=../../../.astro/collections/mensajes.schema.json
+# Cada clave de `mensajes` identifica al mensaje: en minúsculas, sin espacios ni tildes.
+# No la cambies si solo corriges el texto, así se conservan los cambios que cada persona
+# hizo en su navegador. El texto va entre comillas dobles.
+# Ver README.md › «Editar los mensajes de GW2».
+nombre: Raids
+orden: 3
+mensajes:
+  entrenamiento-ala-1: "Entrenamiento de Ala 1 (Vale Guardian, Gorseval, Sabetha). Se aceptan novatos, se explican las mecánicas."
+  composicion: "Composición: 2 healers (alacridad + quickness), 8 DPS. Por favor confirmen rol y build en el escuadrón."
+  wipe: "Wipe, todos al waypoint y reagrupamos. Revisen comida y utilidades antes del próximo intento."

@@ -1,0 +1,80 @@
+---
+// Formulario para editar o agregar un mensaje. Se usa solo como <template>:
+// scripts/messages-editor.ts lo clona dentro de la lista cuando hace falta.
+import { GW2_CHAT_LIMIT } from "../lib/gw2";
+---
+
+<li class="editor-item" data-editor-item>
+  <form class="editor" data-editor novalidate>
+    <textarea
+      data-editor-input
+      rows="3"
+      aria-label="Texto del mensaje"
+      placeholder="Escribe el mensaje tal como lo pegarías en el chat…"
+      spellcheck="true"
+    ></textarea>
+    <div class="bar">
+      <p class="status" data-editor-status aria-live="polite">
+        <span class="count" data-editor-count>0/{GW2_CHAT_LIMIT}</span>
+        <span class="hint" data-editor-hint></span>
+      </p>
+      <button type="button" class="btn" data-action="cancel">Cancelar</button>
+      <button type="submit" class="btn primary" data-editor-save>Guardar</button>
+    </div>
+  </form>
+</li>
+
+<style>
+  .editor {
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    border-left: 4px solid var(--amber);
+    border-radius: .5rem;
+    padding: .75rem;
+  }
+  textarea {
+    display: block;
+    width: 100%;
+    min-height: 4.5rem;
+    resize: vertical;
+    font: inherit;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: .4rem;
+    padding: .6rem .75rem;
+  }
+  textarea:focus { outline: none; border-color: var(--accent); }
+  textarea::placeholder { color: var(--muted); }
+
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem;
+    margin-top: .6rem;
+  }
+  .status {
+    flex: 1;
+    min-width: 10rem;
+    margin: 0;
+    font-size: .85rem;
+    color: var(--muted);
+  }
+  .count { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .status:global(.over) { color: var(--vermilion); }
+  .hint { margin-left: .4rem; }
+
+  .btn {
+    font: 600 .9rem var(--font-body);
+    padding: .45rem 1rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+  }
+  .btn:hover { border-color: var(--accent); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+</style>

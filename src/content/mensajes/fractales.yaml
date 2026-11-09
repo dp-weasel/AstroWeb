@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=../../../.astro/collections/mensajes.schema.json
+# Cada clave de `mensajes` identifica al mensaje: en minúsculas, sin espacios ni tildes.
+# No la cambies si solo corriges el texto, así se conservan los cambios que cada persona
+# hizo en su navegador. El texto va entre comillas dobles.
+# Ver README.md › «Editar los mensajes de GW2».
+nombre: Fractales
+orden: 2
+mensajes:
+  lfg-t4: "LFG T4 diarios + recomendados, busco healer de alacridad y DPS de quickness. Escriban para invitar."
+  preparacion: "Antes de empezar: comida y utilidades puestas, y recuerden la resistencia a la agonía (mínimo 150 para T4)."
+  jefe-final: "En el jefe final: stackeen en la marca del comandante y esquiven el ataque giratorio. ¡Buena suerte a todos!"

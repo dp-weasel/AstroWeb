@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=../../../.astro/collections/mensajes.schema.json
+# Cada clave de `mensajes` identifica al mensaje: en minúsculas, sin espacios ni tildes.
+# No la cambies si solo corriges el texto, así se conservan los cambios que cada persona
+# hizo en su navegador. El texto va entre comillas dobles.
+# Ver README.md › «Editar los mensajes de GW2».
+nombre: Mundo abierto
+orden: 1
+mensajes:
+  dragons-stand: "Meta de Dragon's Stand empezando en 10 min, ¡vengan al waypoint del campamento! Escuadrón abierto, únanse por LFG."
+  tren-frostgorge: "Tren de Champions en Frostgorge Sound: seguimos la ruta en sentido horario. ¡Taguen y no se queden atrás!"
+  tequatl: "Necesitamos 5 personas más para el evento de Tequatl. Defensores de baterías y torretas, por favor anúnciense."
+  portal-maelstrom: "¿Alguien con portal de mesmer en el salto de Mount Maelstrom? ¡Gracias!"

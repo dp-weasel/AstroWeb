@@ -1,27 +1,47 @@
 ---
-import { GW2_CHAT_LIMIT } from "../lib/messages";
+// Un mensaje copiable con sus acciones. Se renderiza al compilar para los mensajes
+// publicados y, como <template>, para que scripts/messages-editor.ts cree los demás
+// en el navegador con el mismo HTML y los mismos estilos.
+import { GW2_CHAT_LIMIT } from "../lib/gw2";
 import { normalize } from "../scripts/text";
 
 interface Props {
+  /** "<pestaña>/<clave>" */
+  messageKey: string;
   text: string;
 }
-const { text } = Astro.props;
+const { messageKey, text } = Astro.props;
 const over = text.length > GW2_CHAT_LIMIT;
 ---
 
-<li data-message data-text={text} data-search={normalize(text)}>
-  <button type="button" class="message" data-copy={text} title="Copiar al portapapeles">
-    <span class="text" data-message-text>{text}</span>
-    <span class="meta">
-      <span class="copy-label" data-copy-label>Copiar</span>
-      <span
-        class:list={["count", { over }]}
-        title={over ? "Supera el límite del chat de GW2 y se cortará" : undefined}
-      >
-        {text.length}/{GW2_CHAT_LIMIT}
+<li data-message data-key={messageKey} data-text={text} data-search={normalize(text)} data-origin="base">
+  <div class="card">
+    <button type="button" class="copy" data-copy={text} title="Copiar al portapapeles">
+      <span class="text" data-message-text>{text}</span>
+      <span class="meta">
+        <span class="copy-label" data-copy-label>Copiar</span>
+        <span
+          class:list={["count", { over }]}
+          data-count
+          title={over ? "Supera el límite del chat de GW2 y se cortará" : undefined}
+        >
+          {text.length}/{GW2_CHAT_LIMIT}
+        </span>
+        <span class="badge" data-badge hidden></span>
       </span>
-    </span>
-  </button>
+    </button>
+    <div class="actions">
+      <button type="button" class="action" data-action="edit" aria-label="Editar mensaje" title="Editar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4Z" /><path d="m13.5 6.5 4 4" /></svg>
+      </button>
+      <button type="button" class="action" data-action="restore" aria-label="Volver al texto original" title="Volver al original" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.6" /><path d="M4 4v5h5" /></svg>
+      </button>
+      <button type="button" class="action danger" data-action="delete" aria-label="Eliminar mensaje" title="Eliminar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14" /><path d="M10 11v6M14 11v6" /><path d="M6 7l1 13h10l1-13" /><path d="M9 7V4h6v3" /></svg>
+      </button>
+    </div>
+  </div>
 </li>
 
 <script>
@@ -30,29 +50,38 @@ const over = text.length > GW2_CHAT_LIMIT;
 </script>
 
 <style>
-  .message {
-    width: 100%;
+  .card {
+    display: flex;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent-strong);
+    border-radius: .5rem;
+    transition: background-color .15s, border-color .15s;
+  }
+  .card:has(.copy:hover) {
+    background: var(--surface-hover);
+    border-color: var(--accent);
+  }
+  [data-origin="edited"] .card,
+  [data-origin="custom"] .card { border-left-color: var(--amber); }
+
+  .copy {
+    flex: 1;
+    min-width: 0;
     display: flex;
     align-items: flex-start;
     gap: 1rem;
     text-align: left;
     font: inherit;
     color: inherit;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 4px solid var(--accent-strong);
-    border-radius: .5rem;
+    background: none;
+    border: 0;
+    border-radius: .4rem 0 0 .4rem;
     padding: 1rem 1.1rem;
     cursor: pointer;
-    transition: background-color .15s, transform .1s, border-color .15s;
+    transition: transform .1s;
   }
-  .message:hover {
-    background: var(--surface-hover);
-    border-color: var(--accent);
-    border-left-color: var(--accent);
-  }
-  .message:active { transform: scale(.99); }
-  .message:global(.copied) { border-left-color: var(--amber); }
+  .copy:active { transform: scale(.99); }
 
   .text { flex: 1; overflow-wrap: anywhere; }
   /* <mark> lo crea el buscador en el navegador, por eso es :global */
@@ -74,4 +103,43 @@ const over = text.length > GW2_CHAT_LIMIT;
   }
   .copy-label { font-weight: 600; color: var(--accent); }
   .count.over { color: var(--vermilion); font-weight: 600; }
+  .badge {
+    padding: 0 .45em;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    font-size: .72rem;
+    font-weight: 600;
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: .15rem;
+    padding: .35rem;
+    border-left: 1px solid var(--border);
+  }
+  .action {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 0;
+    border-radius: .4rem;
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color .15s, background-color .15s;
+  }
+  .action:hover { color: var(--accent); background: var(--surface-hover); }
+  .action.danger:hover { color: var(--vermilion); }
+  .action svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
 </style>
