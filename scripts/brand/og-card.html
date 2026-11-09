@@ -1,0 +1,59 @@
+<!doctype html>
+<!--
+  Plantilla de la imagen que se ve al compartir el enlace (public/og.png, 1200×630).
+  Se captura con `npm run brand:og`. Para cambiar el texto, editar este archivo y volver a correrlo.
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: "Archivo Black"; src: url("../../node_modules/@fontsource/archivo-black/files/archivo-black-latin-400-normal.woff2"); }
+  @font-face { font-family: "Inter"; font-weight: 100 900; src: url("../../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2"); }
+  :root { --charcoal: #212121; --vermilion: #e64a19; --amber: #ff9103; --snow: #f2f2f2; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    background:
+      radial-gradient(circle at 18% 50%, rgb(230 74 25 / .28), transparent 45%),
+      var(--charcoal);
+    font-family: "Inter", sans-serif;
+    color: var(--snow);
+    display: flex;
+    align-items: center;
+    gap: 72px;
+    padding: 0 96px;
+  }
+  .badge {
+    flex: none;
+    width: 380px; height: 380px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--vermilion), var(--amber));
+    box-shadow: 0 24px 64px rgb(230 74 25 / .4);
+  }
+  .badge img { display: block; width: 100%; transform: translateY(5%) scale(1.1); }
+  h1 {
+    margin: 0;
+    font-family: "Archivo Black", sans-serif;
+    font-weight: 400;
+    font-size: 112px;
+    line-height: .95;
+    letter-spacing: -.02em;
+    background: linear-gradient(90deg, var(--vermilion), var(--amber));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  p { margin: 28px 0 0; font-size: 38px; font-weight: 500; color: #d0d0d0; }
+  .bar { margin-top: 36px; width: 120px; height: 8px; border-radius: 4px; background: var(--amber); }
+</style>
+</head>
+<body>
+  <div class="badge"><img src="../../src/assets/brand/weasel-mouth-closed-headphones.png" alt=""></div>
+  <div>
+    <h1>Weasel<br>Shiro</h1>
+    <p>Creador de contenido<br>· Guild Wars 2 ·</p>
+    <div class="bar"></div>
+  </div>
+</body>
+</html>

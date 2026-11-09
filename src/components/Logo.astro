@@ -1,0 +1,44 @@
+---
+// Logo (armiño con auriculares) sobre el círculo naranja de la marca.
+// astro:assets lo convierte a WebP en los tamaños justos al compilar, así que
+// el PNG original de 700 KB nunca llega al navegador.
+import { Image } from "astro:assets";
+import logo from "../assets/brand/weasel-mouth-closed-headphones.png";
+
+interface Props {
+  /** Diámetro del círculo, en cualquier unidad CSS. */
+  size?: string;
+}
+const { size = "9rem" } = Astro.props;
+---
+
+<div class="badge" style={`--size: ${size}`}>
+  <Image
+    src={logo}
+    alt="Weasel Shiro: armiño blanco con auriculares"
+    width={480}
+    widths={[160, 320, 480]}
+    sizes={size}
+    loading="eager"
+    fetchpriority="high"
+  />
+</div>
+
+<style>
+  .badge {
+    width: var(--size);
+    height: var(--size);
+    margin: 0 auto 1.25rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--vermilion), var(--amber));
+    box-shadow: 0 .5rem 1.5rem rgb(230 74 25 / .35);
+    /* El círculo recorta la base del pecho, que en el PNG termina difuminada. */
+    overflow: hidden;
+  }
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transform: translateY(5%) scale(1.1);
+  }
+</style>

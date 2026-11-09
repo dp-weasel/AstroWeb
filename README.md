@@ -1,7 +1,8 @@
 # Weasel Shiro · Mensajes de GW2
 
 Sitio estático hecho con [Astro](https://astro.build) con mensajes de Guild Wars 2 que se
-copian con un clic para pegarlos en el chat del juego. Se publica en GitHub Pages.
+copian con un clic para pegarlos en el chat del juego. Se publica en Cloudflare (rama de
+producción: `master`).
 
 ## Editar los mensajes
 
@@ -15,7 +16,7 @@ pestaña** y su valor es la lista de mensajes. El orden de las claves es el orde
 }
 ```
 
-Al hacer push a `master`, GitHub Actions valida el JSON, compila y publica. Si el JSON tiene
+Al hacer push a `master`, Cloudflare valida el JSON, compila y publica. Si el JSON tiene
 un error (sintaxis, mensaje vacío, valor que no es una lista), la compilación falla y la versión
 publicada no cambia. Los mensajes de más de 199 caracteres (límite del chat de GW2) generan un aviso.
 
@@ -23,12 +24,13 @@ publicada no cambia. Los mensajes de más de 199 caracteres (límite del chat de
 
 ```text
 src/
+├── assets/brand/             Imágenes de la marca (logo y variantes); Astro las optimiza al compilar
 ├── data/messages.json        Contenido: pestañas y mensajes
 ├── lib/messages.ts           Esquema y validación del JSON (en tiempo de compilación)
 ├── layouts/BaseLayout.astro  Documento base: <head>, fuentes, tema sin parpadeo
 ├── components/               Una pieza de la interfaz por archivo, con sus estilos
 │   ├── Hero.astro              Encabezado con el ícono y el título
-│   ├── StoatBadge.astro        Ícono del armiño hecho con CSS
+│   ├── Logo.astro              Logo (armiño con auriculares) en el círculo naranja
 │   ├── ThemeToggle.astro       Botón de modo claro/oscuro
 │   ├── SearchBox.astro         Buscador
 │   ├── Tabs.astro              Pestañas y paneles
@@ -38,8 +40,21 @@ src/
 │   ├── theme.ts  tabs.ts  search.ts  clipboard.ts  toast.ts
 │   └── text.ts                 Normalización y resaltado (compartido con el build)
 ├── styles/                   tokens.css (paleta y temas) y global.css
-└── pages/index.astro         Compone la página a partir de los componentes
+└── pages/
+    ├── index.astro             Compone la página a partir de los componentes
+    └── robots.txt.ts           robots.txt con la URL del sitemap
+public/                       Archivos servidos tal cual: favicon.ico, favicon-96.png,
+                              apple-touch-icon.png y og.png (vista previa al compartir)
+scripts/brand/                Generadores de los íconos y de og.png a partir del logo
 ```
+
+### Imágenes
+
+- Las imágenes que usa la página van en `src/assets/` y se importan con `<Image>` de
+  `astro:assets`: Astro las convierte a WebP en varios tamaños.
+- `public/` es solo para archivos que necesitan una URL fija (favicon, `og.png`).
+- Si cambia el logo: `npm run brand:icons` regenera los íconos y `npm run brand:og` regenera
+  `og.png` desde la plantilla `scripts/brand/og-card.html` (usa el Chrome del sistema).
 
 ### Cómo agregar una funcionalidad
 
@@ -59,6 +74,10 @@ src/
 | `npm run check`   | Verifica tipos y plantillas                             |
 | `npm run build`   | Compila el sitio en `dist/`                             |
 | `npm run preview` | Sirve `dist/` para revisarlo antes de publicar          |
+| `npm run brand:icons` | Regenera los íconos de `public/` desde el logo      |
+| `npm run brand:og` | Regenera `public/og.png` (vista previa al compartir)   |
 
-La URL pública y la ruta base se configuran por entorno (`SITE_URL`, `BASE_PATH`); en GitHub
-Actions se toman de la configuración de Pages. En local no hace falta definirlas.
+La URL pública y la ruta base se configuran por entorno (`SITE_URL`, `BASE_PATH`). En
+Cloudflare hay que definir `SITE_URL` (p. ej. `https://tu-dominio`) en las variables de build:
+sin ella no se generan el sitemap ni las URLs absolutas de la vista previa al compartir.
+En local no hace falta definirlas.
