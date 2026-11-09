@@ -5,14 +5,15 @@ Se publica en Cloudflare: cada push a `master` (rama de producción) compila y p
 
 | Ruta              | Página                                                         |
 | :---------------- | :------------------------------------------------------------- |
-| `/`               | Portada: bio y enlaces a Twitch, YouTube y X                   |
+| `/`               | Portada: presentación, redes, cómo es el canal, herramientas y preguntas frecuentes |
 | `/gw2/mensajes/`  | Mensajes de Guild Wars 2 que se copian con un clic             |
 
-## Editar la bio y las redes
+## Editar los textos de la portada y las redes
 
-Están en [`src/data/profile.ts`](src/data/profile.ts): nombre, frase, párrafos de la bio y la
-lista de redes. La primera red de la lista es el botón destacado de la portada. Los íconos salen
-del paquete `simple-icons`.
+Están en [`src/data/profile.ts`](src/data/profile.ts): nombre, frase, bio, el texto de
+presentación de la portada (`intro`), las tarjetas de "Cómo es el canal" (`valores`), las
+preguntas frecuentes (`preguntas`) y la lista de redes. La primera red de la lista es el botón
+destacado de la portada. Los íconos salen del paquete `simple-icons`.
 
 ## Editar los mensajes de GW2
 
@@ -58,7 +59,7 @@ el original. Ver `src/scripts/messages-store.ts` y `src/scripts/messages-editor.
 src/
 ├── assets/brand/             Imágenes de la marca (logo y variantes); Astro las optimiza al compilar
 ├── data/
-│   └── profile.ts              Bio y redes sociales
+│   └── profile.ts              Textos de la portada y redes sociales
 ├── content/mensajes/*.yaml   Pestañas y mensajes de GW2 (un archivo por pestaña)
 ├── content.config.ts         Esquema de los YAML de mensajes (se valida al compilar)
 ├── lib/
