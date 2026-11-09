@@ -1,0 +1,72 @@
+---
+// Cabecera común: marca, navegación y botón de tema.
+import { Image } from "astro:assets";
+import logo from "../assets/brand/weasel-mouth-closed-headphones.png";
+import ThemeToggle from "./ThemeToggle.astro";
+import { profile } from "../data/profile";
+
+const links = [
+  { href: "/", label: "Inicio" },
+  { href: "/gw2/mensajes/", label: "Mensajes GW2" },
+];
+const current = Astro.url.pathname.replace(/\/?$/, "/");
+---
+
+<header class="site-header">
+  <a class="brand" href="/">
+    <span class="mini-logo"><Image src={logo} alt="" width={64} widths={[32, 64]} sizes="2rem" /></span>
+    <span>{profile.name}</span>
+  </a>
+  <nav aria-label="Principal">
+    {links.map((l) => (
+      <a href={l.href} aria-current={current === l.href ? "page" : undefined}>{l.label}</a>
+    ))}
+  </nav>
+  <ThemeToggle />
+</header>
+
+<style>
+  .site-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: .75rem 1rem;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    margin-right: auto;
+    color: var(--text);
+    text-decoration: none;
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+  .mini-logo {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--vermilion), var(--amber));
+  }
+  .mini-logo img { display: block; width: 100%; height: auto; transform: translateY(5%) scale(1.1); }
+  nav { display: flex; gap: .25rem; }
+  nav a {
+    padding: .4rem .75rem;
+    border-radius: 999px;
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: .95rem;
+  }
+  nav a:hover { color: var(--text); background: var(--surface); }
+  nav a[aria-current="page"] { color: var(--accent); }
+
+  /* En pantallas chicas solo queda el logo, sin el nombre. */
+  @media (max-width: 30rem) {
+    .brand span:last-child { display: none; }
+  }
+</style>

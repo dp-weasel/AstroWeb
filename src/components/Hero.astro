@@ -4,15 +4,17 @@ import Logo from "./Logo.astro";
 interface Props {
   title: string;
   subtitle?: string;
+  /** Versión reducida para páginas internas: sin logo y con el título más chico. */
+  compact?: boolean;
 }
-const { title, subtitle } = Astro.props;
+const { title, subtitle, compact = false } = Astro.props;
 ---
 
-<header class="hero">
-  <Logo />
+<section class:list={["hero", { compact }]}>
+  {!compact && <Logo />}
   <h1>{title}</h1>
   {subtitle && <p class="subtitle">{subtitle}</p>}
-</header>
+</section>
 
 <style>
   .hero {
@@ -24,7 +26,7 @@ const { title, subtitle } = Astro.props;
     font-family: var(--font-display);
     /* Archivo Black ya es una fuente "black"; pedir más peso provoca negrita sintética. */
     font-weight: 400;
-    font-size: clamp(2.75rem, 11vw, 6rem);
+    font-size: clamp(2.75rem, 11vw, 4.25rem);
     line-height: 1;
     letter-spacing: -0.02em;
     background: linear-gradient(90deg, var(--accent-strong), var(--amber));
@@ -33,4 +35,7 @@ const { title, subtitle } = Astro.props;
     color: transparent;
   }
   .subtitle { color: var(--muted); margin: 1rem 0 0; }
+
+  .compact { padding: 2rem 1rem 1.5rem; }
+  .compact h1 { font-size: clamp(2rem, 8vw, 3.5rem); }
 </style>
