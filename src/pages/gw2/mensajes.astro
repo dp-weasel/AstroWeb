@@ -4,7 +4,9 @@ import Hero from "../../components/Hero.astro";
 import SearchBox from "../../components/SearchBox.astro";
 import Tabs from "../../components/Tabs.astro";
 import Toast from "../../components/Toast.astro";
-import { categories } from "../../lib/messages";
+import { getCategories } from "../../lib/messages";
+
+const categories = await getCategories();
 ---
 
 <BaseLayout title="Mensajes de GW2 · Weasel Shiro" description="Mensajes de Guild Wars 2 listos para copiar con un clic y pegar en el chat del juego.">

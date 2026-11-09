@@ -14,21 +14,43 @@ Están en [`src/data/profile.ts`](src/data/profile.ts): nombre, frase, párrafos
 lista de redes. La primera red de la lista es el botón destacado de la portada. Los íconos salen
 del paquete `simple-icons`.
 
-## Editar los mensajes
+## Editar los mensajes de GW2
 
-Todo el contenido está en [`src/data/messages.json`](src/data/messages.json). **Cada clave es una
-pestaña** y su valor es la lista de mensajes. El orden de las claves es el orden de las pestañas.
+Cada archivo de [`src/content/mensajes/`](src/content/mensajes/) es **una pestaña**: agregar un
+archivo `.yaml` agrega una pestaña y borrarlo la quita. El nombre del archivo es el que aparece en
+la URL (`/gw2/mensajes/#fractales`).
 
-```json
-{
-  "Mundo abierto": ["mensaje 1", "mensaje 2"],
-  "Misiones de clan": ["Una clave nueva crea una pestaña nueva"]
-}
+```yaml
+nombre: Fractales          # Texto de la pestaña
+orden: 2                   # Posición (opcional; sin él, van al final por nombre)
+mensajes:
+  lfg-t4: "LFG T4 diarios + recomendados, busco healer…"
+  jefe-final: "En el jefe final: stackeen en la marca…"
 ```
 
-Al hacer push a `master`, Cloudflare valida el JSON, compila y publica. Si el JSON tiene
-un error (sintaxis, mensaje vacío, valor que no es una lista), la compilación falla y la versión
-publicada no cambia. Los mensajes de más de 199 caracteres (límite del chat de GW2) generan un aviso.
+- La **clave** de cada mensaje (`lfg-t4`) va en minúsculas, sin espacios ni tildes, y no debe
+  cambiar si solo corriges el texto: es lo que permite conservar los cambios que cada persona hizo
+  en su navegador. Si cambias la clave, para el navegador es un mensaje nuevo.
+- El **texto** va entre comillas dobles (así no fallan los `:` del medio). Para usar comillas
+  dentro del texto, escríbelas como `\"`.
+- `personalizado` es un nombre reservado: esa pestaña la llena cada persona en su navegador.
+
+Al hacer push a `master`, Cloudflare valida los archivos, compila y publica. Si un archivo tiene un
+error, la compilación falla con un mensaje claro y la versión publicada no cambia. Los mensajes de
+más de 199 caracteres (límite del chat de GW2) generan un aviso. Con la extensión de YAML de VS Code
+se autocompletan los campos y se marcan los errores al escribir (el esquema lo genera
+`npm run dev`/`build` en `.astro/`).
+
+### Cambios de cada persona (en su navegador)
+
+En la página, cada persona puede **editar**, **eliminar** (con «Deshacer» y «Restaurar
+eliminados») y **agregar** mensajes en cualquier pestaña, y tener los suyos en **Personalizado**.
+El editor no deja guardar textos vacíos ni de más de 199 caracteres.
+
+Se guarda en `localStorage` (clave `gw2-mensajes:v1`) solo la diferencia con lo publicado:
+textos editados, claves eliminadas y mensajes agregados. Por eso los mensajes nuevos que publiques
+le aparecen a todo el mundo, y si una persona editó un mensaje, conserva su versión aunque cambies
+el original. Ver `src/scripts/messages-store.ts` y `src/scripts/messages-editor.ts`.
 
 ## Estructura
 
@@ -36,9 +58,12 @@ publicada no cambia. Los mensajes de más de 199 caracteres (límite del chat de
 src/
 ├── assets/brand/             Imágenes de la marca (logo y variantes); Astro las optimiza al compilar
 ├── data/
-│   ├── profile.ts              Bio y redes sociales
-│   └── messages.json           Pestañas y mensajes de GW2
-├── lib/messages.ts           Esquema y validación del JSON (en tiempo de compilación)
+│   └── profile.ts              Bio y redes sociales
+├── content/mensajes/*.yaml   Pestañas y mensajes de GW2 (un archivo por pestaña)
+├── content.config.ts         Esquema de los YAML de mensajes (se valida al compilar)
+├── lib/
+│   ├── messages.ts             Lee y ordena las pestañas de la colección
+│   └── gw2.ts                  Límite de 199 caracteres y pestaña Personalizado
 ├── layouts/BaseLayout.astro  Documento base: <head>, cabecera, pie, tema sin parpadeo
 ├── components/               Una pieza de la interfaz por archivo, con sus estilos
 │   ├── SiteHeader.astro        Cabecera común: marca, navegación y tema
@@ -49,10 +74,13 @@ src/
 │   ├── ThemeToggle.astro       Botón de modo claro/oscuro
 │   ├── SearchBox.astro         Buscador
 │   ├── Tabs.astro              Pestañas y paneles
-│   ├── MessageCard.astro       Mensaje copiable
-│   └── Toast.astro             Aviso de "copiado"
+│   ├── MessageCard.astro       Mensaje copiable con acciones (editar, eliminar, restaurar)
+│   ├── MessageEditor.astro     Formulario para editar/agregar con contador de caracteres
+│   └── Toast.astro             Avisos, con botón opcional («Deshacer»)
 ├── scripts/                  Lógica del navegador, un módulo por funcionalidad
 │   ├── theme.ts  tabs.ts  search.ts  clipboard.ts  toast.ts
+│   ├── messages-store.ts       Cambios de la persona en localStorage
+│   ├── messages-editor.ts      Editar, eliminar, restaurar y agregar mensajes
 │   └── text.ts                 Normalización y resaltado (compartido con el build)
 ├── styles/                   tokens.css (paleta y temas) y global.css
 └── pages/                    Una ruta por archivo

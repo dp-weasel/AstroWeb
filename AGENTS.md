@@ -23,8 +23,9 @@ Consult these guides before working on related tasks:
 
 ## Este proyecto
 
-- La bio y las redes están en `src/data/profile.ts`. Los mensajes de GW2 están en
-  `src/data/messages.json` y se validan en `src/lib/messages.ts`.
+- La bio y las redes están en `src/data/profile.ts`. Los mensajes de GW2 son una Content
+  Collection: un YAML por pestaña en `src/content/mensajes/`, con esquema en `src/content.config.ts`.
+  Las claves de los mensajes son estables: el navegador guarda los cambios de cada persona por clave.
 - Un componente por archivo en `src/components/`; la lógica del navegador va en `src/scripts/`.
 - Los colores salen de las variables de `src/styles/tokens.css` (temas claro y oscuro).
 - Las imágenes van en `src/assets/` y se usan con `<Image>` de `astro:assets`; `public/` solo

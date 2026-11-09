@@ -30,7 +30,8 @@ export function initSearch(input: HTMLInputElement): void {
 
     for (const panel of document.querySelectorAll<HTMLElement>('[role="tabpanel"]')) {
       const empty = panel.querySelector<HTMLElement>("[data-empty]")!;
-      const none = terms.length > 0 && counts.get(panel.id) === 0;
+      // Una pestaña sin ningún mensaje ya muestra su propio aviso.
+      const none = terms.length > 0 && counts.get(panel.id) === 0 && !!panel.querySelector("[data-message]");
       empty.hidden = !none;
       if (none) {
         let msg = `No se encontró ningún mensaje con «${raw}» en esta pestaña.`;
@@ -41,6 +42,8 @@ export function initSearch(input: HTMLInputElement): void {
   };
 
   input.addEventListener("input", apply);
+  // El editor avisa cuando cambia la lista (mensajes editados, agregados o eliminados).
+  document.addEventListener("messages:changed", apply);
   input.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && input.value) {
       input.value = "";

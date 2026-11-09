@@ -1,10 +1,17 @@
-<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<div id="toast" class="toast" role="status" aria-live="polite">
+  <span data-toast-text></span>
+  <button type="button" class="toast-action" data-toast-action hidden></button>
+</div>
 
 <style>
   .toast {
     position: fixed;
     left: 50%;
     bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    max-width: calc(100vw - 2rem);
     transform: translate(-50%, 1rem);
     background: var(--accent);
     color: var(--on-accent);
@@ -14,6 +21,17 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity .2s, transform .2s;
+    z-index: 20;
   }
-  .toast:global(.show) { opacity: 1; transform: translate(-50%, 0); }
+  .toast:global(.show) { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+  .toast-action {
+    font: inherit;
+    padding: .15rem .7rem;
+    border-radius: 999px;
+    border: 1px solid currentColor;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+  }
+  .toast-action:hover { background: rgb(0 0 0 / .12); }
 </style>
