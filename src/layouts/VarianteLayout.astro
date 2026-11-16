@@ -1,0 +1,24 @@
+---
+// Layout de las variantes de /variantes-marca/: carga las fuentes de las escenas
+// de OBS y agrega la barra para pasar de una variante a otra.
+import "@fontsource/russo-one";
+import "@fontsource-variable/montserrat";
+import "@fontsource-variable/montserrat/wght-italic.css";
+import "@fontsource-variable/fredoka";
+import "@fontsource/lilita-one";
+import "../styles/marca.css";
+import BaseLayout from "./BaseLayout.astro";
+import VarianteNav from "../components/marca/VarianteNav.astro";
+import { variantes } from "../data/variantes-marca";
+
+interface Props {
+  slug: string;
+}
+const { slug } = Astro.props;
+const v = variantes.find((x) => x.slug === slug)!;
+---
+
+<BaseLayout title={`${v.nombre} · Variantes`} description={v.idea} noindex>
+  <slot />
+  <VarianteNav slug={slug} />
+</BaseLayout>

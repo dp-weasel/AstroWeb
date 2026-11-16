@@ -1,0 +1,62 @@
+---
+// Barra fija para pasar de una variante a otra (también con ← y →).
+import { variantes } from "../../data/variantes-marca";
+
+interface Props {
+  slug: string;
+}
+const { slug } = Astro.props;
+const i = variantes.findIndex((v) => v.slug === slug);
+const prev = variantes[(i - 1 + variantes.length) % variantes.length];
+const next = variantes[(i + 1) % variantes.length];
+const url = (s: string) => `/variantes-marca/${s}/`;
+---
+
+<nav class="variante-nav" aria-label="Variantes" data-prev={url(prev.slug)} data-next={url(next.slug)}>
+  <a href={url(prev.slug)} aria-label={`Anterior: ${prev.nombre}`}>←</a>
+  <a class="actual" href="/variantes-marca/">{variantes[i].nombre} <small>({i + 1}/{variantes.length})</small></a>
+  <a href={url(next.slug)} aria-label={`Siguiente: ${next.nombre}`}>→</a>
+</nav>
+
+<style>
+  .variante-nav {
+    position: fixed;
+    left: 50%;
+    bottom: 1rem;
+    z-index: 50;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+    max-width: calc(100vw - 2rem);
+    padding: .3rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 .5rem 1.5rem rgb(0 0 0 / .35);
+    font-family: var(--font-body);
+    font-size: .9rem;
+  }
+  a {
+    padding: .4rem .8rem;
+    border-radius: 999px;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  a:hover { background: var(--surface-hover); color: var(--accent); }
+  .actual { overflow: hidden; text-overflow: ellipsis; }
+  small { color: var(--muted); font-weight: 400; }
+</style>
+
+<script>
+  const nav = document.querySelector<HTMLElement>(".variante-nav");
+  document.addEventListener("keydown", (e) => {
+    if (!nav || e.altKey || e.ctrlKey || e.metaKey) return;
+    if ((e.target as HTMLElement).closest("input, textarea")) return;
+    if (e.key === "ArrowLeft") location.href = nav.dataset.prev!;
+    if (e.key === "ArrowRight") location.href = nav.dataset.next!;
+  });
+</script>

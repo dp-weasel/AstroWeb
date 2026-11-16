@@ -10,10 +10,12 @@ interface Props {
   description?: string;
   /** Imagen al compartir el enlace, relativa a public/. 1200×630 recomendado. */
   image?: string;
+  /** Páginas de prueba (p. ej. variantes de diseño) que no deben aparecer en buscadores. */
+  noindex?: boolean;
 }
 
 const SITE_NAME = "Weasel Shiro";
-const { title, description = "", image = "og.png" } = Astro.props;
+const { title, description = "", image = "og.png", noindex = false } = Astro.props;
 
 // Las redes sociales solo aceptan URLs absolutas, que dependen de SITE_URL
 // (ver astro.config.mjs). Sin ella se omiten en vez de publicar URLs rotas.
@@ -31,6 +33,7 @@ const imageUrl = site && new URL(image, site).href;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
+    {noindex && <meta name="robots" content="noindex" />}
     <meta name="theme-color" content="#e64a19" />
 
     <link rel="icon" href="/favicon.ico" sizes="48x48" />

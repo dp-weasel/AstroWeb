@@ -1,0 +1,22 @@
+/* Tokens de la marca de las escenas de OBS (RecursosCC/branding.txt).
+   Por ahora solo los usan las variantes de /variantes-marca/. */
+:root {
+  --cream: #f4ede1;    /* pelaje del Armiño: bocadillos y superficies claras */
+  --magenta: #d6249f;  /* solo ligado a EDM */
+  --rust: #88311f;     /* manchas de los fondos chillchat */
+
+  --font-brand: "Russo One", "Arial Black", sans-serif;            /* WEASEL */
+  --font-title: "Montserrat Variable", "Arial Black", sans-serif;  /* títulos 900 italic */
+  --font-text: "Montserrat Variable", system-ui, sans-serif;
+  --font-bubble: "Fredoka Variable", "Comic Sans MS", sans-serif;  /* bocadillos */
+  --font-label: "Lilita One", "Arial Black", sans-serif;           /* etiquetas cortas */
+}
+
+/* Título de sección como en las escenas: Montserrat Black Italic en mayúsculas. */
+.titulo-marca {
+  font-family: var(--font-title);
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: .01em;
+}

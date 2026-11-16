@@ -1,0 +1,136 @@
+---
+// Variante 2 · Banner diagonal: el hero repite la composición del banner de
+// Twitch (bloque naranja inclinado a la izquierda con el armiño, fondo oscuro a
+// la derecha con la mascota en gris como marca de agua).
+import { Image } from "astro:assets";
+import VarianteLayout from "../../layouts/VarianteLayout.astro";
+import Wordmark from "../../components/marca/Wordmark.astro";
+import Ctas from "../../components/marca/Ctas.astro";
+import armino from "../../assets/brand/weasel-mouth-closed-headphones.png";
+import { intro, valores, preguntas } from "../../data/variantes-marca";
+---
+
+<VarianteLayout slug="banner">
+  <main>
+    <section class="banner">
+      <div class="bloque" aria-hidden="true">
+        <Image src={armino} alt="" width={640} widths={[320, 480, 640]} sizes="(max-width: 48rem) 70vw, 34vw" loading="eager" />
+      </div>
+      <Image class="marca-agua" src={armino} alt="" width={640} widths={[320, 640]} sizes="40vw" />
+      <div class="texto">
+        <p class="eyebrow titulo-marca">Directos de Guild Wars 2 · y lo que pinte</p>
+        <h1><Wordmark size="clamp(3rem, 9vw, 6rem)" /></h1>
+        <p class="lead">{intro}</p>
+        <Ctas />
+      </div>
+    </section>
+
+    <div class="contenido">
+      <section aria-labelledby="valores">
+        <h2 id="valores" class="titulo-marca">Cómo es el canal</h2>
+        <div class="values">
+          {valores.map((v, i) => (
+            <article>
+              <span class="num titulo-marca">0{i + 1}</span>
+              <h3>{v.titulo}</h3>
+              <p>{v.texto}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <a class="franja" href="/gw2/mensajes/">
+        <span class="titulo-marca">Mensajes de GW2</span>
+        <span>Listos para copiar y pegar en el chat del juego →</span>
+      </a>
+
+      <section class="narrow" aria-labelledby="faq">
+        <h2 id="faq" class="titulo-marca">Preguntas frecuentes</h2>
+        <div class="faq">
+          {preguntas.map((p, i) => (
+            <details open={i === 0}>
+              <summary>{p.q}</summary>
+              <p>{p.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+    </div>
+  </main>
+</VarianteLayout>
+
+<style>
+  main { font-family: var(--font-text); padding-bottom: 6rem; }
+
+  /* Hero: siempre oscuro, como el banner. */
+  .banner {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 40% 1fr;
+    align-items: center;
+    min-height: min(34rem, 80vh);
+    background: var(--charcoal);
+    color: var(--snow);
+  }
+  .bloque {
+    align-self: stretch;
+    display: grid;
+    place-items: end center;
+    background: linear-gradient(160deg, var(--amber) 55%, var(--vermilion));
+    clip-path: polygon(0 0, 100% 0, 78% 100%, 0 100%);
+  }
+  .bloque img { width: min(80%, 26rem); height: auto; margin-right: 18%; filter: drop-shadow(0 .5rem 0 rgb(0 0 0 / .2)); }
+  .marca-agua {
+    position: absolute; z-index: -1; right: -6%; top: 50%;
+    width: min(42rem, 55vw); height: auto;
+    transform: translateY(-50%) scaleX(-1);
+    filter: grayscale(1) brightness(.6);
+    opacity: .12;
+  }
+  .texto { padding: 3rem 2rem 3rem 0; max-width: 34rem; }
+  .eyebrow { margin: 0 0 .5rem; color: var(--amber); font-size: .9rem; }
+  h1 { margin: 0 0 1rem; line-height: 1; }
+  .lead { margin: 0 0 1.5rem; color: #cfcfcf; font-size: 1.1rem; font-weight: 500; }
+  .banner :global(.btn:not(.primary):not(.youtube)) { background: #2b2b2b; border-color: #3d3d3d; color: var(--brand, var(--snow)); }
+  .banner :global(.btn[aria-label^="X"]) { color: var(--snow); }
+
+  .contenido { max-width: 60rem; margin: 0 auto; padding: 4rem 1rem 0; }
+  .contenido > * + * { margin-top: 4rem; }
+  .narrow { max-width: 44rem; margin-inline: auto; }
+  h2 { font-size: 1.6rem; margin: 0 0 1.5rem; }
+  h2::after { content: ""; display: block; width: 3rem; height: .3rem; margin-top: .4rem; background: var(--amber); transform: skewX(-20deg); }
+
+  .values { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1rem; }
+  .values article { position: relative; padding: 1.5rem 1.25rem; background: var(--surface); border-left: 4px solid var(--amber); }
+  .num { position: absolute; top: .5rem; right: 1rem; font-size: 2.5rem; color: var(--border); line-height: 1; }
+  .values h3 { margin: 0 0 .25rem; font-weight: 800; }
+  .values p { margin: 0; color: var(--muted); }
+
+  .franja {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .5rem 2rem;
+    padding: 1.5rem 2.5rem;
+    background: linear-gradient(135deg, var(--vermilion), var(--amber));
+    color: var(--charcoal); font-weight: 700; text-decoration: none;
+    clip-path: polygon(1.5rem 0, 100% 0, calc(100% - 1.5rem) 100%, 0 100%);
+    transition: transform .15s;
+  }
+  .franja .titulo-marca { font-size: 1.5rem; }
+  .franja:hover { transform: translateX(.4rem); }
+
+  .faq { display: grid; gap: .5rem; }
+  details { border-left: 4px solid var(--border); background: var(--surface); }
+  details[open] { border-left-color: var(--amber); }
+  summary { padding: 1rem 1.25rem; font-weight: 700; cursor: pointer; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  details p { margin: 0; padding: 0 1.25rem 1rem; color: var(--muted); }
+
+  @media (max-width: 48rem) {
+    .banner { grid-template-columns: 1fr; }
+    .bloque { height: 15rem; clip-path: polygon(0 0, 100% 0, 100% 75%, 0 100%); }
+    .bloque img { width: 13rem; margin: 0; }
+    .texto { padding: 1.5rem 1rem 3rem; }
+    .marca-agua { width: 90vw; top: 70%; }
+  }
+</style>

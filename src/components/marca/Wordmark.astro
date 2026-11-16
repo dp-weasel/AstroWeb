@@ -1,0 +1,28 @@
+---
+// "WEASEL" como en weasel_name_01.png, pero en texto: Russo One naranja con
+// contorno grueso carbón. Al ser texto escala sin pixelarse y se puede leer.
+interface Props {
+  /** Tamaño de letra, en cualquier unidad CSS. */
+  size?: string;
+  as?: "h1" | "span" | "p";
+}
+const { size = "4rem", as: Tag = "span" } = Astro.props;
+---
+
+<Tag class="wordmark" style={`--size: ${size}`}>WEASEL</Tag>
+
+<style>
+  .wordmark {
+    display: inline-block;
+    margin: 0;
+    font-family: var(--font-brand);
+    font-weight: 400;
+    font-size: var(--size);
+    line-height: 1;
+    letter-spacing: .01em;
+    color: var(--amber);
+    -webkit-text-stroke: calc(var(--size) * .1) var(--charcoal);
+    paint-order: stroke fill;
+    text-shadow: 0 calc(var(--size) * .06) 0 rgb(0 0 0 / .35);
+  }
+</style>

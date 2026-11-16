@@ -1,0 +1,77 @@
+---
+// El Armiño del pngTuber (RecursosCC/pngTuber): las 4 caras apiladas y se muestra
+// una según data-ojos / data-boca. Parpadea solo; mueve la boca mientras el
+// contenedor tenga data-hablando="true" (lo pone quien lo hace hablar).
+import { Image } from "astro:assets";
+import ojosAbiertos from "../../assets/brand/armino/ojos-abiertos.png";
+import hablando from "../../assets/brand/armino/hablando.png";
+import ojosCerrados from "../../assets/brand/armino/ojos-cerrados.png";
+import hablandoCerrados from "../../assets/brand/armino/hablando-ojos-cerrados.png";
+
+interface Props {
+  /** Ancho en CSS (la imagen es cuadrada). */
+  size?: string;
+  id?: string;
+  class?: string;
+}
+const { size = "16rem", id, class: extra } = Astro.props;
+const caras = [
+  { src: ojosAbiertos, cara: "abiertos-cerrada" },
+  { src: hablando, cara: "abiertos-abierta" },
+  { src: ojosCerrados, cara: "cerrados-cerrada" },
+  { src: hablandoCerrados, cara: "cerrados-abierta" },
+];
+---
+
+<div
+  class:list={["armino-vivo", extra]}
+  id={id}
+  style={`--size: ${size}`}
+  data-ojos="abiertos"
+  data-boca="cerrada"
+  role="img"
+  aria-label="El Armiño, la mascota de Weasel"
+>
+  {caras.map((c, i) => (
+    <Image
+      src={c.src}
+      alt=""
+      data-cara={c.cara}
+      width={512}
+      widths={[256, 512]}
+      sizes={size}
+      loading={i === 0 ? "eager" : "lazy"}
+    />
+  ))}
+</div>
+
+<style>
+  .armino-vivo { position: relative; width: var(--size); aspect-ratio: 1; }
+  img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; }
+  [data-ojos="abiertos"][data-boca="cerrada"] img[data-cara="abiertos-cerrada"],
+  [data-ojos="abiertos"][data-boca="abierta"] img[data-cara="abiertos-abierta"],
+  [data-ojos="cerrados"][data-boca="cerrada"] img[data-cara="cerrados-cerrada"],
+  [data-ojos="cerrados"][data-boca="abierta"] img[data-cara="cerrados-abierta"] { opacity: 1; }
+</style>
+
+<script>
+  const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  for (const el of document.querySelectorAll<HTMLElement>(".armino-vivo")) {
+    if (quieto) continue;
+
+    // Parpadeo: cierra los ojos 140 ms cada 2,5–5,5 s.
+    const parpadear = () => {
+      el.dataset.ojos = "cerrados";
+      setTimeout(() => (el.dataset.ojos = "abiertos"), 140);
+      setTimeout(parpadear, 2500 + Math.random() * 3000);
+    };
+    setTimeout(parpadear, 1500);
+
+    // Boca: alterna mientras data-hablando sea "true".
+    setInterval(() => {
+      const habla = el.dataset.hablando === "true";
+      el.dataset.boca = habla && el.dataset.boca === "cerrada" ? "abierta" : "cerrada";
+    }, 130);
+  }
+</script>

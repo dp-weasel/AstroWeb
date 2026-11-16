@@ -1,0 +1,61 @@
+// Variantes de portada con la marca de RecursosCC (/variantes-marca/).
+// Son propuestas para comparar: no se enlazan desde el sitio y no se indexan.
+// Los textos van en voseo (Weasel es argentino) y con mate, como en las escenas de OBS.
+
+export interface Variante {
+  slug: string;
+  nombre: string;
+  idea: string;
+  /** Recursos de RecursosCC que usa. */
+  recursos: string[];
+}
+
+export const variantes: Variante[] = [
+  {
+    slug: "logotipo",
+    nombre: "1 · Marca aplicada",
+    idea: "La portada de hoy, con la tipografía y los colores de las escenas. Cambia poco y se ve “de la marca”.",
+    recursos: ["Logo con círculo", "WEASEL en Russo One", "Títulos en Montserrat Black Italic"],
+  },
+  {
+    slug: "banner",
+    nombre: "2 · Banner diagonal",
+    idea: "El hero copia la composición del banner de Twitch: bloque naranja inclinado con el armiño y fondo oscuro con la marca de agua.",
+    recursos: ["Banner de Twitch (composición)", "Logo sin círculo", "Marca de agua gris"],
+  },
+  {
+    slug: "chillchat",
+    nombre: "3 · Chillchat",
+    idea: "La web se viste como la escena de charla: manchas óxido en los bordes, el Armiño en un marco de cámara con el anillo que gira y WEASEL montado sobre el borde.",
+    recursos: ["Textura de los fondos chillchat", "Marco de cámara redondeado", "Anillo de la escena Juego", "Armiño que parpadea"],
+  },
+  {
+    slug: "armino",
+    nombre: "4 · El Armiño te recibe",
+    idea: "El Armiño (pngTuber) es el anfitrión: parpadea, mueve la boca mientras escribe en su bocadillo y se asoma desde el borde al final.",
+    recursos: ["pngTuber (4 caras)", "Bocadillo crema con etiqueta naranja", "Fredoka y Lilita One"],
+  },
+  {
+    slug: "escena",
+    nombre: "5 · La escena",
+    idea: "La portada como un directo: ecualizador a 120 BPM, y EDM y el Armiño presentan cada sección charlando. Las preguntas frecuentes son un chat.",
+    recursos: ["EDM (poses con borde)", "pngTuber", "Ecualizador de Starting Soon", "Bocadillos de los dos personajes"],
+  },
+];
+
+/** Texto de presentación en voseo. */
+export const intro =
+  "¡Hola! Soy Weasel. Streameo Guild Wars 2 (y lo que pinte), aprendo sobre la marcha y siempre hay un mate cerca. Pasá, ponete cómodo.";
+
+export const valores = [
+  { emoji: "🎮", titulo: "Jugar sin presión", texto: "Aprendemos sobre la marcha. Equivocarse es parte del directo." },
+  { emoji: "💬", titulo: "Buenas charlas", texto: "El chat es parte del juego: preguntá, aconsejá, contá tu anécdota." },
+  { emoji: "🧉", titulo: "Crecer juntos", texto: "Un canal nuevo que crece con la gente que se suma. La pava está puesta." },
+];
+
+export const preguntas = [
+  { q: "¿Cuándo hay directo?", a: "Los avisos salen en X. Si me seguís en Twitch, te llega la notificación apenas arranco." },
+  { q: "Soy nuevo en Guild Wars 2, ¿puedo pasar igual?", a: "¡Obvio! El canal también aprende sobre la marcha. Preguntá lo que quieras en el chat." },
+  { q: "¿Para qué son los mensajes de GW2?", a: "Son mensajes listos para copiar y pegar en el chat del juego: LFG, explicaciones de jefes, etc." },
+  { q: "¿Jugás otras cosas?", a: "Guild Wars 2 es el principal, pero estoy abierto a probar otros juegos. ¿Alguna sugerencia?" },
+];
