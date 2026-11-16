@@ -1,5 +1,5 @@
 // Dibuja la tierlist en un canvas para descargarla o copiarla como imagen
-// (versión 3 en adelante). El estilo copia la miniatura de tierlist de YouTube.
+// El estilo copia la miniatura de tierlist de YouTube.
 import type { Estado } from "./estado";
 
 const ANCHO = 1280;

@@ -15,7 +15,7 @@ export type Armadura = "pesada" | "media" | "ligera";
 
 /** Expansión en la que salió cada especialización. "base" es la profesión sin élite. */
 export const expansiones = {
-  base: { nombre: "Base", corto: "Base" },
+  base: { nombre: "Profesiones base (core)", corto: "Core" },
   hot: { nombre: "Heart of Thorns", corto: "HoT" },
   pof: { nombre: "Path of Fire", corto: "PoF" },
   eod: { nombre: "End of Dragons", corto: "EoD" },

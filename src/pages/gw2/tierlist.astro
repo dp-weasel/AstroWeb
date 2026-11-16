@@ -1,0 +1,24 @@
+---
+// Tierlist de profesiones y especializaciones de élite de GW2.
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import TierList from "../../components/tierlist/TierList.astro";
+import Toast from "../../components/Toast.astro";
+---
+
+<BaseLayout title="Tierlist de GW2 · Weasel Shiro" description="Armá tu tierlist de profesiones y especializaciones de élite de Guild Wars 2, y compartila como imagen o enlace.">
+  <main>
+    <h1 class="titulo-marca">Tierlist de GW2</h1>
+    <p class="idea">
+      Ubicá las profesiones y élites en cada fila. EDM opina, vos explicás el porqué, y al final la descargás como imagen o
+      compartís el enlace. Se guarda sola en tu navegador.
+    </p>
+    <TierList />
+  </main>
+  <Toast />
+</BaseLayout>
+
+<style>
+  main { max-width: 80rem; margin: 0 auto; padding: 1rem 1rem 4rem; }
+  h1 { margin: 0 0 .25rem; font-size: clamp(1.6rem, 5vw, 2.4rem); }
+  .idea { margin: 0 0 1.5rem; max-width: 46rem; color: var(--muted); }
+</style>

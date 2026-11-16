@@ -77,12 +77,12 @@ punteada **EJEMPLO**, **IDEA** o **HISTORIA SUPUESTA**.
 
 # Tierlist de GW2 (`/gw2/tierlist/`)
 
-Cuatro versiones para comparar en `/gw2/tierlist/` (rama `feature/gw2-tierlist`). Cada una suma lo de la
-anterior; las opciones están en `src/pages/gw2/tierlist/[version].astro`.
+Se eligió la versión 4 (la del directo). Rama `feature/gw2-tierlist`.
 
-- [ ] Elegir la versión. Después: dejarla en `/gw2/tierlist/`, sacar el `noindex` y las pestañas de versiones,
-      y sumarla a "Herramientas" en la portada y a la cabecera.
+- [x] Dejarla en `/gw2/tierlist/` sin `noindex` ni pestañas de versiones, y sumarla a la cabecera.
+- [ ] Sumarla también a "Herramientas" en la portada (hoy solo está la tarjeta de Mensajes con EDM señalando).
 - [ ] Nombres de las élites: van en inglés (como se dicen en el chat). ¿Pasarlos al castellano del cliente?
 - [ ] Frases de EDM (`frasesEdm` en `src/data/tierlist.ts`) y plantillas: revisar o sumar.
-- [ ] Votación del chat (versión 4, IDEA): leer el chat de Twitch y mover la ficha a la fila ganadora.
+- [ ] Votación del chat (IDEA, oculta con `MOSTRAR_VOTACION` en `TierList.astro`): leer el chat de Twitch y
+      mover la ficha a la fila ganadora.
 - [ ] Íconos: `npm run gw2:iconos` los vuelve a importar desde `RecursosCC/GW2/Profesiones`.

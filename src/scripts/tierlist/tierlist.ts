@@ -1,23 +1,22 @@
-// Tierlist de GW2 en el navegador. Las opciones de cada versión llegan en
-// data-config (ver src/components/tierlist/TierList.astro).
+// Tierlist de GW2 en el navegador. Plantillas, frases e imágenes de EDM llegan
+// en data-config (ver src/components/tierlist/TierList.astro).
 import { coloresExtra, type Plantilla, type frasesEdm } from "../../data/tierlist";
 import { showToast } from "../toast";
 import { copyText } from "../clipboard";
 import { activarArrastre } from "./arrastre";
-import { cargar, guardar, aEnlace, deEnlace, type Estado } from "./estado";
+import { cargar, guardar, aEnlace, deEnlace, estadoInicial, type Estado } from "./estado";
 import { dibujar, aBlob } from "./exportar";
 
 interface Config {
-  opciones: { editarFilas?: boolean; filtros?: boolean; encabezado?: boolean; exportar?: boolean; directo?: boolean };
   plantillas: Plantilla[];
   frases: typeof frasesEdm;
-  edm: Record<"inicio" | "arriba" | "medio" | "abajo" | "pool", string> | null;
+  edm: Record<"inicio" | "arriba" | "medio" | "abajo" | "pool", string>;
 }
 
 const azar = <T>(xs: T[]) => xs[Math.floor(Math.random() * xs.length)];
 
 export function iniciarTierlist(raiz: HTMLElement): void {
-  const { opciones: op, plantillas, frases, edm } = JSON.parse(raiz.dataset.config!) as Config;
+  const { plantillas, frases, edm } = JSON.parse(raiz.dataset.config!) as Config;
   const $ = <T extends Element = HTMLElement>(sel: string) => raiz.querySelector<T>(sel);
   const contFilas = $("[data-filas]")!;
   const banco = $("[data-zona='banco']")!;
@@ -48,15 +47,13 @@ export function iniciarTierlist(raiz: HTMLElement): void {
         fila.className = "tl-fila";
         fila.dataset.fila = f.id;
         fila.style.setProperty("--color", f.color);
-        const etiqueta = document.createElement(op.editarFilas ? "button" : "div");
+        const etiqueta = document.createElement("button");
         const largo = f.nombre.length;
         etiqueta.className = `tl-etiqueta ${largo <= 2 ? "corta" : largo <= 6 && !f.nombre.includes(" ") ? "media" : ""}`;
         etiqueta.textContent = f.nombre;
-        if (op.editarFilas) {
-          (etiqueta as HTMLButtonElement).type = "button";
-          etiqueta.title = `Editar la fila ${f.nombre} (tecla ${i + 1})`;
-          etiqueta.addEventListener("click", () => editarFila(f.id));
-        }
+        etiqueta.type = "button";
+        etiqueta.title = `Editar la fila ${f.nombre} (tecla ${i + 1})`;
+        etiqueta.addEventListener("click", () => editarFila(f.id));
         const zona = document.createElement("div");
         zona.className = "tl-zona";
         zona.dataset.zona = f.id;
@@ -148,28 +145,18 @@ export function iniciarTierlist(raiz: HTMLElement): void {
   /* ---------- Filtros del banco ---------- */
 
   function filtrar(): void {
-    if (!op.filtros) return;
     const q = $<HTMLInputElement>("[data-buscar]")!.value.trim().toLowerCase();
-    const tipo = $<HTMLSelectElement>("[data-tipo]")!.value;
     const exps = new Set([...raiz.querySelectorAll<HTMLInputElement>("[data-exp]:checked")].map((i) => i.value));
     const armas = new Set([...raiz.querySelectorAll<HTMLInputElement>("[data-armadura]:checked")].map((i) => i.value));
     for (const f of banco.querySelectorAll<HTMLElement>(".ficha")) {
-      const base = f.dataset.exp === "base";
-      f.hidden = !(
-        (!q || f.dataset.buscar!.includes(q)) &&
-        (tipo === "todas" || (tipo === "base") === base) &&
-        (base || exps.has(f.dataset.exp!)) &&
-        armas.has(f.dataset.armadura!)
-      );
+      f.hidden = !((!q || f.dataset.buscar!.includes(q)) && exps.has(f.dataset.exp!) && armas.has(f.dataset.armadura!));
     }
     // Al volver al banco, una ficha filtrada no debe quedar oculta en una fila.
     contFilas.querySelectorAll<HTMLElement>(".ficha[hidden]").forEach((f) => (f.hidden = false));
   }
-  if (op.filtros) {
-    raiz.querySelector(".tl-filtros")!.addEventListener("input", filtrar);
-    const nombres = $<HTMLInputElement>("[data-nombres]")!;
-    nombres.addEventListener("change", () => raiz.classList.toggle("con-nombres", nombres.checked));
-  }
+  raiz.querySelector(".tl-filtros")!.addEventListener("input", filtrar);
+  const nombres = $<HTMLInputElement>("[data-nombres]")!;
+  nombres.addEventListener("change", () => raiz.classList.toggle("con-nombres", nombres.checked));
 
   /* ---------- Título y plantillas ---------- */
 
@@ -187,8 +174,8 @@ export function iniciarTierlist(raiz: HTMLElement): void {
     if (!p) return;
     const antes = structuredClone(estado);
     estado = { subtitulo: p.subtitulo, filas: p.tiers.map((t) => ({ ...t, fichas: [] })), notas: {} };
-    const tipo = $<HTMLSelectElement>("[data-tipo]");
-    if (tipo) tipo.value = p.soloBase ? "base" : "todas";
+    // "Para empezar" muestra solo las profesiones core; el resto, todas.
+    raiz.querySelectorAll<HTMLInputElement>("[data-exp]").forEach((c) => (c.checked = !p.soloBase || c.value === "base"));
     pintar();
     guardar(estado);
     deshacible(`Plantilla «${p.nombre}» aplicada`, antes);
@@ -256,13 +243,48 @@ export function iniciarTierlist(raiz: HTMLElement): void {
     editarFila(id);
   });
 
-  $("[data-accion='reiniciar']")!.addEventListener("click", () => {
+  // Vaciar: todas las fichas vuelven al banco y las filas quedan como están.
+  $("[data-accion='vaciar']")!.addEventListener("click", () => {
     const antes = structuredClone(estado);
     estado.filas.forEach((f) => (f.fichas = []));
     estado.notas = {};
+    seleccionar(null);
     pintar();
     guardar(estado);
     deshacible("Lista vaciada", antes);
+  });
+
+  // Restablecer: como la primera vez, con las filas S a D y el tema Balance.
+  $("[data-accion='restablecer']")!.addEventListener("click", () => {
+    const antes = structuredClone(estado);
+    estado = estadoInicial();
+    seleccionar(null);
+    pintar();
+    guardar(estado);
+    deshacible("Lista restablecida", antes);
+  });
+
+  // Mostrar u ocultar a EDM. Es una preferencia de quien mira, no parte de la lista.
+  const botonEdm = $<HTMLButtonElement>("[data-accion='edm']")!;
+  const CLAVE_EDM = "gw2-tierlist-edm";
+  const mostrarEdm = (si: boolean) => {
+    raiz.classList.toggle("sin-edm", !si);
+    botonEdm.setAttribute("aria-pressed", String(si));
+    botonEdm.textContent = si ? "🙈 Ocultar a EDM" : "👀 Mostrar a EDM";
+  };
+  try {
+    mostrarEdm(localStorage.getItem(CLAVE_EDM) !== "no");
+  } catch {
+    mostrarEdm(true);
+  }
+  botonEdm.addEventListener("click", () => {
+    const si = raiz.classList.contains("sin-edm");
+    mostrarEdm(si);
+    try {
+      localStorage.setItem(CLAVE_EDM, si ? "si" : "no");
+    } catch {
+      // Sin almacenamiento: vale solo mientras la página esté abierta.
+    }
   });
 
   /* ---------- Imagen y enlace ---------- */
@@ -314,7 +336,7 @@ export function iniciarTierlist(raiz: HTMLElement): void {
   const edmCaja = $(".tl-edm");
 
   function reaccionar(ficha: HTMLElement): void {
-    if (!edm || !edmImg || !edmTexto || !edmCaja) return;
+    if (!edmImg || !edmTexto || !edmCaja || raiz.classList.contains("sin-edm")) return;
     const zona = ficha.closest<HTMLElement>("[data-zona]")!.dataset.zona!;
     const i = estado.filas.findIndex((f) => f.id === zona);
     const tipo = i < 0 ? "pool" : i === 0 ? "arriba" : i === estado.filas.length - 1 ? "abajo" : "medio";
@@ -326,18 +348,21 @@ export function iniciarTierlist(raiz: HTMLElement): void {
     edmCaja.classList.add("reacciona");
   }
 
-  const panelNotas = $("[data-notas]");
-  const nota = $<HTMLTextAreaElement>("[data-nota]");
+  const nota = $<HTMLTextAreaElement>("[data-nota-campo]");
 
   /** Muestra la nota de la ficha elegida, para editarla y en el escenario. */
   function mostrarNota(): void {
-    if (!panelNotas || !nota) return;
+    if (!nota) return;
     const f = seleccionada && seleccionada.parentElement !== banco ? seleccionada : null;
-    panelNotas.hidden = !f;
+    nota.disabled = !f;
     const escena = $("[data-nota-escena]")!;
     const texto = f ? estado.notas[f.dataset.id!] ?? "" : "";
     escena.hidden = !texto;
-    if (!f) return;
+    if (!f) {
+      $("[data-nota-etiqueta]")!.textContent = "Nota";
+      nota.value = "";
+      return;
+    }
     const fila = estado.filas.find((x) => x.fichas.includes(f.dataset.id!))?.nombre ?? "";
     $("[data-nota-etiqueta]")!.textContent = `¿Por qué ${f.dataset.nombre} en ${fila}?`;
     if (document.activeElement !== nota) nota.value = texto;

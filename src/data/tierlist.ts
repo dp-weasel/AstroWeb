@@ -1,5 +1,5 @@
-// Configuración de la tierlist de GW2 (/gw2/tierlist/): filas, plantillas, frases
-// de EDM y las versiones que se comparan. Sin dependencias de Astro: lo usa también
+// Configuración de la tierlist de GW2 (/gw2/tierlist/): filas, plantillas y
+// frases de EDM. Sin dependencias de Astro: lo usa también
 // el navegador (src/scripts/tierlist/).
 
 export interface Tier {
@@ -81,7 +81,7 @@ export const plantillas: Plantilla[] = [
 ];
 
 /**
- * Lo que dice EDM al ubicar una ficha (versión 4). {n} es la especialización y {t}
+ * Lo que dice EDM al ubicar una ficha. {n} es la especialización y {t}
  * la fila. "arriba" es la primera fila, "abajo" la última y "medio" el resto.
  */
 export const frasesEdm = {
@@ -102,37 +102,3 @@ export const frasesEdm = {
   ],
   pool: ["¿Te arrepentiste de {n}? Pasa.", "{n} vuelve al banco. Pensalo bien.", "Bueno, {n} queda sin lugar por ahora."],
 };
-
-export interface Version {
-  slug: string;
-  nombre: string;
-  idea: string;
-  suma: string[];
-}
-
-export const versiones: Version[] = [
-  {
-    slug: "simple",
-    nombre: "1 · Simple",
-    idea: "Lo justo: filas S a D y las 45 fichas. Arrastrás o tocás una ficha y después la fila.",
-    suma: ["Arrastrar y soltar (también en el celular)", "Tocar ficha y fila", "Atajos de teclado", "Se guarda en el navegador"],
-  },
-  {
-    slug: "configurable",
-    nombre: "2 · Configurable",
-    idea: "La simple, más filas editables y filtros para armar la lista que quieras.",
-    suma: ["Filas con nombre y color propios", "Agregar, mover y borrar filas", "Filtros por tipo, expansión y armadura", "Buscador", "Nombres y expansión en las fichas"],
-  },
-  {
-    slug: "compartir",
-    nombre: "3 · Para compartir",
-    idea: "Con el look de la miniatura de YouTube, plantillas temáticas y salida como imagen o enlace.",
-    suma: ["Título TIER LIST con etiqueta", "Plantillas: Balance, Para empezar, Diversión, Fashion Wars…", "Descargar o copiar como imagen", "Enlace que guarda la lista"],
-  },
-  {
-    slug: "directo",
-    nombre: "4 · La del directo",
-    idea: "Pensada para usar en stream: escenario 16:9, EDM opina de cada ficha y notas para explicar el porqué.",
-    suma: ["Escenario 16:9 a pantalla completa", "EDM reacciona a cada ficha", "Notas por ficha", "Lugar para la votación del chat"],
-  },
-];

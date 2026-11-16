@@ -1,6 +1,6 @@
 ---
-// Tierlist de profesiones de GW2. Un solo componente para las cuatro versiones:
-// cada opción suma una capa (ver src/data/tierlist.ts → versiones).
+// Tierlist de profesiones de GW2: escenario 16:9 con EDM que opina, notas por
+// ficha, filas editables, plantillas, filtros e imagen o enlace para compartir.
 // Las filas se arman en el navegador (src/scripts/tierlist/); las fichas se
 // renderizan acá en el banco y el script las mueve a su fila.
 import { getImage } from "astro:assets";
@@ -14,22 +14,8 @@ import edmTriste from "../../assets/brand/edm/triste.png";
 import Bocadillo from "../marca/Bocadillo.astro";
 import Ejemplo from "../secciones/Ejemplo.astro";
 
-export interface Opciones {
-  /** Filas con nombre y color editables, y agregar o borrar filas. */
-  editarFilas?: boolean;
-  /** Buscador y filtros del banco. */
-  filtros?: boolean;
-  /** Título TIER LIST con etiqueta editable y plantillas temáticas. */
-  encabezado?: boolean;
-  /** Descargar o copiar como imagen y copiar enlace. */
-  exportar?: boolean;
-  /** Escenario 16:9 con EDM que reacciona, notas por ficha y pantalla completa. */
-  directo?: boolean;
-}
-interface Props {
-  opciones: Opciones;
-}
-const { opciones: op } = Astro.props;
+/** Votación del chat: es una idea todavía sin hacer, así que no se muestra. */
+const MOSTRAR_VOTACION = false;
 
 const fichas = await Promise.all(
   especializaciones.map(async (e) => ({
@@ -39,97 +25,87 @@ const fichas = await Promise.all(
   })),
 );
 
-const edm = op.directo
-  ? {
-      inicio: (await getImage({ src: edmSaludando, width: 320 })).src,
-      arriba: (await getImage({ src: edmCheer, width: 320 })).src,
-      medio: (await getImage({ src: edmShrug, width: 320 })).src,
-      abajo: (await getImage({ src: edmHiss, width: 320 })).src,
-      pool: (await getImage({ src: edmTriste, width: 320 })).src,
-    }
-  : null;
+const pose = async (img: ImageMetadata) => (await getImage({ src: img, height: 320 })).src;
+const edm = {
+  inicio: await pose(edmSaludando),
+  arriba: await pose(edmCheer),
+  medio: await pose(edmShrug),
+  abajo: await pose(edmHiss),
+  pool: await pose(edmTriste),
+};
 
-const config = { opciones: op, plantillas, frases: frasesEdm, edm };
+const config = { plantillas, frases: frasesEdm, edm };
 ---
 
-<div class:list={["tierlist", { directo: op.directo, "con-encabezado": op.encabezado }]} data-tierlist data-config={JSON.stringify(config)}>
-  {(op.encabezado || op.exportar || op.directo) && (
-    <div class="tl-barra" role="toolbar" aria-label="Acciones de la tierlist">
-      {op.encabezado && (
-        <label class="campo">
-          <span>Plantilla</span>
-          <select data-plantilla>
-            <option value="">Elegir…</option>
-            {plantillas.map((p) => <option value={p.id}>{p.nombre}</option>)}
-          </select>
-        </label>
-      )}
-      {op.exportar && <button type="button" class="btn" data-accion="descargar">⬇ Descargar imagen</button>}
-      {op.exportar && <button type="button" class="btn" data-accion="copiar-imagen" hidden>🖼 Copiar imagen</button>}
-      {op.exportar && <button type="button" class="btn" data-accion="enlace">🔗 Copiar enlace</button>}
-      {op.directo && <button type="button" class="btn" data-accion="pantalla">⛶ Pantalla completa</button>}
+<div class="tierlist" data-tierlist data-config={JSON.stringify(config)}>
+  <div class="tl-barra" role="toolbar" aria-label="Acciones de la tierlist">
+    <label class="campo">
+      <span>Plantilla</span>
+      <select data-plantilla>
+        <option value="">Elegir…</option>
+        {plantillas.map((p) => <option value={p.id}>{p.nombre}</option>)}
+      </select>
+    </label>
+    <div class="grupo">
+      <button type="button" class="btn" data-accion="descargar">⬇ Descargar imagen</button>
+      <button type="button" class="btn" data-accion="copiar-imagen" hidden>🖼 Copiar imagen</button>
+      <button type="button" class="btn" data-accion="enlace">🔗 Copiar enlace</button>
+      <button type="button" class="btn" data-accion="pantalla">⛶ Pantalla completa</button>
     </div>
-  )}
+    <div class="grupo derecha">
+      <button type="button" class="btn" data-accion="edm" aria-pressed="true">🙈 Ocultar a EDM</button>
+      <button type="button" class="btn" data-accion="vaciar" title="Devuelve todas las fichas al banco; las filas quedan como están">↩ Vaciar lista</button>
+      <button type="button" class="btn" data-accion="restablecer" title="Vuelve a las filas S a D, sin fichas ni notas">⟲ Restablecer</button>
+    </div>
+  </div>
 
   <div class="tl-escenario">
     <div class="tl-tablero">
-      {op.encabezado && !op.directo && (
-        <div class="tl-titulo">
-          <p class="titulo-marca"><span>TIER</span> <span class="list">LIST</span></p>
-          <input class="etiqueta-tema titulo-marca" data-subtitulo aria-label="Tema de la tierlist" maxlength="28" />
-        </div>
-      )}
       <div class="tl-filas" data-filas></div>
-      {op.editarFilas && <button type="button" class="agregar-fila" data-accion="agregar-fila">+ Agregar fila</button>}
+      <button type="button" class="agregar-fila" data-accion="agregar-fila">+ Agregar fila</button>
     </div>
 
-    {op.directo && edm && (
-      <aside class="tl-lado">
-        <p class="titulo-marca tl-grande"><span>TIER</span><br /><span class="list">LIST</span></p>
+    <!-- El lado no estira el escenario: su contenido va en una capa absoluta
+         y la foto de EDM ocupa solo el espacio que sobra. -->
+    <aside class="tl-lado">
+      <div class="tl-lado-capa">
+        <p class="titulo-marca tl-grande"><span>TIER</span> <span class="list">LIST</span></p>
         <input class="etiqueta-tema titulo-marca" data-subtitulo aria-label="Tema de la tierlist" maxlength="28" />
         <div class="tl-nota-escena" data-nota-escena hidden>
           <strong data-nota-titulo></strong>
           <p data-nota-texto></p>
         </div>
-        <div class="tl-edm" aria-live="polite">
+        <div class="tl-edm" data-edm aria-live="polite">
           <Bocadillo quien="edm" cola="abajo" class="tl-dice"><p data-edm-texto>¡Arrastrá una ficha y te digo qué opino!</p></Bocadillo>
-          <img data-edm-img src={edm.inicio} alt="EDM" width="160" />
+          <div class="tl-edm-foto"><img data-edm-img src={edm.inicio} alt="EDM" /></div>
         </div>
-      </aside>
-    )}
+      </div>
+    </aside>
   </div>
 
-  {op.directo && (
-    <div class="tl-notas" data-notas hidden>
-      <label>
-        <span data-nota-etiqueta>Nota</span>
-        <textarea data-nota rows="2" maxlength="180" placeholder="¿Por qué está ahí? Se muestra en el escenario."></textarea>
-      </label>
-    </div>
-  )}
+  <!-- Siempre visible (deshabilitado sin ficha elegida) para que el banco no salte. -->
+  <div class="tl-notas">
+    <label>
+      <span data-nota-etiqueta>Nota</span>
+      <textarea data-nota-campo rows="1" maxlength="180" disabled placeholder="Tocá una ficha ubicada para escribir por qué está ahí. Se muestra en el escenario."></textarea>
+    </label>
+  </div>
 
   <section class="tl-banco" aria-label="Fichas sin ubicar">
-    {op.filtros && (
-      <div class="tl-filtros">
-        <input type="search" data-buscar placeholder="Buscar (p. ej. ladrón, specter)…" aria-label="Buscar especialización" />
-        <select data-tipo aria-label="Tipo">
-          <option value="todas">Todas</option>
-          <option value="base">Solo profesiones base</option>
-          <option value="elites">Solo élites</option>
-        </select>
-        <fieldset class="chips" aria-label="Expansión">
-          {Object.entries(expansiones).filter(([id]) => id !== "base").map(([id, x]) => (
-            <label title={x.nombre}><input type="checkbox" data-exp value={id} checked /> {x.corto}</label>
-          ))}
-        </fieldset>
-        <fieldset class="chips" aria-label="Armadura">
-          {["pesada", "media", "ligera"].map((a) => (
-            <label><input type="checkbox" data-armadura value={a} checked /> {a[0].toUpperCase() + a.slice(1)}</label>
-          ))}
-        </fieldset>
-        <label class="interruptor"><input type="checkbox" data-nombres /> Nombres</label>
-      </div>
-    )}
+    <div class="tl-filtros">
+      <input type="search" data-buscar placeholder="Buscar (p. ej. ladrón, specter)…" aria-label="Buscar especialización" />
+      <fieldset class="chips" aria-label="Expansión">
+        {Object.entries(expansiones).map(([id, x]) => (
+          <label title={x.nombre}><input type="checkbox" data-exp value={id} checked /> {x.corto}</label>
+        ))}
+      </fieldset>
+      <fieldset class="chips" aria-label="Armadura">
+        {["pesada", "media", "ligera"].map((a) => (
+          <label><input type="checkbox" data-armadura value={a} checked /> {a[0].toUpperCase() + a.slice(1)}</label>
+        ))}
+      </fieldset>
+      <label class="interruptor"><input type="checkbox" data-nombres /> Nombres</label>
+    </div>
     <div class="tl-zona banco" data-zona="banco">
       {fichas.map((f) => (
         <button
@@ -150,14 +126,13 @@ const config = { opciones: op, plantillas, frases: frasesEdm, edm };
         </button>
       ))}
     </div>
-    <p class="ayuda" data-ayuda>
+    <p class="ayuda">
       Arrastrá cada ficha a su fila, o tocá una ficha y después la fila. Con el teclado: <kbd>1</kbd>–<kbd>9</kbd> la mandan a
-      esa fila, <kbd>0</kbd> la devuelve y <kbd>←</kbd> <kbd>→</kbd> la mueven.
-      <button type="button" class="enlace" data-accion="reiniciar">Vaciar la lista</button>
+      esa fila, <kbd>0</kbd> la devuelve y <kbd>←</kbd> <kbd>→</kbd> la mueven. Tocá una ficha ubicada para escribir por qué está ahí.
     </p>
   </section>
 
-  {op.directo && (
+  {MOSTRAR_VOTACION && (
     <aside class="tl-votacion">
       <Ejemplo texto="Idea" />
       <h3>Votación del chat</h3>
@@ -165,28 +140,23 @@ const config = { opciones: op, plantillas, frases: frasesEdm, edm };
         El chat escribe <code>!tier S</code> mientras una ficha está elegida y acá se ve el conteo en vivo. Al cerrar la
         votación, la ficha va a la fila que ganó. Se puede leer el chat de Twitch sin servidor ni inicio de sesión.
       </p>
-      <div class="barras" aria-hidden="true">
-        <span style="--p: 46%">S</span><span style="--p: 30%">A</span><span style="--p: 14%">B</span><span style="--p: 6%">C</span><span style="--p: 4%">D</span>
-      </div>
     </aside>
   )}
 
-  {op.editarFilas && (
-    <dialog class="tl-dialogo" data-dialogo>
-      <form method="dialog">
-        <h3>Editar fila</h3>
-        <label>Nombre <input data-fila-nombre maxlength="24" required /></label>
-        <label>Color <input type="color" data-fila-color /></label>
-        <div class="acciones">
-          <button type="button" class="btn" data-fila="subir">↑ Subir</button>
-          <button type="button" class="btn" data-fila="bajar">↓ Bajar</button>
-          <button type="button" class="btn" data-fila="vaciar">Vaciar</button>
-          <button type="button" class="btn peligro" data-fila="borrar">Borrar fila</button>
-        </div>
-        <button class="btn primario" value="ok">Listo</button>
-      </form>
-    </dialog>
-  )}
+  <dialog class="tl-dialogo" data-dialogo>
+    <form method="dialog">
+      <h3>Editar fila</h3>
+      <label>Nombre <input data-fila-nombre maxlength="24" required /></label>
+      <label>Color <input type="color" data-fila-color /></label>
+      <div class="acciones">
+        <button type="button" class="btn" data-fila="subir">↑ Subir</button>
+        <button type="button" class="btn" data-fila="bajar">↓ Bajar</button>
+        <button type="button" class="btn" data-fila="vaciar">Vaciar</button>
+        <button type="button" class="btn peligro" data-fila="borrar">Borrar fila</button>
+      </div>
+      <button class="btn primario" value="ok">Listo</button>
+    </form>
+  </dialog>
 </div>
 
 <style>
@@ -195,6 +165,8 @@ const config = { opciones: op, plantillas, frases: frasesEdm, edm };
 
   /* ---------- Barra de acciones ---------- */
   .tl-barra { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-bottom: 1rem; }
+  .grupo { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .grupo.derecha { margin-left: auto; }
   .campo { display: inline-flex; align-items: center; gap: .5rem; font-weight: 700; font-size: .9rem; }
   select, input[type="search"] {
     height: 2.5rem; padding: 0 .75rem; border: 1px solid var(--border); border-radius: .6rem;
@@ -208,59 +180,86 @@ const config = { opciones: op, plantillas, frases: frasesEdm, edm };
   .btn.primario { background: var(--amber); border-color: var(--amber); color: var(--charcoal); }
   .btn.peligro { color: #ff6b6b; }
 
-  /* ---------- Título como en la miniatura ---------- */
-  .tl-titulo { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; margin-bottom: 1rem; }
-  .tl-titulo p { margin: 0; font-size: clamp(2.2rem, 7vw, 3.5rem); line-height: 1; }
+  /* ---------- Escenario 16:9 (siempre oscuro, como en el directo) ---------- */
+  .tl-escenario {
+    display: grid; grid-template-columns: 1fr minmax(12rem, 26%); gap: 1.5rem;
+    min-height: 30rem; padding: clamp(1rem, 2.5vw, 2rem); border-radius: 1rem;
+    background: radial-gradient(circle at 80% 20%, #333, var(--charcoal) 60%); color: var(--snow);
+    --surface: #2e2e2e; --text: var(--snow); --border: #444;
+  }
+  .tierlist.sin-edm .tl-escenario { min-height: 0; }
+
+  .tl-lado { position: relative; }
+  .tl-lado-capa { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; gap: .75rem; text-align: center; }
+  .tl-grande { margin: 0; font-size: clamp(2rem, 4vw, 3.6rem); line-height: .9; }
+  .tl-grande span { display: block; }
   .titulo-marca span { color: var(--snow); -webkit-text-stroke: .08em #111; paint-order: stroke fill; }
   .titulo-marca .list { color: var(--amber); }
-  :global(:root[data-theme="light"]) .tierlist:not(.directo) .titulo-marca span { -webkit-text-stroke: 0; }
-  :global(:root[data-theme="light"]) .tierlist:not(.directo) .titulo-marca span:not(.list) { color: var(--charcoal); }
   .etiqueta-tema {
-    width: auto; field-sizing: content; min-width: 6ch; max-width: 100%;
+    field-sizing: content; min-width: 6ch; max-width: 100%;
     padding: .35rem .9rem; border: 0; border-radius: .45rem;
-    background: var(--amber); color: var(--charcoal); font-size: 1.25rem;
+    background: var(--amber); color: var(--charcoal); font-size: 1.2rem; text-align: center;
   }
   .etiqueta-tema:focus-visible { outline: 3px solid var(--snow); outline-offset: 2px; }
+  .tl-nota-escena { align-self: stretch; padding: .6rem .9rem; border-left: 4px solid var(--amber); border-radius: .5rem; background: rgb(255 255 255 / .06); text-align: left; }
+  .tl-nota-escena strong { font-family: var(--font-label); font-weight: 400; color: var(--amber); }
+  .tl-nota-escena p { margin: .2rem 0 0; font-size: .92rem; }
+
+  /* EDM ocupa lo que sobra del lado: el bocadillo tiene alto fijo (tres
+     líneas) y la foto se achica para entrar, así nada empuja al tablero. */
+  .tl-edm { flex: 1; min-height: 0; width: 100%; display: flex; flex-direction: column; align-items: center; gap: .6rem; }
+  .tl-edm :global(.bocadillo) { width: 100%; height: 6.2rem; display: flex; align-items: center; font-size: .9rem; line-height: 1.3; }
+  .tl-edm-foto { flex: 1; min-height: 4rem; width: 100%; display: flex; justify-content: center; }
+  .tl-edm-foto img { height: 100%; max-height: 16rem; width: 100%; object-fit: contain; object-position: bottom; }
+  .tl-edm.reacciona img { animation: salto .4s; }
+  @keyframes salto { 40% { transform: translateY(-.6rem) rotate(-3deg); } }
+  .tierlist.sin-edm .tl-edm { display: none; }
 
   /* ---------- Filas ---------- */
   .tl-filas { display: grid; gap: .4rem; }
   .tl-filas :global(.tl-fila) { display: grid; grid-template-columns: calc(var(--icono) * 1.6) 1fr; gap: .4rem; }
   .tl-filas :global(.tl-etiqueta) {
     display: grid; place-items: center; min-height: calc(var(--icono) + .8rem); padding: .3rem;
-    border: 0; border-radius: .7rem; background: var(--color); color: var(--charcoal);
+    border: 0; border-radius: .7rem; background: var(--color); color: var(--charcoal); cursor: pointer;
     font-family: var(--font-brand); font-size: clamp(.85rem, 2.4vw, 1.2rem); line-height: 1.1;
     text-align: center; hyphens: auto; overflow-wrap: break-word;
   }
   .tl-filas :global(.tl-etiqueta.corta) { font-size: clamp(1.8rem, 5vw, 2.6rem); }
   .tl-filas :global(.tl-etiqueta.media) { font-size: clamp(1.1rem, 3.2vw, 1.6rem); }
-  .tl-filas :global(button.tl-etiqueta) { cursor: pointer; }
-  .tl-filas :global(button.tl-etiqueta:hover) { filter: brightness(1.1); }
+  .tl-filas :global(.tl-etiqueta:hover) { filter: brightness(1.1); }
   .tierlist :global(.tl-zona) {
     display: flex; flex-wrap: wrap; align-content: flex-start; gap: .25rem; padding: .4rem;
-    min-height: calc(var(--icono) + .8rem); border-radius: .7rem;
+    min-height: calc(var(--icono) + .8rem + 4px); border-radius: .7rem;
     background: var(--surface); border: 2px dashed transparent;
   }
-  .tierlist :global(.encima), .tierlist :global(.tl-fila.destino .tl-zona) { border-color: var(--amber); }
+  .tierlist :global(.encima) { border-color: var(--amber); }
   .tierlist.hay-seleccion :global(.tl-zona) { border-color: var(--border); cursor: pointer; }
-  .agregar-fila { width: 100%; margin-top: .4rem; padding: .6rem; border: 2px dashed var(--border); border-radius: .7rem; background: none; color: var(--muted); font: inherit; font-weight: 700; cursor: pointer; }
-  .agregar-fila:hover { color: var(--accent); border-color: var(--accent); }
+  .agregar-fila { width: 100%; margin-top: .4rem; padding: .6rem; border: 2px dashed var(--border); border-radius: .7rem; background: none; color: #9a9a9a; font: inherit; font-weight: 700; cursor: pointer; }
+  .agregar-fila:hover { color: var(--amber); border-color: var(--amber); }
 
   /* ---------- Fichas ---------- */
   .ficha {
-    position: relative; display: grid; justify-items: center; width: var(--icono); padding: 0;
+    position: relative; display: grid; justify-items: center; min-width: var(--icono); padding: 0;
     border: 0; border-radius: .6rem; background: none; color: var(--text);
     cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none;
   }
   .ficha img { display: block; width: var(--icono); height: var(--icono); filter: drop-shadow(0 .15rem .2rem rgb(0 0 0 / .45)); pointer-events: none; }
+  /* Sin nombres: una rayita con el color de la profesión. */
   .ficha::after { content: ""; position: absolute; left: 25%; right: 25%; bottom: -.1rem; height: .2rem; border-radius: 1rem; background: var(--prof); opacity: .8; }
   .ficha:hover img { transform: scale(1.06); }
   .ficha:focus-visible, .ficha[aria-pressed="true"] { outline: 3px solid var(--amber); outline-offset: 1px; }
   .ficha[aria-pressed="true"] img { transform: scale(1.08); }
   .ficha .nombre, .ficha .exp { display: none; }
-  .tierlist.con-nombres .ficha .nombre { display: block; max-width: 100%; margin-top: .1rem; font-size: .6rem; font-weight: 700; letter-spacing: -.02em; line-height: 1.1; text-align: center; hyphens: auto; }
+  /* Con nombres: sin rayita, el nombre va en una etiqueta del color de la profesión. */
+  .tierlist.con-nombres .ficha::after { display: none; }
+  .tierlist.con-nombres .ficha .nombre {
+    display: block; margin-top: .15rem; padding: .05rem .4rem; border-radius: .35rem;
+    background: var(--prof); color: var(--charcoal);
+    font-size: .66rem; font-weight: 800; line-height: 1.25; white-space: nowrap;
+  }
   .tierlist.con-nombres .ficha .exp {
     display: block; position: absolute; top: 0; right: 0; padding: 0 .25rem; border-radius: .3rem;
-    background: rgb(0 0 0 / .7); color: #fff; font-family: var(--font-label); font-size: .65rem;
+    background: rgb(0 0 0 / .75); color: #fff; font-family: var(--font-label); font-size: .65rem;
   }
   .ficha[data-nota]::before { content: "✎"; position: absolute; z-index: 1; top: -.2rem; left: -.1rem; display: grid; place-items: center; width: 1.2rem; height: 1.2rem; border-radius: 50%; background: var(--amber); color: var(--charcoal); font-size: .7rem; }
   .ficha.arrastrando { opacity: .25; }
@@ -271,15 +270,19 @@ const config = { opciones: op, plantillas, frases: frasesEdm, edm };
   :global(.ficha-copia img) { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 .6rem .6rem rgb(0 0 0 / .5)); }
   :global(.ficha-copia span) { display: none; }
   :global(.ficha-copia::after) { display: none; }
-  .tierlist.con-arrastre, .tierlist.con-arrastre * { cursor: grabbing !important; }
+  .tierlist.con-arrastre, .tierlist.con-arrastre * { cursor: grabbing !important; user-select: none; }
 
-  /* ---------- Banco ---------- */
+  /* ---------- Notas y banco ---------- */
+  .tl-notas { margin-top: 1rem; }
+  .tl-notas label { display: grid; gap: .35rem; font-weight: 700; }
+  .tl-notas textarea:disabled { opacity: .6; resize: none; }
+  .tl-notas textarea { padding: .6rem .75rem; border: 1px solid var(--border); border-radius: .6rem; background: var(--surface); color: var(--text); font: inherit; resize: vertical; }
   .tl-banco { margin-top: 1.5rem; }
   .tierlist .banco { background: none; border-color: var(--border); }
   .banco:empty::before { content: "¡Ubicaste todas! 🎉"; margin: auto; color: var(--muted); font-weight: 700; }
   .tl-filtros { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-bottom: .75rem; }
   .tl-filtros input[type="search"] { flex: 1 1 14rem; }
-  .chips { display: flex; gap: .25rem; margin: 0; padding: 0; border: 0; }
+  .chips { display: flex; flex-wrap: wrap; gap: .25rem; margin: 0; padding: 0; border: 0; }
   .chips label, .interruptor {
     display: inline-flex; align-items: center; gap: .3rem; padding: .35rem .65rem;
     border: 1px solid var(--border); border-radius: 999px; font-size: .85rem; font-weight: 700; cursor: pointer;
@@ -288,7 +291,10 @@ const config = { opciones: op, plantillas, frases: frasesEdm, edm };
   .chips input, .interruptor input { accent-color: var(--amber); }
   .ayuda { margin: .75rem 0 0; color: var(--muted); font-size: .85rem; }
   kbd { padding: 0 .3rem; border: 1px solid var(--border); border-radius: .25rem; font-size: .8rem; }
-  .enlace { margin-left: .5rem; padding: 0; border: 0; background: none; color: var(--accent); font: inherit; text-decoration: underline; cursor: pointer; }
+
+  .tl-votacion { margin-top: 1.5rem; padding: 1rem 1.25rem; border: 2px dashed var(--magenta); border-radius: 1rem; }
+  .tl-votacion h3 { margin: .5rem 0 .25rem; }
+  .tl-votacion p { margin: 0; color: var(--muted); font-size: .92rem; }
 
   /* ---------- Diálogo de fila ---------- */
   .tl-dialogo { border: 1px solid var(--border); border-radius: 1rem; background: var(--surface); color: var(--text); padding: 1.25rem; width: min(22rem, calc(100vw - 2rem)); }
@@ -300,45 +306,21 @@ const config = { opciones: op, plantillas, frases: frasesEdm, edm };
   .tl-dialogo input[type="color"] { padding: .2rem; width: 5rem; }
   .acciones { display: flex; flex-wrap: wrap; gap: .4rem; }
 
-  /* ---------- Versión del directo: escenario 16:9 ---------- */
-  .directo .tl-escenario {
-    display: grid; grid-template-columns: 1fr minmax(12rem, 28%); gap: 1.5rem; align-items: start;
-    aspect-ratio: 16 / 9; padding: clamp(1rem, 2.5vw, 2rem); border-radius: 1rem;
-    background: radial-gradient(circle at 80% 20%, #333, var(--charcoal) 60%); color: var(--snow);
-    --surface: #2e2e2e; --text: var(--snow); --border: #444;
-  }
-  .tl-lado { display: grid; justify-items: center; gap: .75rem; text-align: center; }
-  .tl-grande { margin: 0; font-size: clamp(2.2rem, 5vw, 4.5rem); line-height: .9; }
-  .tl-lado .etiqueta-tema { text-align: center; }
-  .tl-edm { display: grid; justify-items: center; gap: .5rem; }
-  .tl-edm img { width: clamp(6rem, 12vw, 10rem); height: auto; transition: transform .25s; }
-  .tl-edm.reacciona img { animation: salto .4s; }
-  @keyframes salto { 40% { transform: translateY(-.6rem) rotate(-3deg); } }
-  .tl-edm :global(.bocadillo) { font-size: .95rem; }
-  .tl-nota-escena { padding: .75rem 1rem; border-left: 4px solid var(--amber); border-radius: .5rem; background: rgb(255 255 255 / .06); text-align: left; }
-  .tl-nota-escena strong { font-family: var(--font-label); color: var(--amber); }
-  .tl-nota-escena p { margin: .25rem 0 0; font-size: .95rem; }
-  .tl-notas { margin-top: 1rem; }
-  .tl-notas label { display: grid; gap: .35rem; font-weight: 700; }
-  .tl-notas textarea { padding: .6rem .75rem; border: 1px solid var(--border); border-radius: .6rem; background: var(--surface); color: var(--text); font: inherit; resize: vertical; }
-
-  .tl-votacion { margin-top: 1.5rem; padding: 1rem 1.25rem; border: 2px dashed var(--magenta); border-radius: 1rem; }
-  .tl-votacion h3 { margin: .5rem 0 .25rem; }
-  .tl-votacion p { margin: 0 0 .75rem; color: var(--muted); font-size: .92rem; }
-  .barras { display: grid; gap: .25rem; max-width: 24rem; }
-  .barras span { width: max(var(--p), 2rem); padding: .1rem .5rem; border-radius: .3rem; background: var(--magenta); color: #fff; font-family: var(--font-label); opacity: .6; }
-
   /* Pantalla completa: escenario arriba y banco abajo, para capturar en OBS. */
   .tierlist:fullscreen { overflow: auto; padding: 1.5rem; background: var(--charcoal); --icono: 4.6rem; }
-  .tierlist:fullscreen .tl-barra, .tierlist:fullscreen .ayuda, .tierlist:fullscreen .tl-votacion, .tierlist:fullscreen .tl-filtros { display: none; }
-  .tierlist:fullscreen .tl-escenario { max-height: calc(100vh - 3rem - var(--icono) * 2); aspect-ratio: auto; min-height: 70vh; }
+  .tierlist:fullscreen .tl-barra, .tierlist:fullscreen .ayuda, .tierlist:fullscreen .tl-filtros { display: none; }
+  .tierlist:fullscreen .tl-escenario { min-height: 70vh; }
 
+  /* Celular: el lado pasa arriba, en una franja compacta de alto fijo. */
   @media (max-width: 48rem) {
-    .directo .tl-escenario { grid-template-columns: 1fr; aspect-ratio: auto; }
-    .tl-lado { grid-row: 1; grid-template-columns: auto 1fr; text-align: left; justify-items: start; }
-    .tl-grande { font-size: 2.2rem; }
-    .tl-edm { grid-column: 1 / -1; grid-template-columns: 5rem 1fr; }
-    .tl-edm img { width: 5rem; grid-column: 1; grid-row: 1; }
+    .tl-escenario { grid-template-columns: 1fr; min-height: 0; }
+    .tl-lado { grid-row: 1; }
+    .tl-lado-capa { position: static; display: grid; grid-template-columns: auto 1fr; align-items: center; justify-items: start; text-align: left; gap: .5rem 1rem; }
+    .tl-grande { font-size: 2rem; }
+    .tl-nota-escena { grid-column: 1 / -1; }
+    .tl-edm { grid-column: 1 / -1; flex-direction: row-reverse; align-items: center; height: 6.5rem; }
+    .tl-edm :global(.bocadillo) { flex: 1; height: 5.2rem; font-size: .85rem; }
+    .tl-edm-foto { flex: none; width: 4.5rem; height: 100%; min-height: 0; }
   }
 </style>
 

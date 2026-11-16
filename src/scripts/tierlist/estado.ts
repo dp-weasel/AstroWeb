@@ -10,7 +10,7 @@ export interface Fila extends Tier {
 export interface Estado {
   subtitulo: string;
   filas: Fila[];
-  /** Nota por ficha (versión 4): por qué está donde está. */
+  /** Nota por ficha: por qué está donde está. */
   notas: Record<string, string>;
 }
 
