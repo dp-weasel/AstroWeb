@@ -1,6 +1,6 @@
 ---
-// Tierlist de profesiones de GW2: escenario 16:9 con EDM que opina, notas por
-// ficha, filas editables, plantillas, filtros e imagen o enlace para compartir.
+// Tierlist de profesiones de GW2: escenario 16:9 con EDM que opina, filas
+// editables, plantillas, filtros e imagen o enlace para compartir.
 // Las filas se arman en el navegador (src/scripts/tierlist/); las fichas se
 // renderizan acá en el banco y el script las mueve a su fila.
 import { getImage } from "astro:assets";
@@ -54,7 +54,7 @@ const config = { plantillas, reacciones: reaccionesEdm, poses };
     <div class="grupo derecha">
       <button type="button" class="btn" data-accion="edm" aria-pressed="true">🙈 Ocultar a EDM</button>
       <button type="button" class="btn" data-accion="vaciar" title="Devuelve todas las fichas al banco; las filas quedan como están">↩ Vaciar lista</button>
-      <button type="button" class="btn" data-accion="restablecer" title="Vuelve a las filas S a D, sin fichas ni notas">⟲ Restablecer</button>
+      <button type="button" class="btn" data-accion="restablecer" title="Vuelve a las filas S a D, sin fichas">⟲ Restablecer</button>
     </div>
   </div>
 
@@ -70,10 +70,6 @@ const config = { plantillas, reacciones: reaccionesEdm, poses };
       <div class="tl-lado-capa">
         <p class="titulo-marca tl-grande"><span>TIER</span> <span class="list">LIST</span></p>
         <input class="etiqueta-tema titulo-marca" data-subtitulo aria-label="Tema de la tierlist" maxlength="28" />
-        <div class="tl-nota-escena" data-nota-escena hidden>
-          <strong data-nota-titulo></strong>
-          <p data-nota-texto></p>
-        </div>
         <div class="tl-edm" data-edm aria-live="polite">
           <Bocadillo quien="edm" cola="abajo" class="tl-dice"><p data-edm-texto>¡Arrastrá una ficha y te digo qué opino!</p></Bocadillo>
           <div class="tl-edm-foto"><img data-edm-img src={poses.saludando} alt="EDM" /></div>
@@ -82,13 +78,6 @@ const config = { plantillas, reacciones: reaccionesEdm, poses };
     </aside>
   </div>
 
-  <!-- Siempre visible (deshabilitado sin ficha elegida) para que el banco no salte. -->
-  <div class="tl-notas">
-    <label>
-      <span data-nota-etiqueta>Nota</span>
-      <textarea data-nota-campo rows="1" maxlength="180" disabled placeholder="Tocá una ficha ubicada para escribir por qué está ahí. Se muestra en el escenario."></textarea>
-    </label>
-  </div>
 
   <section class="tl-banco" aria-label="Fichas sin ubicar">
     <div class="tl-filtros">
@@ -127,7 +116,7 @@ const config = { plantillas, reacciones: reaccionesEdm, poses };
     </div>
     <p class="ayuda">
       Arrastrá cada ficha a su fila, o tocá una ficha y después la fila. Con el teclado: <kbd>1</kbd>–<kbd>9</kbd> la mandan a
-      esa fila, <kbd>0</kbd> la devuelve y <kbd>←</kbd> <kbd>→</kbd> la mueven. Tocá una ficha ubicada para escribir por qué está ahí.
+      esa fila, <kbd>0</kbd> la devuelve y <kbd>←</kbd> <kbd>→</kbd> la mueven.
     </p>
   </section>
 
@@ -200,9 +189,6 @@ const config = { plantillas, reacciones: reaccionesEdm, poses };
     background: var(--amber); color: var(--charcoal); font-size: 1.2rem; text-align: center;
   }
   .etiqueta-tema:focus-visible { outline: 3px solid var(--snow); outline-offset: 2px; }
-  .tl-nota-escena { align-self: stretch; padding: .6rem .9rem; border-left: 4px solid var(--amber); border-radius: .5rem; background: rgb(255 255 255 / .06); text-align: left; }
-  .tl-nota-escena strong { font-family: var(--font-label); font-weight: 400; color: var(--amber); }
-  .tl-nota-escena p { margin: .2rem 0 0; font-size: .92rem; }
 
   /* EDM ocupa lo que sobra del lado: el bocadillo tiene alto fijo (tres
      líneas) y la foto se achica para entrar, así nada empuja al tablero. */
@@ -261,7 +247,6 @@ const config = { plantillas, reacciones: reaccionesEdm, poses };
     display: block; position: absolute; top: 0; right: 0; padding: 0 .25rem; border-radius: .3rem;
     background: rgb(0 0 0 / .75); color: #fff; font-family: var(--font-label); font-size: .65rem;
   }
-  .ficha[data-nota]::before { content: "✎"; position: absolute; z-index: 1; top: -.2rem; left: -.1rem; display: grid; place-items: center; width: 1.2rem; height: 1.2rem; border-radius: 50%; background: var(--amber); color: var(--charcoal); font-size: .7rem; }
   .ficha.arrastrando { opacity: .25; }
   :global(.ficha-copia) {
     position: fixed; z-index: 100; left: 0; top: 0; margin: 0; pointer-events: none; cursor: grabbing;
@@ -272,11 +257,7 @@ const config = { plantillas, reacciones: reaccionesEdm, poses };
   :global(.ficha-copia::after) { display: none; }
   .tierlist.con-arrastre, .tierlist.con-arrastre * { cursor: grabbing !important; user-select: none; }
 
-  /* ---------- Notas y banco ---------- */
-  .tl-notas { margin-top: 1rem; }
-  .tl-notas label { display: grid; gap: .35rem; font-weight: 700; }
-  .tl-notas textarea:disabled { opacity: .6; resize: none; }
-  .tl-notas textarea { padding: .6rem .75rem; border: 1px solid var(--border); border-radius: .6rem; background: var(--surface); color: var(--text); font: inherit; resize: vertical; }
+  /* ---------- Banco ---------- */
   .tl-banco { margin-top: 1.5rem; }
   .tierlist .banco { background: none; border-color: var(--border); }
   .banco:empty::before { content: "¡Ubicaste todas! 🎉"; margin: auto; color: var(--muted); font-weight: 700; }
@@ -317,8 +298,7 @@ const config = { plantillas, reacciones: reaccionesEdm, poses };
     .tl-lado { grid-row: 1; }
     .tl-lado-capa { position: static; display: grid; grid-template-columns: auto 1fr; align-items: center; justify-items: start; text-align: left; gap: .5rem 1rem; }
     .tl-grande { font-size: 2rem; }
-    .tl-nota-escena { grid-column: 1 / -1; }
-    .tl-edm { grid-column: 1 / -1; flex-direction: row-reverse; align-items: center; height: 6.5rem; }
+      .tl-edm { grid-column: 1 / -1; flex-direction: row-reverse; align-items: center; height: 6.5rem; }
     .tl-edm :global(.bocadillo) { flex: 1; height: 5.2rem; font-size: .85rem; }
     .tl-edm-foto { flex: none; width: 4.5rem; height: 100%; min-height: 0; }
   }

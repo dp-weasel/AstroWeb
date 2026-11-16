@@ -83,13 +83,8 @@ export function iniciarTierlist(raiz: HTMLElement): void {
     );
     const ubicadas = new Set(estado.filas.flatMap((f) => f.fichas));
     banco.append(...orden.filter((id) => !ubicadas.has(id)).map((id) => fichas.get(id)!));
-    for (const [id, f] of fichas) {
-      if (estado.notas[id]) f.dataset.nota = "";
-      else delete f.dataset.nota;
-    }
     raiz.querySelectorAll<HTMLInputElement>("[data-subtitulo]").forEach((i) => (i.value = estado.subtitulo));
     filtrar();
-    mostrarNota();
   }
 
   /** Lee del DOM dónde quedó cada ficha, ordena el banco y guarda. */
@@ -102,7 +97,6 @@ export function iniciarTierlist(raiz: HTMLElement): void {
     banco.append(...orden.filter((id) => enBanco.has(id)).map((id) => fichas.get(id)!));
     guardar(estado);
     if (movida) reaccionar(movida);
-    mostrarNota();
   }
 
   function mover(ficha: HTMLElement, zona: HTMLElement): void {
@@ -118,7 +112,6 @@ export function iniciarTierlist(raiz: HTMLElement): void {
     seleccionada = f === seleccionada ? null : f;
     seleccionada?.setAttribute("aria-pressed", "true");
     raiz.classList.toggle("hay-seleccion", !!seleccionada);
-    mostrarNota();
   }
 
   activarArrastre(raiz, {
@@ -196,7 +189,7 @@ export function iniciarTierlist(raiz: HTMLElement): void {
     selPlantilla.value = "";
     if (!p) return;
     const antes = structuredClone(estado);
-    estado = { subtitulo: p.subtitulo, filas: p.tiers.map((t) => ({ ...t, fichas: [] })), notas: {} };
+    estado = { subtitulo: p.subtitulo, filas: p.tiers.map((t) => ({ ...t, fichas: [] })) };
     // "Para empezar" muestra solo las profesiones core; el resto, todas.
     raiz.querySelectorAll<HTMLInputElement>("[data-exp]").forEach((c) => (c.checked = !p.soloBase || c.value === "base"));
     pintar();
@@ -270,7 +263,6 @@ export function iniciarTierlist(raiz: HTMLElement): void {
   $("[data-accion='vaciar']")!.addEventListener("click", () => {
     const antes = structuredClone(estado);
     estado.filas.forEach((f) => (f.fichas = []));
-    estado.notas = {};
     seleccionar(null);
     edmDeInicio();
     pintar();
@@ -354,7 +346,7 @@ export function iniciarTierlist(raiz: HTMLElement): void {
     else raiz.requestFullscreen?.().catch(() => showToast("El navegador no dejó pasar a pantalla completa"));
   });
 
-  /* ---------- Versión del directo: EDM y notas ---------- */
+  /* ---------- Versión del directo: EDM ---------- */
 
   const edmImg = $<HTMLImageElement>("[data-edm-img]");
   const edmTexto = $("[data-edm-texto]");
@@ -396,41 +388,6 @@ export function iniciarTierlist(raiz: HTMLElement): void {
     edmCaja.classList.add("reacciona");
   }
 
-  const nota = $<HTMLTextAreaElement>("[data-nota-campo]");
-
-  /** Muestra la nota de la ficha elegida, para editarla y en el escenario. */
-  function mostrarNota(): void {
-    if (!nota) return;
-    const f = seleccionada && seleccionada.parentElement !== banco ? seleccionada : null;
-    nota.disabled = !f;
-    const escena = $("[data-nota-escena]")!;
-    const texto = f ? estado.notas[f.dataset.id!] ?? "" : "";
-    escena.hidden = !texto;
-    if (!f) {
-      $("[data-nota-etiqueta]")!.textContent = "Nota";
-      nota.value = "";
-      return;
-    }
-    const fila = estado.filas.find((x) => x.fichas.includes(f.dataset.id!))?.nombre ?? "";
-    $("[data-nota-etiqueta]")!.textContent = `¿Por qué ${f.dataset.nombre} en ${fila}?`;
-    if (document.activeElement !== nota) nota.value = texto;
-    $("[data-nota-titulo]")!.textContent = `${f.dataset.nombre} · ${fila}`;
-    $("[data-nota-texto]")!.textContent = texto;
-  }
-
-  nota?.addEventListener("input", () => {
-    if (!seleccionada) return;
-    const id = seleccionada.dataset.id!;
-    if (nota.value.trim()) {
-      estado.notas[id] = nota.value;
-      seleccionada.dataset.nota = "";
-    } else {
-      delete estado.notas[id];
-      delete seleccionada.dataset.nota;
-    }
-    guardar(estado);
-    mostrarNota();
-  });
 
   pintar();
 }
