@@ -80,25 +80,69 @@ export const plantillas: Plantilla[] = [
   },
 ];
 
+/** Poses de EDM (archivos de src/assets/brand/edm/, sin el .png). */
+export type PoseEdm =
+  | "saludando"
+  | "cheer"
+  | "feliz-apuntando-arriba"
+  | "apuntando"
+  | "shrug"
+  | "sorprendida-mirando-a-la-izquierda"
+  | "triste"
+  | "triste-mirando-al-suelo"
+  | "hiss";
+
+export interface ReaccionEdm {
+  /** Se elige una al azar. `espejo` la da vuelta para que mire hacia la tierlist. */
+  poses: { pose: PoseEdm; espejo?: boolean }[];
+  /** Se elige una al azar. {n} es la especialización y {t} la fila. */
+  frases: string[];
+}
+
+/** Niveles de reacción, de la mejor fila a la peor, más el banco. */
+export const niveles = ["s", "a", "b", "c", "d"] as const;
+export type Nivel = (typeof niveles)[number] | "banco";
+
 /**
- * Lo que dice EDM al ubicar una ficha. {n} es la especialización y {t}
- * la fila. "arriba" es la primera fila, "abajo" la última y "medio" el resto.
+ * Qué nivel de reacción le toca a la fila i de n. Con cinco filas es uno por fila.
+ * Con otra cantidad se reparten de forma pareja: la primera fila siempre es S,
+ * la última siempre es D y las del medio caen en el nivel más cercano.
+ *   4 filas → S, A, C, D        6 filas → S, A, B, C, C, D
+ *   3 filas → S, B, D           7 filas → S, A, A, B, C, C, D
  */
-export const frasesEdm = {
-  arriba: [
-    "¿{n} en {t}? Por fin una decisión con sentido.",
-    "{n} arriba de todo. Respeto.",
-    "¡Eso! {n} se lo merece.",
-  ],
-  medio: [
-    "{n} en {t}… bueno, no voy a discutir. Hoy.",
-    "Mmm, {n} en {t}. Aceptable.",
-    "¿{t}? Le pondría una más. O una menos. Ya fue.",
-  ],
-  abajo: [
-    "¿¡{n} en {t}!? Quiero hablar con el gerente.",
-    "Pobre {n}. ¿Qué te hizo?",
-    "{n} en {t}. El chat no va a estar de acuerdo.",
-  ],
-  pool: ["¿Te arrepentiste de {n}? Pasa.", "{n} vuelve al banco. Pensalo bien.", "Bueno, {n} queda sin lugar por ahora."],
+export function nivelDeFila(i: number, n: number): Nivel {
+  if (n <= 1) return "s";
+  return niveles[Math.round((i * (niveles.length - 1)) / (n - 1))];
+}
+
+/** Lo que hace y dice EDM al ubicar una ficha (los números son los de RecursosCC/edm-borde). */
+export const reaccionesEdm: Record<Nivel, ReaccionEdm> = {
+  s: {
+    poses: [{ pose: "cheer" }, { pose: "feliz-apuntando-arriba" }], // 010 y 009
+    frases: ["¿{n} en {t}? Por fin una decisión con sentido.", "{n} arriba de todo. Respeto.", "¡Eso! {n} se lo merece."],
+  },
+  a: {
+    poses: [{ pose: "apuntando" }], // 013
+    frases: [
+      "A {n} le faltó farmear más aura.",
+      "Casi S. {n} se quedó sin aura en la última curva.",
+      "{n} en {t}: buena, pero le falta un poquito de aura.",
+    ],
+  },
+  b: {
+    poses: [{ pose: "shrug" }, { pose: "sorprendida-mirando-a-la-izquierda", espejo: true }], // 015 y 011
+    frases: ["{n} en {t}… bueno, no voy a discutir. Hoy.", "Mmm, {n} en {t}. Aceptable.", "¿{t}? Le pondría una más. O una menos. Ya fue."],
+  },
+  c: {
+    poses: [{ pose: "triste" }, { pose: "triste-mirando-al-suelo" }], // 008 y 014
+    frases: ["¿{n} en {t}? Bueno… tiene sus días.", "Pobre {n}, merecía un poquito más.", "{n} en {t}. No lloro, me entró yerba en el ojo."],
+  },
+  d: {
+    poses: [{ pose: "hiss" }, { pose: "triste" }, { pose: "triste-mirando-al-suelo" }], // 005, 008 y 014
+    frases: ["¿¡{n} en {t}!? Quiero hablar con el gerente.", "Pobre {n}. ¿Qué te hizo?", "{n} en {t}. El chat no va a estar de acuerdo."],
+  },
+  banco: {
+    poses: [{ pose: "triste" }],
+    frases: ["¿Te arrepentiste de {n}? Pasa.", "{n} vuelve al banco. Pensalo bien.", "Bueno, {n} queda sin lugar por ahora."],
+  },
 };

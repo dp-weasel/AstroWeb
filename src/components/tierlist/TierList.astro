@@ -5,12 +5,7 @@
 // renderizan acá en el banco y el script las mueve a su fila.
 import { getImage } from "astro:assets";
 import { especializaciones, profesiones, expansiones } from "../../data/gw2-profesiones";
-import { plantillas, frasesEdm } from "../../data/tierlist";
-import edmSaludando from "../../assets/brand/edm/saludando.png";
-import edmCheer from "../../assets/brand/edm/cheer.png";
-import edmShrug from "../../assets/brand/edm/shrug.png";
-import edmHiss from "../../assets/brand/edm/hiss.png";
-import edmTriste from "../../assets/brand/edm/triste.png";
+import { plantillas, reaccionesEdm, type PoseEdm } from "../../data/tierlist";
 import Bocadillo from "../marca/Bocadillo.astro";
 import Ejemplo from "../secciones/Ejemplo.astro";
 
@@ -25,16 +20,20 @@ const fichas = await Promise.all(
   })),
 );
 
-const pose = async (img: ImageMetadata) => (await getImage({ src: img, height: 320 })).src;
-const edm = {
-  inicio: await pose(edmSaludando),
-  arriba: await pose(edmCheer),
-  medio: await pose(edmShrug),
-  abajo: await pose(edmHiss),
-  pool: await pose(edmTriste),
-};
+// URL optimizada de cada pose que usan las reacciones (más la de bienvenida).
+const archivosEdm = import.meta.glob<{ default: ImageMetadata }>("../../assets/brand/edm/*.png", { eager: true });
+const usadas = new Set<PoseEdm>(["saludando", ...Object.values(reaccionesEdm).flatMap((r) => r.poses.map((p) => p.pose))]);
+const poses = Object.fromEntries(
+  await Promise.all(
+    [...usadas].map(async (p) => {
+      const img = archivosEdm[`../../assets/brand/edm/${p}.png`];
+      if (!img) throw new Error(`Falta la pose de EDM ${p}.png en src/assets/brand/edm/`);
+      return [p, (await getImage({ src: img.default, height: 320 })).src];
+    }),
+  ),
+) as Record<PoseEdm, string>;
 
-const config = { plantillas, frases: frasesEdm, edm };
+const config = { plantillas, reacciones: reaccionesEdm, poses };
 ---
 
 <div class="tierlist" data-tierlist data-config={JSON.stringify(config)}>
@@ -77,7 +76,7 @@ const config = { plantillas, frases: frasesEdm, edm };
         </div>
         <div class="tl-edm" data-edm aria-live="polite">
           <Bocadillo quien="edm" cola="abajo" class="tl-dice"><p data-edm-texto>¡Arrastrá una ficha y te digo qué opino!</p></Bocadillo>
-          <div class="tl-edm-foto"><img data-edm-img src={edm.inicio} alt="EDM" /></div>
+          <div class="tl-edm-foto"><img data-edm-img src={poses.saludando} alt="EDM" /></div>
         </div>
       </div>
     </aside>
@@ -211,6 +210,7 @@ const config = { plantillas, frases: frasesEdm, edm };
   .tl-edm :global(.bocadillo) { width: 100%; height: 6.2rem; display: flex; align-items: center; font-size: .9rem; line-height: 1.3; }
   .tl-edm-foto { flex: 1; min-height: 4rem; width: 100%; display: flex; justify-content: center; }
   .tl-edm-foto img { height: 100%; max-height: 16rem; width: 100%; object-fit: contain; object-position: bottom; }
+  .tl-edm-foto img.espejo { scale: -1 1; }
   .tl-edm.reacciona img { animation: salto .4s; }
   @keyframes salto { 40% { transform: translateY(-.6rem) rotate(-3deg); } }
   .tierlist.sin-edm .tl-edm { display: none; }

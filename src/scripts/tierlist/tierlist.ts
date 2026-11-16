@@ -1,6 +1,6 @@
 // Tierlist de GW2 en el navegador. Plantillas, frases e imágenes de EDM llegan
 // en data-config (ver src/components/tierlist/TierList.astro).
-import { coloresExtra, type Plantilla, type frasesEdm } from "../../data/tierlist";
+import { coloresExtra, nivelDeFila, type Plantilla, type PoseEdm, type reaccionesEdm } from "../../data/tierlist";
 import { showToast } from "../toast";
 import { copyText } from "../clipboard";
 import { activarArrastre } from "./arrastre";
@@ -9,14 +9,14 @@ import { dibujar, aBlob } from "./exportar";
 
 interface Config {
   plantillas: Plantilla[];
-  frases: typeof frasesEdm;
-  edm: Record<"inicio" | "arriba" | "medio" | "abajo" | "pool", string>;
+  reacciones: typeof reaccionesEdm;
+  poses: Record<PoseEdm, string>;
 }
 
 const azar = <T>(xs: T[]) => xs[Math.floor(Math.random() * xs.length)];
 
 export function iniciarTierlist(raiz: HTMLElement): void {
-  const { plantillas, frases, edm } = JSON.parse(raiz.dataset.config!) as Config;
+  const { plantillas, reacciones, poses } = JSON.parse(raiz.dataset.config!) as Config;
   const $ = <T extends Element = HTMLElement>(sel: string) => raiz.querySelector<T>(sel);
   const contFilas = $("[data-filas]")!;
   const banco = $("[data-zona='banco']")!;
@@ -339,10 +339,12 @@ export function iniciarTierlist(raiz: HTMLElement): void {
     if (!edmImg || !edmTexto || !edmCaja || raiz.classList.contains("sin-edm")) return;
     const zona = ficha.closest<HTMLElement>("[data-zona]")!.dataset.zona!;
     const i = estado.filas.findIndex((f) => f.id === zona);
-    const tipo = i < 0 ? "pool" : i === 0 ? "arriba" : i === estado.filas.length - 1 ? "abajo" : "medio";
+    const r = reacciones[i < 0 ? "banco" : nivelDeFila(i, estado.filas.length)];
+    const { pose, espejo } = azar(r.poses);
     const fila = estado.filas[i]?.nombre ?? "";
-    edmImg.src = edm[tipo];
-    edmTexto.textContent = azar(frases[tipo]).replaceAll("{n}", ficha.dataset.nombre!).replaceAll("{t}", fila);
+    edmImg.src = poses[pose];
+    edmImg.classList.toggle("espejo", !!espejo);
+    edmTexto.textContent = azar(r.frases).replaceAll("{n}", ficha.dataset.nombre!).replaceAll("{t}", fila);
     edmCaja.classList.remove("reacciona");
     void edmCaja.offsetWidth; // reinicia la animación
     edmCaja.classList.add("reacciona");
