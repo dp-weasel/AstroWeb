@@ -83,6 +83,8 @@ export const plantillas: Plantilla[] = [
 /** Poses de EDM (archivos de src/assets/brand/edm/, sin el .png). */
 export type PoseEdm =
   | "saludando"
+  | "brazos-cruzados"
+  | "mirando-arriba-un-brazo"
   | "cheer"
   | "feliz-apuntando-arriba"
   | "apuntando"
@@ -104,7 +106,8 @@ export interface ReaccionEdm {
 
 /** Niveles de reacción, de la mejor fila a la peor, más el banco. */
 export const niveles = ["s", "a", "b", "c", "d"] as const;
-export type Nivel = (typeof niveles)[number] | "banco";
+/** "banco": la ficha volvió al banco. "duda": se soltó fuera de toda fila y volvió a su lugar. */
+export type Nivel = (typeof niveles)[number] | "banco" | "duda";
 
 /**
  * Qué nivel de reacción le toca a la fila i de n. Con cinco filas es uno por fila.
@@ -125,8 +128,10 @@ export const reaccionesEdm: Record<Nivel, ReaccionEdm> = {
     frases: ["¿{n} en {t}? Por fin una decisión con sentido.", "{n} arriba de todo. Respeto.", "¡Eso! {n} se lo merece."],
   },
   a: {
-    poses: [{ pose: "shrug" }], // 015
+    poses: [{ pose: "shrug" }, { pose: "mirando-arriba-un-brazo" }], // 015 y 002
     frases: [
+      "¡Tan cerca de S! {n} casi llega.",
+      "{n} quedó a un pasito de la S.",
       "A {n} le faltó farmear más aura.",
       "Casi S. {n} se quedó sin aura en la última curva.",
       "{n} en {t}: buena, pero le falta un poquito de aura.",
@@ -144,8 +149,12 @@ export const reaccionesEdm: Record<Nivel, ReaccionEdm> = {
     poses: [{ pose: "hiss" }, { pose: "triste" }, { pose: "triste-mirando-al-suelo" }, { pose: "apuntando" }], // 005, 008, 014 y 013
     frases: ["¿¡{n} en {t}!? Quiero hablar con el gerente.", "Pobre {n}. ¿Qué te hizo?", "{n} en {t}. El chat no va a estar de acuerdo."],
   },
+  duda: {
+    poses: [{ pose: "brazos-cruzados" }], // 001
+    frases: ["¿Y? ¿Dónde va {n}? Decidite.", "Eso no es una fila. {n} vuelve a su lugar.", "Te estoy mirando. Soltá a {n} en una fila."],
+  },
   banco: {
-    poses: [{ pose: "triste" }],
+    poses: [{ pose: "brazos-cruzados" }], // 001
     frases: ["¿Te arrepentiste de {n}? Pasa.", "{n} vuelve al banco. Pensalo bien.", "Bueno, {n} queda sin lugar por ahora."],
   },
 };

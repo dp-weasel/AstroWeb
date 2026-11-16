@@ -5,13 +5,15 @@
 interface Opciones {
   /** Se llama al soltar una ficha en una zona (fila o banco). */
   alSoltar: (ficha: HTMLElement, zona: HTMLElement) => void;
+  /** Se llama al soltarla fuera de toda zona: la ficha ya volvió a su lugar. */
+  alSoltarFuera: (ficha: HTMLElement) => void;
   /** Se llama cuando se toca una ficha sin arrastrarla. */
   alTocar: (ficha: HTMLElement) => void;
 }
 
 const UMBRAL = 6; // px que hay que mover para que cuente como arrastre
 
-export function activarArrastre(raiz: HTMLElement, { alSoltar, alTocar }: Opciones): void {
+export function activarArrastre(raiz: HTMLElement, { alSoltar, alSoltarFuera, alTocar }: Opciones): void {
   raiz.addEventListener("pointerdown", (ev) => {
     const ficha = (ev.target as Element).closest<HTMLElement>(".ficha");
     if (!ficha || ev.button !== 0) return;
@@ -21,6 +23,8 @@ export function activarArrastre(raiz: HTMLElement, { alSoltar, alTocar }: Opcion
     const puntero = ev.pointerId;
 
     const inicio = { x: ev.clientX, y: ev.clientY };
+    // Lugar original, para devolverla si se suelta fuera de toda zona.
+    const origen = { padre: ficha.parentElement!, siguiente: ficha.nextElementSibling };
     const caja = ficha.getBoundingClientRect();
     const agarre = { x: ev.clientX - caja.left, y: ev.clientY - caja.top };
     let copia: HTMLElement | null = null;
@@ -64,8 +68,11 @@ export function activarArrastre(raiz: HTMLElement, { alSoltar, alTocar }: Opcion
       if (!copia) return void (e.type === "pointerup" && alTocar(ficha));
       copia.remove();
       ficha.classList.remove("arrastrando");
-      const destino = ficha.closest<HTMLElement>("[data-zona]");
-      if (destino) alSoltar(ficha, destino);
+      if (!zona) {
+        origen.padre.insertBefore(ficha, origen.siguiente);
+        return alSoltarFuera(ficha);
+      }
+      alSoltar(ficha, zona);
     };
 
     document.addEventListener("pointermove", mover);

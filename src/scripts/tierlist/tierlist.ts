@@ -126,6 +126,11 @@ export function iniciarTierlist(raiz: HTMLElement): void {
       seleccionar(null);
       confirmar(ficha);
     },
+    alSoltarFuera: (ficha) => {
+      seleccionar(null);
+      confirmar();
+      reaccionar(ficha, "duda");
+    },
     alTocar: (ficha) => seleccionar(ficha),
   });
 
@@ -267,6 +272,7 @@ export function iniciarTierlist(raiz: HTMLElement): void {
     estado.filas.forEach((f) => (f.fichas = []));
     estado.notas = {};
     seleccionar(null);
+    edmDeInicio();
     pintar();
     guardar(estado);
     deshacible("Lista vaciada", antes);
@@ -277,6 +283,7 @@ export function iniciarTierlist(raiz: HTMLElement): void {
     const antes = structuredClone(estado);
     estado = estadoInicial();
     seleccionar(null);
+    edmDeInicio();
     pintar();
     guardar(estado);
     deshacible("Lista restablecida", antes);
@@ -359,11 +366,21 @@ export function iniciarTierlist(raiz: HTMLElement): void {
   const general = historial();
   const porNivel = new Map<string, ReturnType<typeof historial>>();
 
-  function reaccionar(ficha: HTMLElement): void {
+  // Cómo arranca EDM, para volver a eso al vaciar o restablecer la lista.
+  const saludoInicial = edmTexto?.textContent ?? "";
+
+  function edmDeInicio(): void {
+    if (!edmImg || !edmTexto) return;
+    edmImg.src = poses.saludando;
+    edmImg.classList.remove("espejo");
+    edmTexto.textContent = saludoInicial;
+  }
+
+  function reaccionar(ficha: HTMLElement, forzado?: "duda"): void {
     if (!edmImg || !edmTexto || !edmCaja || raiz.classList.contains("sin-edm")) return;
     const zona = ficha.closest<HTMLElement>("[data-zona]")!.dataset.zona!;
     const i = estado.filas.findIndex((f) => f.id === zona);
-    const nivel = i < 0 ? "banco" : nivelDeFila(i, estado.filas.length);
+    const nivel = forzado ?? (i < 0 ? "banco" : nivelDeFila(i, estado.filas.length));
     const r = reacciones[nivel];
     if (!porNivel.has(nivel)) porNivel.set(nivel, historial());
     const propio = porNivel.get(nivel)!;
