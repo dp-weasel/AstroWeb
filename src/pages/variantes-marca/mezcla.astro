@@ -4,7 +4,8 @@
 // entero al final de la página.
 import { Image } from "astro:assets";
 import VarianteLayout from "../../layouts/VarianteLayout.astro";
-import Wordmark from "../../components/marca/Wordmark.astro";
+import "@fontsource-variable/exo-2/wght-italic.css";
+import Numeros from "../../components/secciones/Numeros.astro";
 import ArminoVivo from "../../components/marca/ArminoVivo.astro";
 import Bocadillo from "../../components/marca/Bocadillo.astro";
 import Ctas from "../../components/marca/Ctas.astro";
@@ -26,7 +27,15 @@ import edmBrazosArriba from "../../assets/brand/edm/brazos-arriba.png";
 import edmApuntando from "../../assets/brand/edm/apuntando.png";
 import edmRiendo from "../../assets/brand/edm/riendo-en-el-suelo.png";
 import { intro, preguntas } from "../../data/variantes-marca";
-import { preguntasExtra } from "../../data/contenido";
+import { preguntasExtra, franja } from "../../data/contenido";
+
+/** Tipografías para probar en el nombre (solo para esta revisión). */
+const letras = [
+  { id: "montserrat", nombre: "Montserrat Black Italic" },
+  { id: "exo", nombre: "Exo 2 Italic" },
+  { id: "lilita", nombre: "Lilita One" },
+  { id: "russo", nombre: "Russo One (la de antes)" },
+];
 
 const faq = [...preguntas, ...preguntasExtra];
 
@@ -70,11 +79,21 @@ const usoStickers = [
       <Image class="marca-agua" src={armino} alt="" width={640} widths={[320, 640]} sizes="40vw" />
       <div class="texto">
         <p class="eyebrow titulo-marca">Directos de Guild Wars 2 · y lo que pinte</p>
-        <h1><Wordmark size="clamp(3rem, 9vw, 6rem)" /></h1>
+        <h1 class="nombre" data-letra="montserrat">WEASEL</h1>
         <p class="lead">{intro}</p>
         <Ctas />
       </div>
+      <!-- Solo para la revisión: probar tipografías del nombre. -->
+      <div class="probar-letra" role="group" aria-label="Probar tipografía del nombre">
+        <span>Letra del nombre:</span>
+        {letras.map((l, i) => (
+          <button type="button" data-letra={l.id} aria-pressed={i === 0 ? "true" : "false"} title={l.nombre}>{l.nombre.split(" ")[0]}</button>
+        ))}
+      </div>
     </section>
+
+    <!-- Franja debajo del banner (de la variante 2) -->
+    <div class="franja"><Numeros items={franja} /></div>
 
     <!-- 2. Cómo es el canal, charlado (de la 5) -->
     <section class="charla" aria-labelledby="valores">
@@ -221,7 +240,50 @@ const usoStickers = [
   }
   .texto { padding: 3rem 2rem 3rem 0; max-width: 34rem; }
   .eyebrow { margin: 0 0 .5rem; color: var(--amber); font-size: .9rem; }
-  h1 { margin: 0 0 1rem; line-height: 1; }
+  /* Nombre en blanco. Cada data-letra es una opción para comparar. */
+  .nombre {
+    margin: 0 0 1rem; line-height: .95; color: var(--snow);
+    font-size: clamp(3.25rem, 10vw, 6.5rem); font-weight: 400;
+  }
+  .nombre[data-letra="montserrat"] {
+    font-family: var(--font-title); font-weight: 900; font-style: italic; letter-spacing: -.01em;
+    text-shadow: .05em .05em 0 var(--vermilion);
+  }
+  .nombre[data-letra="exo"] {
+    font-family: "Exo 2 Variable", var(--font-title); font-weight: 800; font-style: italic; letter-spacing: .02em;
+    text-shadow: 0 .04em 0 var(--vermilion), 0 .2em .5em rgb(0 0 0 / .45);
+  }
+  .nombre[data-letra="lilita"] {
+    font-family: var(--font-label); letter-spacing: .02em;
+    -webkit-text-stroke: .08em var(--charcoal); paint-order: stroke fill;
+    text-shadow: .06em .07em 0 var(--amber);
+  }
+  .nombre[data-letra="russo"] { font-family: var(--font-brand); }
+
+  .probar-letra {
+    position: absolute; right: 1rem; top: .9rem; z-index: 3;
+    display: flex; flex-wrap: wrap; align-items: center; gap: .35rem;
+    padding: .35rem .5rem; border-radius: .75rem;
+    background: rgb(0 0 0 / .55); border: 1px dashed #777;
+    font-family: var(--font-body); font-size: .75rem; color: #ccc;
+  }
+  @media (max-width: 48rem) { .probar-letra { left: 1rem; right: auto; } }
+  .probar-letra button {
+    padding: .2rem .55rem; border: 1px solid #555; border-radius: 999px;
+    background: #2b2b2b; color: #eee; font: inherit; font-weight: 700; cursor: pointer;
+  }
+  .probar-letra button[aria-pressed="true"] { background: var(--amber); border-color: var(--amber); color: var(--charcoal); }
+
+  /* Franja: naranja inclinada debajo del banner, como en la variante 2. */
+  .franja {
+    margin-top: -2.5rem; position: relative; z-index: 2;
+    padding: 1.5rem max(1rem, calc((100vw - 60rem) / 2)) 1rem;
+    background: linear-gradient(135deg, var(--vermilion), var(--amber));
+    clip-path: polygon(0 1.5rem, 100% 0, 100% calc(100% - 1.5rem), 0 100%);
+    color: var(--charcoal);
+  }
+  .franja :global(dd) { color: var(--charcoal); }
+  .franja :global(dt), .franja :global(.ejemplo) { color: rgb(33 33 33 / .75); }
   .lead { margin: 0 0 1.5rem; color: #cfcfcf; font-size: 1.1rem; font-weight: 500; }
   .banner :global(.btn:not(.primary):not(.youtube)) { background: #2b2b2b; border-color: #3d3d3d; color: var(--brand, var(--snow)); }
   .banner :global(.btn[aria-label^="X"]) { color: var(--snow); }
@@ -313,6 +375,25 @@ const usoStickers = [
 
 <script>
   const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Selector de tipografía del nombre (solo para la revisión). Se recuerda en
+  // la URL (?letra=exo) para poder compartir la opción elegida.
+  const nombre = document.querySelector<HTMLElement>(".nombre")!;
+  const botones = document.querySelectorAll<HTMLButtonElement>(".probar-letra button");
+  function usarLetra(id: string) {
+    if (![...botones].some((b) => b.dataset.letra === id)) return;
+    nombre.dataset.letra = id;
+    botones.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.letra === id)));
+  }
+  usarLetra(new URLSearchParams(location.search).get("letra") ?? "montserrat");
+  botones.forEach((b) =>
+    b.addEventListener("click", () => {
+      usarLetra(b.dataset.letra!);
+      const url = new URL(location.href);
+      url.searchParams.set("letra", b.dataset.letra!);
+      history.replaceState(null, "", url);
+    }),
+  );
 
   // Las cosas aparecen al entrar en pantalla.
   if (!quieto && "IntersectionObserver" in window) {

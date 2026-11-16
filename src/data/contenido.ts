@@ -97,6 +97,21 @@ export const numeros = [
 ];
 
 /* ------------------------------------------------------------------ */
+/* Franja debajo del banner (variante 6).                              */
+/* ------------------------------------------------------------------ */
+/** EJEMPLO: fecha del primer directo, para contar los días de la aventura. */
+export const inicioCanal = "2026-09-28";
+
+export interface DatoFranja {
+  valor: string;
+  etiqueta: string;
+  /** "dia": el valor se recalcula en el navegador a partir de inicioCanal. */
+  auto?: "dia";
+}
+
+const diasDesde = (fecha: string) => Math.floor((Date.now() - Date.parse(`${fecha}T00:00:00-03:00`)) / 864e5) + 1;
+
+/* ------------------------------------------------------------------ */
 /* Metas: requisitos reales de Afiliado de Twitch, con progreso EJEMPLO. */
 /* ------------------------------------------------------------------ */
 export const metas = {
@@ -213,4 +228,12 @@ export const preguntasExtra = [
   { q: "¿Tengo que jugar Guild Wars 2 para pasar?", a: "Para nada. La mitad del directo es charla. Y si te dan ganas de probarlo, el juego base es gratis." },
   { q: "¿Puedo jugar con Weasel?", a: "En los directos de fractales y mundo abierto se arman grupos con el chat. Preguntá en el directo." },
   { q: "¿Qué música suena en los directos?", a: "Música libre de derechos y temas que no traigan problemas con Twitch. Si te gusta uno, preguntá: aparece en pantalla." },
+];
+
+/** Se arma acá abajo porque usa las metas y el horario de más arriba. */
+export const franja: DatoFranja[] = [
+  { valor: `Día ${diasDesde(inicioCanal)}`, etiqueta: "de la aventura", auto: "dia" },
+  { valor: String(horario.length), etiqueta: "directos por semana" },
+  { valor: `${metas.items[0].actual}/${metas.items[0].meta}`, etiqueta: "seguidores para Afiliado" },
+  { valor: "∞", etiqueta: "veces que EDM tuvo razón" },
 ];
