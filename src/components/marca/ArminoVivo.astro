@@ -13,8 +13,12 @@ interface Props {
   size?: string;
   id?: string;
   class?: string;
+  /** Le pone auriculares dibujados en el mismo estilo plano que el pngTuber. */
+  auriculares?: boolean;
 }
-const { size = "16rem", id, class: extra } = Astro.props;
+const { size = "16rem", id, class: extra, auriculares = false } = Astro.props;
+// Vincha de los auriculares (coordenadas del PNG de 1024×1024).
+const vincha = "M292 425 C 300 245, 460 170, 600 192 C 690 207, 752 270, 772 345";
 const caras = [
   { src: ojosAbiertos, cara: "abiertos-cerrada" },
   { src: hablando, cara: "abiertos-abierta" },
@@ -32,6 +36,12 @@ const caras = [
   role="img"
   aria-label="El Armiño, la mascota de Weasel"
 >
+  {auriculares && (
+    <svg class="auris" viewBox="0 0 1024 1024" aria-hidden="true">
+      <!-- copa lejana: queda detrás de la cabeza -->
+      <ellipse cx="770" cy="400" rx="48" ry="88" fill="#2b2b2b" stroke="#141414" stroke-width="14" />
+    </svg>
+  )}
   {caras.map((c, i) => (
     <Image
       src={c.src}
@@ -43,11 +53,21 @@ const caras = [
       loading={i === 0 ? "eager" : "lazy"}
     />
   ))}
+  {auriculares && (
+    <svg class="auris" viewBox="0 0 1024 1024" aria-hidden="true">
+      <path d={vincha} fill="none" stroke="#141414" stroke-width="58" stroke-linecap="round" />
+      <path d={vincha} fill="none" stroke="#3a3a3a" stroke-width="30" stroke-linecap="round" />
+      <!-- copa cercana, con el aro naranja de la marca -->
+      <ellipse cx="282" cy="470" rx="78" ry="112" fill="#2b2b2b" stroke="#141414" stroke-width="16" />
+      <ellipse cx="300" cy="470" rx="46" ry="76" fill="#3d3d3d" stroke="#ff9103" stroke-width="10" />
+    </svg>
+  )}
 </div>
 
 <style>
   .armino-vivo { position: relative; width: var(--size); aspect-ratio: 1; }
-  img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; }
+  img, .auris { position: absolute; inset: 0; width: 100%; height: 100%; }
+  img { opacity: 0; }
   [data-ojos="abiertos"][data-boca="cerrada"] img[data-cara="abiertos-cerrada"],
   [data-ojos="abiertos"][data-boca="abierta"] img[data-cara="abiertos-abierta"],
   [data-ojos="cerrados"][data-boca="cerrada"] img[data-cara="cerrados-cerrada"],

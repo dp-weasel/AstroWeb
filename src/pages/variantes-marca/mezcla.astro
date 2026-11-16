@@ -4,14 +4,7 @@
 // entero al final de la página.
 import { Image } from "astro:assets";
 import VarianteLayout from "../../layouts/VarianteLayout.astro";
-// Tipografías candidatas para el nombre (solo para esta revisión).
 import "@fontsource-variable/unbounded";
-import "@fontsource/bebas-neue";
-import "@fontsource/luckiest-guy";
-import "@fontsource/bungee";
-import "@fontsource/righteous";
-import "@fontsource/dela-gothic-one";
-import "@fontsource-variable/bricolage-grotesque";
 import Numeros from "../../components/secciones/Numeros.astro";
 import ArminoVivo from "../../components/marca/ArminoVivo.astro";
 import Bocadillo from "../../components/marca/Bocadillo.astro";
@@ -36,15 +29,12 @@ import edmRiendo from "../../assets/brand/edm/riendo-en-el-suelo.png";
 import { intro, preguntas } from "../../data/variantes-marca";
 import { preguntasExtra, franja } from "../../data/contenido";
 
-/** Tipografías para probar en el nombre (solo para esta revisión). */
-const letras = [
-  { id: "unbounded", nombre: "Unbounded", corto: "Unbounded" },
-  { id: "luckiest", nombre: "Luckiest Guy", corto: "Luckiest" },
-  { id: "bungee", nombre: "Bungee", corto: "Bungee" },
-  { id: "bebas", nombre: "Bebas Neue", corto: "Bebas" },
-  { id: "dela", nombre: "Dela Gothic One", corto: "Dela" },
-  { id: "righteous", nombre: "Righteous", corto: "Righteous" },
-  { id: "bricolage", nombre: "Bricolage Grotesque", corto: "Bricolage" },
+/** Versiones del Armiño para comparar en el banner (solo para esta revisión). */
+const versiones = [
+  { id: "auris", nombre: "pngTuber con auriculares" },
+  { id: "pngtuber", nombre: "pngTuber sin auriculares" },
+  { id: "silueta", nombre: "Logo en silueta" },
+  { id: "actual", nombre: "Logo actual" },
 ];
 
 const faq = [...preguntas, ...preguntasExtra];
@@ -82,22 +72,29 @@ const usoStickers = [
 <VarianteLayout slug="mezcla">
   <main data-escena>
     <!-- 1. Banner (de la variante 2) -->
-    <section class="banner">
+    <section class="banner" data-armino="auris">
       <div class="naranja" aria-hidden="true">
-        <Image src={armino} alt="" width={640} widths={[320, 480, 640]} sizes="(max-width: 48rem) 70vw, 34vw" loading="eager" />
+        <ArminoVivo size="min(30rem, 32vw)" auriculares class="op op-auris" />
+        <ArminoVivo size="min(30rem, 32vw)" class="op op-pngtuber" />
+        <Image class="op op-logo" src={armino} alt="" width={640} widths={[320, 480, 640]} sizes="(max-width: 48rem) 70vw, 34vw" loading="eager" />
       </div>
-      <Image class="marca-agua" src={armino} alt="" width={640} widths={[320, 640]} sizes="40vw" />
+      <!-- Marca de agua: la misma versión del Armiño, en gris y gigante -->
+      <div class="marca-agua" aria-hidden="true">
+        <ArminoVivo size="100%" auriculares class="op op-auris" />
+        <ArminoVivo size="100%" class="op op-pngtuber" />
+        <Image class="op op-logo" src={armino} alt="" width={640} widths={[320, 640]} sizes="40vw" />
+      </div>
       <div class="texto">
         <p class="eyebrow titulo-marca">Directos de Guild Wars 2 · y lo que pinte</p>
-        <h1 class="nombre" data-letra="unbounded">WEASEL</h1>
+        <h1 class="nombre">WEASEL</h1>
         <p class="lead">{intro}</p>
         <Ctas />
       </div>
-      <!-- Solo para la revisión: probar tipografías del nombre. -->
-      <div class="probar-letra" role="group" aria-label="Probar tipografía del nombre">
-        <span>Letra del nombre:</span>
-        {letras.map((l, i) => (
-          <button type="button" data-letra={l.id} aria-pressed={i === 0 ? "true" : "false"} title={l.nombre}>{l.corto}</button>
+      <!-- Solo para la revisión: comparar versiones del Armiño. -->
+      <div class="probar" role="group" aria-label="Probar versión del Armiño">
+        <span>Armiño:</span>
+        {versiones.map((v, i) => (
+          <button type="button" data-armino={v.id} aria-pressed={i === 0 ? "true" : "false"}>{v.nombre}</button>
         ))}
       </div>
     </section>
@@ -242,6 +239,9 @@ const usoStickers = [
     clip-path: polygon(0 0, 100% 0, 78% 100%, 0 100%);
   }
   .naranja img { width: min(80%, 26rem); height: auto; margin-right: 18%; filter: drop-shadow(0 .5rem 0 rgb(0 0 0 / .2)); }
+  /* El pngTuber termina en un corte recto: lo apoyamos en el borde de abajo. */
+  .naranja :global(.armino-vivo) { margin-right: 14%; margin-bottom: -3%; filter: drop-shadow(0 .5rem 0 rgb(0 0 0 / .2)); }
+  .marca-agua :global(img), .marca-agua :global(.armino-vivo) { width: 100%; height: auto; }
   .marca-agua {
     position: absolute; z-index: -1; right: -6%; top: 50%;
     width: min(42rem, 55vw); height: auto;
@@ -250,55 +250,36 @@ const usoStickers = [
   }
   .texto { padding: 3rem 2rem 3rem 0; max-width: 34rem; }
   .eyebrow { margin: 0 0 .5rem; color: var(--amber); font-size: .9rem; }
-  /* Nombre en blanco. Cada data-letra es una tipografía candidata, con el
-     tratamiento que mejor le queda. --escala compensa que unas son más
-     anchas o más altas que otras, para que ocupen un ancho parecido. */
+  /* Nombre: Unbounded en blanco, con un subrayado naranja inclinado. */
   .nombre {
-    --escala: 1;
-    margin: 0 0 1rem; line-height: .95; color: var(--snow); font-weight: 400;
-    font-size: calc(clamp(3rem, 9vw, 6rem) * var(--escala));
+    margin: 0 0 1rem; line-height: .95; color: var(--snow);
+    font-family: "Unbounded Variable", sans-serif; font-weight: 900; letter-spacing: -.03em;
+    font-size: calc(clamp(3rem, 9vw, 6rem) * .8);
   }
-  /* Moderna y ancha: limpia, con un subrayado naranja inclinado. */
-  .nombre[data-letra="unbounded"] { --escala: .8; font-family: "Unbounded Variable", sans-serif; font-weight: 900; letter-spacing: -.03em; }
-  .nombre[data-letra="unbounded"]::after { content: ""; display: block; width: 1.4em; height: .12em; margin-top: .12em; background: var(--amber); transform: skewX(-25deg); }
-  /* De dibujito, como la mascota: contorno oscuro y sombra naranja "sticker". */
-  .nombre[data-letra="luckiest"] {
-    --escala: 1.05; font-family: "Luckiest Guy", sans-serif; letter-spacing: .06em; line-height: 1.1;
-    padding-top: .08em;
-    text-shadow: .05em .06em 0 var(--vermilion), .09em .1em 0 rgb(0 0 0 / .35);
-  }
-  /* Cartel / arcade: sombra en capas que le da volumen. */
-  .nombre[data-letra="bungee"] {
-    --escala: .85; font-family: "Bungee", sans-serif;
-    text-shadow: .03em .03em 0 var(--amber), .06em .06em 0 var(--vermilion), .09em .09em 0 rgb(0 0 0 / .45);
-  }
-  /* Alta y angosta: elegante, con aire a póster o título de película. */
-  .nombre[data-letra="bebas"] { --escala: 1.5; font-family: "Bebas Neue", sans-serif; letter-spacing: .06em; line-height: .9; }
-  .nombre[data-letra="bebas"]::first-letter { color: var(--amber); }
-  /* Pesadísima y compacta: mucha presencia. */
-  .nombre[data-letra="dela"] { --escala: .8; font-family: "Dela Gothic One", sans-serif; letter-spacing: -.01em; text-shadow: 0 .06em 0 var(--vermilion); }
-  /* Retro redondeada, con algo de neón (la música del canal). */
-  .nombre[data-letra="righteous"] {
-    --escala: 1.05; font-family: "Righteous", sans-serif; letter-spacing: .04em;
-    text-shadow: 0 0 .12em rgb(255 145 3 / .8), 0 0 .4em rgb(230 74 25 / .55);
-  }
-  /* Editorial moderna, con carácter: apretada y con el punto naranja. */
-  .nombre[data-letra="bricolage"] { --escala: 1.05; font-family: "Bricolage Grotesque Variable", sans-serif; font-weight: 800; letter-spacing: -.045em; }
-  .nombre[data-letra="bricolage"]::after { content: "."; color: var(--amber); }
+  .nombre::after { content: ""; display: block; width: 1.4em; height: .12em; margin-top: .12em; background: var(--amber); transform: skewX(-25deg); }
 
-  .probar-letra {
+  /* Versiones del Armiño: se muestra la que diga data-armino. */
+  .banner :global(.op) { display: none !important; }
+  .banner[data-armino="auris"] :global(.op-auris),
+  .banner[data-armino="pngtuber"] :global(.op-pngtuber),
+  .banner[data-armino="silueta"] :global(.op-logo),
+  .banner[data-armino="actual"] :global(.op-logo) { display: block !important; }
+  /* Silueta: el logo como un esténcil carbón sobre el naranja. */
+  .banner[data-armino="silueta"] .naranja :global(.op-logo) { filter: brightness(0) opacity(.85); }
+
+  .probar {
     position: absolute; right: 1rem; top: .9rem; z-index: 3;
     display: flex; flex-wrap: wrap; align-items: center; gap: .35rem;
     padding: .35rem .5rem; border-radius: .75rem;
     background: rgb(0 0 0 / .55); border: 1px dashed #777;
     font-family: var(--font-body); font-size: .75rem; color: #ccc;
   }
-  @media (max-width: 48rem) { .probar-letra { left: 1rem; right: auto; } }
-  .probar-letra button {
+  @media (max-width: 48rem) { .probar { position: relative; top: auto; right: auto; margin: -1.5rem 1rem 3.5rem; } }
+  .probar button {
     padding: .2rem .55rem; border: 1px solid #555; border-radius: 999px;
     background: #2b2b2b; color: #eee; font: inherit; font-weight: 700; cursor: pointer;
   }
-  .probar-letra button[aria-pressed="true"] { background: var(--amber); border-color: var(--amber); color: var(--charcoal); }
+  .probar button[aria-pressed="true"] { background: var(--amber); border-color: var(--amber); color: var(--charcoal); }
 
   /* Franja: naranja inclinada debajo del banner, como en la variante 2. */
   .franja {
@@ -386,6 +367,7 @@ const usoStickers = [
     .banner { grid-template-columns: 1fr; }
     .naranja { height: 15rem; clip-path: polygon(0 0, 100% 0, 100% 75%, 0 100%); }
     .naranja img { width: 13rem; margin: 0; }
+    .naranja :global(.armino-vivo) { width: 13rem !important; margin-right: 0; }
     .texto { padding: 1.5rem 1rem 3rem; }
     .marca-agua { width: 90vw; top: 70%; }
   }
@@ -402,24 +384,33 @@ const usoStickers = [
 <script>
   const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // Selector de tipografía del nombre (solo para la revisión). Se recuerda en
-  // la URL (?letra=bebas) para poder compartir la opción elegida.
-  const nombre = document.querySelector<HTMLElement>(".nombre")!;
-  const botones = document.querySelectorAll<HTMLButtonElement>(".probar-letra button");
-  function usarLetra(id: string) {
-    if (![...botones].some((b) => b.dataset.letra === id)) return;
-    nombre.dataset.letra = id;
-    botones.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.letra === id)));
+  // Selector de versión del Armiño (solo para la revisión). Se recuerda en la
+  // URL (?armino=silueta) para poder compartir la opción elegida.
+  const banner = document.querySelector<HTMLElement>(".banner")!;
+  const botones = document.querySelectorAll<HTMLButtonElement>(".probar button");
+  function usarArmino(id: string) {
+    if (![...botones].some((b) => b.dataset.armino === id)) return;
+    banner.dataset.armino = id;
+    botones.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.armino === id)));
   }
-  usarLetra(new URLSearchParams(location.search).get("letra") ?? "unbounded");
+  usarArmino(new URLSearchParams(location.search).get("armino") ?? "auris");
   botones.forEach((b) =>
     b.addEventListener("click", () => {
-      usarLetra(b.dataset.letra!);
+      usarArmino(b.dataset.armino!);
       const url = new URL(location.href);
-      url.searchParams.set("letra", b.dataset.letra!);
+      url.searchParams.set("armino", b.dataset.armino!);
       history.replaceState(null, "", url);
     }),
   );
+
+  // Al pasar por "Ver en vivo", el Armiño del banner habla.
+  const cta = banner.querySelector('[data-cta="twitch"]');
+  const hablar = (si: boolean) =>
+    banner.querySelectorAll<HTMLElement>(".naranja .armino-vivo").forEach((a) => (a.dataset.hablando = String(si)));
+  cta?.addEventListener("mouseenter", () => hablar(true));
+  cta?.addEventListener("mouseleave", () => hablar(false));
+  cta?.addEventListener("focus", () => hablar(true));
+  cta?.addEventListener("blur", () => hablar(false));
 
   // Las cosas aparecen al entrar en pantalla.
   if (!quieto && "IntersectionObserver" in window) {
