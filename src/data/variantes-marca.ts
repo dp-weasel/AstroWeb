@@ -48,6 +48,13 @@ export const variantes: Variante[] = [
     recursos: ["EDM (poses con borde)", "pngTuber", "Ecualizador de Starting Soon", "Bocadillos de los dos personajes"],
     secciones: ["Próximo directo", "Números", "Horario", "Qué se juega + votación", "Stickers de EDM", "Comandos del chat", "Metas de afiliado", "Videos", "Reglas", "Cómo apoyar", "Más preguntas en el chat"],
   },
+  {
+    slug: "mezcla",
+    nombre: "6 · La mezcla",
+    idea: "La escena (5) como base, con el banner de la 2, el equipo y la historia de la 4, las preguntas de la 2 y el Armiño despidiéndose al final (ahora entero).",
+    recursos: ["Banner de Twitch (composición)", "EDM (poses con borde)", "pngTuber", "Bocadillos de los dos personajes"],
+    secciones: ["Cómo es el canal (charla)", "Te presento al equipo", "Cómo empezó todo", "Stickers de EDM + cómo se usan", "Escribí y pasa algo", "Camino a Afiliado", "Lo último en YouTube", "Reglas de la casa", "Herramientas", "¿Querés dar una mano?", "Preguntas frecuentes"],
+  },
 ];
 
 /** Texto de presentación en voseo. */

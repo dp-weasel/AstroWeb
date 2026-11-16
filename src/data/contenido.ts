@@ -135,6 +135,7 @@ export const comandos = [
   { cmd: "!edm", que: "EDM te contesta en pantalla con una frase al azar.", real: true },
   { cmd: "mate", que: "Nombrá el mate en cualquier mensaje y EDM opina al respecto.", real: true },
   { cmd: "armiño", que: "Nombrá al Armiño y se asoma desde abajo de la pantalla.", real: true },
+  { cmd: "jaja", que: "Si el chat se ríe, EDM se tira al piso de la risa.", real: true },
   { cmd: "tu primer mensaje", que: "EDM te saluda por tu nombre la primera vez que hablás.", real: true },
   { cmd: "!horario", que: "Te dice cuándo es el próximo directo.", real: false },
   { cmd: "!redes", que: "YouTube, X y esta web.", real: false },
