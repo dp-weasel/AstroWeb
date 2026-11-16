@@ -1,5 +1,5 @@
 /* Tokens de la marca de las escenas de OBS (RecursosCC/branding.txt).
-   Por ahora solo los usan las variantes de /variantes-marca/. */
+   Se cargan en todas las páginas desde BaseLayout. */
 :root {
   --cream: #f4ede1;    /* pelaje del Armiño: bocadillos y superficies claras */
   --magenta: #d6249f;  /* solo ligado a EDM */

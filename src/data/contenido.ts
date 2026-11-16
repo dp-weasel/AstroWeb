@@ -1,7 +1,6 @@
-// Contenido nuevo propuesto para la portada (variantes de /variantes-marca/).
-// ⚠ Casi todo son SUPOSICIONES para ver cómo quedaría: los campos `ejemplo: true`
-// o los comentarios EJEMPLO marcan lo inventado. Hay que cambiarlo por lo real
-// o quitar la sección antes de pasar una variante a la portada.
+// Contenido de la portada (src/pages/index.astro).
+// ⚠ Todavía hay SUPOSICIONES: los campos `ejemplo: true` o los comentarios EJEMPLO
+// marcan lo inventado. Hay que cambiarlo por lo real o quitar la sección (ver todo.md).
 import type { ImageMetadata } from "astro";
 import edmSaludando from "../assets/brand/edm/saludando.png";
 import edmCheer from "../assets/brand/edm/cheer.png";
@@ -169,18 +168,6 @@ export const reglas = [
 ];
 
 /* ------------------------------------------------------------------ */
-/* El rincón (setup) — EJEMPLO.                                        */
-/* ------------------------------------------------------------------ */
-export const rincon = [
-  { emoji: "🖥️", que: "PC", detalle: "La que aguanta Guild Wars 2 y OBS a la vez (casi siempre)." },
-  { emoji: "🎙️", que: "Micrófono", detalle: "Dinámico, para que no se escuche la pava." },
-  { emoji: "📷", que: "Cámara", detalle: "Webcam 1080p con una luz que todavía estoy acomodando." },
-  { emoji: "🎧", que: "Auriculares", detalle: "Como el Armiño. Obvio." },
-  { emoji: "🧉", que: "Mate", detalle: "Calabaza, bombilla de alpaca y yerba con palo." },
-  { emoji: "🛠️", que: "Escenas", detalle: "Hechas a mano en HTML: alertas, EDM, el Armiño y todo lo que ves." },
-];
-
-/* ------------------------------------------------------------------ */
 /* Videos de YouTube (las miniaturas son reales; títulos EJEMPLO).      */
 /* ------------------------------------------------------------------ */
 export const videos = [
@@ -189,22 +176,6 @@ export const videos = [
   { titulo: "¿¡QUÉ!? Lo mejor del mes", img: miniReaccion, duracion: "8:15" },
   { titulo: "Tier list de clases según alguien que recién empieza", img: miniTier, duracion: "15:22" },
   { titulo: "Directo completo: juegos, mate y charla", img: miniMarca, duracion: "2:31:10" },
-];
-
-/* ------------------------------------------------------------------ */
-/* Juegos.                                                             */
-/* ------------------------------------------------------------------ */
-export const juegoPrincipal = {
-  nombre: "Guild Wars 2",
-  texto: "El juego de la casa. Fractales, mundo abierto y raids de a poco. Si jugás, sumate a las partidas con la comunidad.",
-  modos: ["Fractales", "Mundo abierto", "Raids (aprendiendo)", "Eventos de temporada"],
-};
-/** EJEMPLO: géneros que el chat podría votar para los sábados. */
-export const proximos = [
-  { nombre: "Un cozy de granja", votos: 9 },
-  { nombre: "Un indie de terror cortito", votos: 14 },
-  { nombre: "Un souls (para sufrir juntos)", votos: 6 },
-  { nombre: "Cooperativo con el chat", votos: 11 },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -222,8 +193,19 @@ export const apoyar = {
 };
 
 /* ------------------------------------------------------------------ */
-/* Preguntas frecuentes, ampliadas.                                    */
+/* Presentación del banner y preguntas frecuentes.                     */
 /* ------------------------------------------------------------------ */
+/** Texto de presentación en voseo. */
+export const intro =
+  "¡Hola! Soy Weasel. Streameo Guild Wars 2 (y lo que pinte), aprendo sobre la marcha y siempre hay un mate cerca. Pasá, ponete cómodo.";
+
+export const preguntas = [
+  { q: "¿Cuándo hay directo?", a: "Los avisos salen en X. Si me seguís en Twitch, te llega la notificación apenas arranco." },
+  { q: "Soy nuevo en Guild Wars 2, ¿puedo pasar igual?", a: "¡Obvio! El canal también aprende sobre la marcha. Preguntá lo que quieras en el chat." },
+  { q: "¿Para qué son los mensajes de GW2?", a: "Son mensajes listos para copiar y pegar en el chat del juego: LFG, explicaciones de jefes, etc." },
+  { q: "¿Jugás otras cosas?", a: "Guild Wars 2 es el principal, pero estoy abierto a probar otros juegos. ¿Alguna sugerencia?" },
+];
+
 export const preguntasExtra = [
   { q: "¿Tengo que jugar Guild Wars 2 para pasar?", a: "Para nada. La mitad del directo es charla. Y si te dan ganas de probarlo, el juego base es gratis." },
   { q: "¿Puedo jugar con Weasel?", a: "En los directos de fractales y mundo abierto se arman grupos con el chat. Preguntá en el directo." },

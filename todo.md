@@ -1,7 +1,7 @@
 # Pendientes de la portada
 
-Lo que falta definir para pasar la **variante 6 · La mezcla** (`/variantes-marca/mezcla/`) a la portada real.
-Casi todo el contenido nuevo está en `src/data/contenido.ts`. En la página, lo supuesto lleva la etiqueta
+La **variante 6 · La mezcla** ya es la portada (`src/pages/index.astro`). Esto es lo que falta definir.
+Casi todo el contenido está en `src/data/contenido.ts`. En la página, lo supuesto lleva la etiqueta
 punteada **EJEMPLO**, **IDEA** o **HISTORIA SUPUESTA**.
 
 ## Imágenes
@@ -23,13 +23,13 @@ punteada **EJEMPLO**, **IDEA** o **HISTORIA SUPUESTA**.
       porqué del nombre (¿Shiro = blanco?) y lo de la música.
 - [ ] **Personajes** (`personajes`): revisar los textos, sobre todo la frase típica de Weasel
       ("Esperá que ya entiendo") y el dato de EDM.
-- [ ] **Intro del banner** (`intro` en `variantes-marca.ts`) y la línea de arriba del nombre
+- [ ] **Intro del banner** (`intro` en `contenido.ts`) y la línea de arriba del nombre
       ("Directos de Guild Wars 2 · y lo que pinte").
 - [ ] **Reglas de la casa** (`reglas`): son una propuesta. Confirmar o ajustar.
 - [ ] **Preguntas frecuentes** (`preguntasExtra`): confirmar las respuestas de "¿Puedo jugar con
       Weasel?" (¿se arman grupos con el chat?) y "¿Qué música suena?".
-- [ ] La portada actual (`src/data/profile.ts`) todavía usa tú: "Si te sigues", "¿Juegas otras cosas?".
-      Pasarla a voseo o reemplazarla por los textos de la variante 6.
+- [x] La portada vieja (con tú) se reemplazó por los textos en voseo de la variante 6.
+- [ ] `/gw2/mensajes/` todavía usa tú en el subtítulo ("Haz clic… y pégalo").
 
 ## Datos
 
@@ -65,10 +65,12 @@ punteada **EJEMPLO**, **IDEA** o **HISTORIA SUPUESTA**.
 
 ## Antes de publicar
 
-- [ ] Reemplazar `src/pages/index.astro` por la variante 6 (sin la barra de variantes ni el `noindex`).
+- [x] Reemplazar `src/pages/index.astro` por la variante 6 (sin la barra de variantes ni el `noindex`).
 - [ ] Revisar la variante en el tema claro: las capturas se hicieron solo en el oscuro.
-- [ ] Limpiar lo que no se use: las páginas de `/variantes-marca/`, las secciones que no entraron
-      (`Horario`, `ProximoDirecto`, `Juegos`, `Rincon`), las imágenes sobrantes de `src/assets/brand/`
-      y las fuentes que queden sin usar.
+- [x] Limpiar las páginas de `/variantes-marca/` y las secciones que no entraron (`Horario`,
+      `ProximoDirecto`, `Juegos`, `Rincon`). Siguen en el historial de la rama `feature/home-marca`.
+- [ ] Revisar las imágenes sobrantes de `src/assets/brand/` y la dependencia `@fontsource-variable/cinzel`,
+      que no se usa.
 - [ ] Sacar todas las etiquetas EJEMPLO, IDEA o HISTORIA SUPUESTA que queden.
-- [ ] `npm run check && npm run build`, merge a `master` y revisar en Cloudflare.
+- [x] `npm run check && npm run build` y merge a `master`.
+- [ ] Subir `master` a GitHub y revisar en Cloudflare.

@@ -1,77 +1,190 @@
 ---
-// Portada: presentación con enlaces a las redes, cómo es el canal,
-// herramientas y preguntas frecuentes. Los textos están en src/data/profile.ts.
+// Portada: banner diagonal, charla entre el Armiño y EDM, equipo, historia,
+// stickers, comandos, metas, videos, reglas, herramientas, apoyo y preguntas.
+// Casi todos los textos están en src/data/contenido.ts. Lo que falta definir
+// lleva la etiqueta EJEMPLO, IDEA o HISTORIA SUPUESTA (ver todo.md).
+import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Logo from "../components/Logo.astro";
-import { profile, socials, valores, preguntas } from "../data/profile";
+import "@fontsource-variable/unbounded";
+import Numeros from "../components/secciones/Numeros.astro";
+import ArminoVivo from "../components/marca/ArminoVivo.astro";
+import Bocadillo from "../components/marca/Bocadillo.astro";
+import Ctas from "../components/marca/Ctas.astro";
+import Personajes from "../components/secciones/Personajes.astro";
+import SobreMi from "../components/secciones/SobreMi.astro";
+import Emotes from "../components/secciones/Emotes.astro";
+import Comandos from "../components/secciones/Comandos.astro";
+import Metas from "../components/secciones/Metas.astro";
+import Videos from "../components/secciones/Videos.astro";
+import Reglas from "../components/secciones/Reglas.astro";
+import Apoyar from "../components/secciones/Apoyar.astro";
+import Ejemplo from "../components/secciones/Ejemplo.astro";
+import armino from "../assets/brand/weasel-mouth-closed-headphones.png";
+import edmShrug from "../assets/brand/edm/shrug.png";
+import edmArriba from "../assets/brand/edm/feliz-apuntando-arriba.png";
+import edmSorprendida from "../assets/brand/edm/sorprendida.png";
+import edmHiss from "../assets/brand/edm/hiss.png";
+import edmBrazosArriba from "../assets/brand/edm/brazos-arriba.png";
+import edmApuntando from "../assets/brand/edm/apuntando.png";
+import edmRiendo from "../assets/brand/edm/riendo-en-el-suelo.png";
+import { intro, preguntas, preguntasExtra, franja } from "../data/contenido";
 
-const twitch = socials[0];
-const resto = socials.slice(1);
+const faq = [...preguntas, ...preguntasExtra];
 
-// Igual que en SocialLinks: el negro de X no se vería en modo oscuro, usa el del texto.
-const brandColor = (hex: string) => (hex === "000000" ? "currentColor" : `#${hex}`);
+/** Quién presenta cada sección. */
+const dice = {
+  equipo: "Somos tres. Bueno, dos y medio: EDM dice que yo no cuento porque no juego.",
+  historia: "¿Querés saber cómo empezó todo esto? Te cuento, que yo estaba ahí.",
+  emotes: { edm: edmSorprendida, texto: "¿Esa soy yo? ¿Y por qué tengo doce caras? Bueno, usalas en el chat." },
+  comandos: { edm: edmHiss, texto: "Si escribís !edm, contesto. Si nombrás el mate, opino. No me provoques." },
+  metas: { edm: edmBrazosArriba, texto: "Cuando seamos Afiliados quiero mis emotes en Twitch. Es un trato." },
+  reglas: { edm: edmShrug, texto: "Son pocas. Hasta Weasel las cumple. Casi siempre." },
+};
+
+/** Cómo se usarían los stickers, de hoy a cuando el canal sea Afiliado. */
+const usoStickers = [
+  {
+    cuando: "En el directo",
+    texto: "Escribí el nombre de un sticker en el chat y EDM aparece en pantalla con esa pose.",
+    estado: "idea",
+  },
+  {
+    cuando: "En el chat, ya",
+    texto: "Con la extensión 7TV (gratis), los stickers se ven como emotes en el chat de Twitch.",
+    estado: "idea",
+  },
+  {
+    cuando: "Al ser Afiliados",
+    texto: "Pasan a ser emotes oficiales del canal, con el prefijo de Twitch (por ejemplo weaselHola).",
+    estado: "meta",
+  },
+];
 ---
 
 <BaseLayout
-  title={`${profile.name} · Streamer`}
-  description="Streamer nuevo de Guild Wars 2 aprendiendo sobre la marcha. Directos en Twitch, videos en YouTube y comunidad."
+  title="Weasel Shiro · Streamer"
+  description="Directos de Guild Wars 2 (y lo que pinte) con mate, el Armiño y EDM. Twitch, YouTube y herramientas para el juego."
 >
-  <main>
-    <section class="hero">
-      <div class="hero-text">
-        <p class="eyebrow"><span class="dot"></span> Streamer en Twitch</p>
-        <h1>{profile.name}</h1>
-        <p class="lead">{profile.intro}</p>
-        <div class="ctas">
-          <a class="btn primary" href={twitch.url} target="_blank" rel="noopener me">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d={twitch.icon.path} /></svg>
-            {twitch.cta}
-          </a>
-          {resto.map((s) => (
-            <a
-              class:list={["btn", { youtube: s.icon.slug === "youtube" }]}
-              href={s.url}
-              target="_blank"
-              rel="noopener me"
-              aria-label={s.name}
-              style={`--brand: ${brandColor(s.icon.hex)}`}
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d={s.icon.path} /></svg>
-            </a>
-          ))}
-        </div>
+  <main data-escena>
+    <!-- 1. Banner (de la variante 2) -->
+    <!-- Logo actual con auriculares. Pendiente: reemplazarlo por un logo nuevo
+         en el estilo del pngTuber (ver todo.md). <ArminoVivo auriculares /> sirve
+         de referencia de cómo quedaría. -->
+    <section class="banner">
+      <div class="naranja" aria-hidden="true">
+        <Image src={armino} alt="" width={640} widths={[320, 480, 640]} sizes="(max-width: 48rem) 70vw, 34vw" loading="eager" />
       </div>
-      <div class="hero-art"><Logo size="min(16rem, 60vw)" /></div>
+      <div class="marca-agua" aria-hidden="true">
+        <Image src={armino} alt="" width={640} widths={[320, 640]} sizes="40vw" />
+      </div>
+      <div class="texto">
+        <p class="eyebrow titulo-marca">Directos de Guild Wars 2 · y lo que pinte</p>
+        <h1 class="nombre">WEASEL</h1>
+        <p class="lead">{intro}</p>
+        <Ctas />
+      </div>
     </section>
 
-    <section aria-labelledby="valores">
-      <h2 id="valores">Cómo es el canal</h2>
-      <div class="values">
-        {valores.map((v) => (
-          <article>
-            <span class="emoji" aria-hidden="true">{v.emoji}</span>
-            <h3>{v.titulo}</h3>
-            <p>{v.texto}</p>
-          </article>
+    <!-- Franja debajo del banner (de la variante 2) -->
+    <div class="franja"><Numeros items={franja} /></div>
+
+    <!-- 2. Cómo es el canal, charlado (de la 5) -->
+    <section class="charla" aria-labelledby="valores">
+      <h2 id="valores" class="titulo-marca">Cómo es el canal</h2>
+      <div class="turno aparece">
+        <ArminoVivo size="7rem" class="avatar" />
+        <Bocadillo quien="armino"><p><strong>Jugamos sin presión.</strong> Weasel aprende sobre la marcha y equivocarse es parte del directo.</p></Bocadillo>
+      </div>
+      <div class="turno edm aparece">
+        <Bocadillo quien="edm" cola="derecha"><p>Y se equivoca seguido, eh.</p></Bocadillo>
+        <Image class="avatar" src={edmShrug} alt="EDM encogiéndose de hombros" width={200} />
+      </div>
+      <div class="turno aparece">
+        <ArminoVivo size="7rem" class="avatar" />
+        <Bocadillo quien="armino"><p><strong>Buenas charlas.</strong> El chat es parte del juego: preguntá, aconsejá, contá tu anécdota.</p></Bocadillo>
+      </div>
+      <div class="turno edm aparece">
+        <Bocadillo quien="edm" cola="derecha"><p><strong>¡Y crecemos juntos!</strong> Es un canal nuevo. Sumate, que la pava ya está puesta 🧉</p></Bocadillo>
+        <Image class="avatar" src={edmArriba} alt="EDM feliz, señalando hacia arriba" width={200} />
+      </div>
+    </section>
+
+    <!-- 3. Equipo e historia (de la 4), presentados por el Armiño -->
+    <section class="bloque" aria-labelledby="equipo">
+      <h2 id="equipo" class="titulo-marca">Te presento al equipo</h2>
+      <div class="dice aparece"><ArminoVivo size="5rem" /><Bocadillo quien="armino"><p>{dice.equipo}</p></Bocadillo></div>
+      <Personajes />
+    </section>
+
+    <section class="bloque" aria-labelledby="historia">
+      <h2 id="historia" class="titulo-marca">Cómo empezó todo</h2>
+      <div class="dice aparece"><ArminoVivo size="5rem" /><Bocadillo quien="armino"><p>{dice.historia}</p></Bocadillo></div>
+      <SobreMi ficha={false} />
+    </section>
+
+    <!-- 4. Stickers y chat, presentados por EDM -->
+    <section class="bloque" aria-labelledby="emotes">
+      <h2 id="emotes" class="titulo-marca">Los stickers de EDM</h2>
+      <div class="dice aparece"><Image src={dice.emotes.edm} alt="" width={160} /><Bocadillo quien="edm"><p>{dice.emotes.texto}</p></Bocadillo></div>
+      <Emotes />
+      <ol class="uso">
+        {usoStickers.map((u, i) => (
+          <li>
+            <span class="paso">{i + 1}</span>
+            <strong>{u.cuando}</strong>
+            <p>{u.texto}</p>
+            <Ejemplo texto={u.estado === "meta" ? "Con Afiliado" : "Idea"} />
+          </li>
         ))}
-      </div>
+      </ol>
     </section>
 
-    <section class="narrow" aria-labelledby="herramientas">
-      <h2 id="herramientas">Herramientas</h2>
-      <div class="tools">
+    <section class="bloque angosto" aria-labelledby="comandos">
+      <h2 id="comandos" class="titulo-marca">Escribí y pasa algo</h2>
+      <div class="dice aparece"><Image src={dice.comandos.edm} alt="" width={160} /><Bocadillo quien="edm"><p>{dice.comandos.texto}</p></Bocadillo></div>
+      <Comandos />
+    </section>
+
+    <section class="bloque angosto" aria-labelledby="metas">
+      <h2 id="metas" class="titulo-marca">Camino a Afiliado</h2>
+      <div class="dice aparece"><Image src={dice.metas.edm} alt="" width={160} /><Bocadillo quien="edm"><p>{dice.metas.texto}</p></Bocadillo></div>
+      <Metas />
+    </section>
+
+    <section class="bloque" aria-labelledby="videos">
+      <h2 id="videos" class="titulo-marca">Lo último en YouTube</h2>
+      <Videos cantidad={3} />
+    </section>
+
+    <section class="bloque angosto" aria-labelledby="reglas">
+      <h2 id="reglas" class="titulo-marca">Reglas de la casa</h2>
+      <div class="dice aparece"><Image src={dice.reglas.edm} alt="" width={160} /><Bocadillo quien="edm"><p>{dice.reglas.texto}</p></Bocadillo></div>
+      <Reglas />
+    </section>
+
+    <!-- 5. Herramientas: EDM señala la tarjeta -->
+    <section class="bloque angosto" aria-labelledby="herramientas">
+      <h2 id="herramientas" class="titulo-marca">Herramientas</h2>
+      <div class="señala aparece">
         <a class="tool-card" href="/gw2/mensajes/">
           <span class="emoji" aria-hidden="true">💬</span>
-          <h3>Mensajes de GW2 →</h3>
-          <p>Mensajes listos para copiar y pegar en el chat del juego.</p>
+          <span><strong>Mensajes de GW2 →</strong><br />Listos para copiar y pegar en el chat del juego.</span>
         </a>
+        <Image class="edm-apunta" src={edmApuntando} alt="EDM señalando la herramienta" width={240} />
       </div>
     </section>
 
-    <section class="narrow" aria-labelledby="faq">
-      <h2 id="faq">Preguntas frecuentes</h2>
+    <section class="bloque" aria-labelledby="apoyar">
+      <h2 id="apoyar" class="titulo-marca">¿Querés dar una mano?</h2>
+      <div class="dice aparece"><ArminoVivo size="5rem" /><Bocadillo quien="armino"><p>Todo suma, y casi todo es gratis. EDM igual prefiere los cafecitos.</p></Bocadillo></div>
+      <Apoyar />
+    </section>
+
+    <!-- 6. Preguntas frecuentes (de la 2) -->
+    <section class="bloque angosto" aria-labelledby="faq">
+      <h2 id="faq" class="titulo-marca">Preguntas frecuentes</h2>
       <div class="faq">
-        {preguntas.map((p, i) => (
+        {faq.map((p, i) => (
           <details open={i === 0}>
             <summary>{p.q}</summary>
             <p>{p.a}</p>
@@ -79,83 +192,193 @@ const brandColor = (hex: string) => (hex === "000000" ? "currentColor" : `#${hex
         ))}
       </div>
     </section>
+
+    <!-- 7. Cierre: EDM tirada de la risa -->
+    <section class="cierre aparece">
+      <Image src={edmRiendo} alt="EDM tirada en el suelo, muerta de risa" width={260} />
+      <Bocadillo quien="edm" cola="izquierda"><p>¡Nos vemos en el próximo directo! Traé el mate.</p></Bocadillo>
+    </section>
+
+    <!-- El Armiño se asoma desde la línea del pie al llegar al final (de la 4) -->
+    <div class="asomo" aria-hidden="true">
+      <Bocadillo quien="armino" cola="derecha" class="chau"><p>¿Ya te vas? Seguí a Weasel en Twitch así no te perdés nada 🧉</p></Bocadillo>
+      <div class="ventanita"><ArminoVivo size="9rem" class="armino-chau" /></div>
+    </div>
   </main>
 </BaseLayout>
 
 <style>
-  main { max-width: 60rem; margin: 0 auto; padding: 1rem 1rem 4rem; }
-  section + section { margin-top: 4rem; }
-  .narrow { max-width: 44rem; margin-inline: auto; }
+  main { font-family: var(--font-text); overflow-x: clip; }
+  h2 { text-align: center; font-size: clamp(1.5rem, 4vw, 2rem); margin: 0 0 2rem; }
 
-  /* Presentación */
-  .hero {
-    display: grid;
-    grid-template-columns: 1.3fr 1fr;
-    align-items: center;
-    gap: 2rem;
-    padding: 2rem 0 1rem;
+  /* ---------- Banner (siempre oscuro, como el de Twitch) ---------- */
+  .banner {
+    position: relative; isolation: isolate; overflow: hidden;
+    display: grid; grid-template-columns: 40% 1fr; align-items: center;
+    min-height: min(34rem, 80vh);
+    background: var(--charcoal); color: var(--snow);
   }
-  .hero-art :global(.badge) { margin: 0 auto; }
-  .eyebrow { display: inline-flex; align-items: center; gap: .5rem; margin: 0; color: var(--accent); font-weight: 700; font-size: .9rem; text-transform: uppercase; letter-spacing: .08em; }
-  .dot { width: .6rem; height: .6rem; border-radius: 50%; background: var(--vermilion); animation: pulse 1.6s infinite; }
-  @keyframes pulse { 50% { opacity: .3; } }
-  @media (prefers-reduced-motion: reduce) { .dot { animation: none; } }
-  h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.5rem, 7vw, 4.5rem); line-height: 1; margin: .5rem 0 1rem; }
-  .lead { color: var(--muted); font-size: 1.1rem; margin: 0 0 1.5rem; max-width: 32rem; }
-  .ctas { display: flex; flex-wrap: wrap; gap: .5rem; }
-  .btn {
-    display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
-    min-width: 3rem; height: 3rem; padding: 0 1rem;
-    border: 1px solid var(--border); border-radius: .75rem;
-    background: var(--surface); color: var(--brand, var(--text));
-    font-weight: 700; text-decoration: none;
-    transition: border-color .15s, transform .15s;
+  .naranja {
+    align-self: stretch;
+    display: grid; place-items: end center;
+    background: linear-gradient(160deg, var(--amber) 55%, var(--vermilion));
+    clip-path: polygon(0 0, 100% 0, 78% 100%, 0 100%);
   }
-  .btn:hover { border-color: var(--accent); transform: translateY(-2px); }
-  .btn svg { width: 1.25rem; height: 1.25rem; fill: currentColor; }
-  /* YouTube: botón claro con el ícono en su rojo. En el tema oscuro es gris
-     claro en vez de blanco puro, para que no encandile frente a los demás. */
-  .btn.youtube { background: #e0e0e0; border-color: #e0e0e0; }
-  :global(:root[data-theme="light"]) .btn.youtube { background: #fff; border-color: var(--border); }
-  .btn.youtube:hover { border-color: var(--accent); }
-  .btn.primary { padding: 0 1.5rem; border: 0; color: #fff; background: linear-gradient(135deg, var(--vermilion), var(--amber)); }
+  .naranja img { width: min(80%, 26rem); height: auto; margin-right: 18%; filter: drop-shadow(0 .5rem 0 rgb(0 0 0 / .2)); }
+  .marca-agua :global(img) { display: block; width: 100%; height: auto; }
+  .marca-agua {
+    position: absolute; z-index: -1; right: -6%; top: 50%;
+    width: min(42rem, 55vw); height: auto;
+    transform: translateY(-50%) scaleX(-1);
+    filter: grayscale(1) brightness(.6); opacity: .12;
+  }
+  .texto { padding: 3rem 2rem 3rem 0; max-width: 34rem; }
+  .eyebrow { margin: 0 0 .5rem; color: var(--amber); font-size: .9rem; }
+  /* Nombre: Unbounded en blanco, con un subrayado naranja inclinado. */
+  .nombre {
+    margin: 0 0 1rem; line-height: .95; color: var(--snow);
+    font-family: "Unbounded Variable", sans-serif; font-weight: 900; letter-spacing: -.03em;
+    font-size: calc(clamp(3rem, 9vw, 6rem) * .8);
+  }
+  .nombre::after { content: ""; display: block; width: 1.4em; height: .12em; margin-top: .12em; background: var(--amber); transform: skewX(-25deg); }
 
-  /* Secciones */
-  h2 { text-align: center; font-size: 1.5rem; margin: 0 0 1.5rem; }
 
-  .values { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1rem; }
-  .values article { padding: 1.5rem 1.25rem; border-radius: 1.25rem; background: var(--surface); text-align: center; }
-  .values .emoji { font-size: 2rem; }
-  .values h3 { margin: .5rem 0 .25rem; font-size: 1.05rem; }
-  .values p { margin: 0; color: var(--muted); font-size: .95rem; }
+  /* Franja: naranja inclinada debajo del banner, como en la variante 2. */
+  .franja {
+    margin-top: -2.5rem; position: relative; z-index: 2;
+    padding: 1.5rem max(1rem, calc((100vw - 60rem) / 2)) 1rem;
+    background: linear-gradient(135deg, var(--vermilion), var(--amber));
+    clip-path: polygon(0 1.5rem, 100% 0, 100% calc(100% - 1.5rem), 0 100%);
+    color: var(--charcoal);
+  }
+  .franja :global(dd) { color: var(--charcoal); }
+  .franja :global(dt), .franja :global(.ejemplo) { color: rgb(33 33 33 / .75); }
+  .lead { margin: 0 0 1.5rem; color: #cfcfcf; font-size: 1.1rem; font-weight: 500; }
+  .banner :global(.btn:not(.primary):not(.youtube)) { background: #2b2b2b; border-color: #3d3d3d; color: var(--brand, var(--snow)); }
+  .banner :global(.btn[aria-label^="X"]) { color: var(--snow); }
 
+  /* ---------- Charla ---------- */
+  .charla { max-width: 46rem; margin: 5rem auto 0; padding: 0 1rem; display: grid; gap: 1.5rem; }
+  .turno { display: flex; align-items: center; gap: 1rem; }
+  .turno.edm { justify-content: flex-end; }
+  .turno :global(.bocadillo) { flex: 0 1 30rem; }
+  .turno :global(.avatar) { flex: none; }
+  .turno :global(img.avatar) { width: 6.5rem; height: auto; }
+
+  /* ---------- Secciones ---------- */
+  .bloque { max-width: 60rem; margin: 5rem auto 0; padding: 0 1rem; }
+  .bloque.angosto { max-width: 46rem; }
+  .dice { display: flex; align-items: center; gap: 1rem; max-width: 34rem; margin: -.75rem auto 1.75rem; }
+  .dice img { width: 4.5rem; height: auto; flex: none; }
+  .dice :global(.bocadillo) { flex: 1; }
+
+  /* Cómo se usan los stickers: tres pasos */
+  .uso { list-style: none; margin: 1.5rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: .75rem; }
+  .uso li { position: relative; padding: 1rem 1rem 1rem 3.5rem; border-radius: 1rem; border: 2px dashed var(--border); }
+  .uso li:last-child { border-color: var(--magenta); }
+  .paso {
+    position: absolute; left: .9rem; top: 1rem;
+    display: grid; place-items: center; width: 1.9rem; height: 1.9rem; border-radius: 50%;
+    background: var(--magenta); color: #fff; font-family: var(--font-label); font-size: 1rem;
+  }
+  .uso p { margin: .2rem 0 .5rem; color: var(--muted); font-size: .92rem; }
+
+  /* Herramientas */
+  .señala { position: relative; padding-right: 7rem; }
+  .tool-card {
+    display: flex; gap: 1rem; align-items: center; padding: 1.25rem;
+    border: 3px solid var(--charcoal); border-radius: 1.25rem; background: var(--cream);
+    color: var(--charcoal); text-decoration: none; box-shadow: .35rem .35rem 0 var(--amber);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .tool-card:hover { transform: translate(-.15rem, -.15rem); box-shadow: .5rem .5rem 0 var(--amber); }
+  .tool-card .emoji { font-size: 2rem; }
+  .tool-card strong { font-size: 1.1rem; }
+  .edm-apunta { position: absolute; right: -1rem; top: 50%; width: 8rem; height: auto; transform: translateY(-45%); }
+
+  /* Preguntas (estilo de la 2) */
   .faq { display: grid; gap: .5rem; }
-  details { border: 1px solid var(--border); border-radius: 1rem; background: var(--surface); }
-  summary { padding: 1rem 1.25rem; font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 1rem; }
+  details { border-left: 4px solid var(--border); background: var(--surface); }
+  details[open] { border-left-color: var(--amber); }
+  summary { padding: 1rem 1.25rem; font-weight: 700; cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 1rem; }
   summary::-webkit-details-marker { display: none; }
   summary::after { content: "+"; color: var(--accent); font-size: 1.25rem; line-height: 1; }
   details[open] summary::after { content: "−"; }
   details p { margin: 0; padding: 0 1.25rem 1rem; color: var(--muted); }
-  /* Herramientas */
-  .tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; }
-  .tool-card {
-    padding: 1.25rem;
-    border: 1px solid var(--border);
-    border-radius: .9rem;
-    background: var(--surface);
-    color: var(--text);
-    text-decoration: none;
-    transition: border-color .15s;
-  }
-  .tool-card:hover { border-color: var(--accent); }
-  .tool-card .emoji { font-size: 1.75rem; }
-  .tool-card h3 { margin: .5rem 0 .25rem; font-size: 1.1rem; }
-  .tool-card p { margin: 0; color: var(--muted); }
 
-  @media (max-width: 40rem) {
-    .hero { grid-template-columns: 1fr; text-align: center; }
-    .hero-art { order: -1; }
-    .lead { margin-inline: auto; }
-    .ctas { justify-content: center; }
+  /* Cierre */
+  .cierre { display: flex; align-items: center; justify-content: center; gap: 1rem; max-width: 40rem; margin: 5rem auto 0; padding: 0 1rem; }
+  .cierre img { width: 9rem; height: auto; }
+
+  /* El Armiño sale desde la línea donde empieza el pie, a la derecha. La
+     ventanita recorta todo lo que queda por debajo de esa línea. */
+  .asomo { display: flex; justify-content: flex-end; align-items: center; gap: .75rem; max-width: 60rem; margin: 3rem auto 0; padding: 0 1rem; }
+  .ventanita { flex: none; width: 9rem; height: 8.5rem; overflow: hidden; }
+  .asomo :global(.armino-chau) { transform: translateY(100%); transition: transform .6s cubic-bezier(.3, 1.4, .5, 1); }
+  .asomo.visible :global(.armino-chau) { transform: translateY(4%); }
+  .asomo :global(.chau) { max-width: 15rem; font-size: .95rem; opacity: 0; transform: scale(.8); transform-origin: right center; transition: opacity .3s .4s, transform .3s .4s; }
+  .asomo.visible :global(.chau) { opacity: 1; transform: none; }
+
+  /* Aparición al hacer scroll */
+  :global(.js) .aparece { opacity: 0; transform: translateY(1.5rem); transition: opacity .5s, transform .5s; }
+  :global(.js) .aparece.visible { opacity: 1; transform: none; }
+
+  @media (max-width: 48rem) {
+    .banner { grid-template-columns: 1fr; }
+    .naranja { height: 15rem; clip-path: polygon(0 0, 100% 0, 100% 75%, 0 100%); }
+    .naranja img { width: 13rem; margin: 0; }
+      .texto { padding: 1.5rem 1rem 3rem; }
+    .marca-agua { width: 90vw; top: 70%; }
+  }
+  @media (max-width: 44rem) {
+    .turno :global(.avatar) { width: 4.5rem !important; }
+    .señala { padding-right: 4.5rem; }
+    .edm-apunta { width: 6rem; }
+    .ventanita { width: 7rem; height: 6.6rem; }
+    .asomo :global(.armino-chau) { width: 7rem !important; }
+    .asomo :global(.chau) { max-width: 12rem; font-size: .85rem; }
   }
 </style>
+
+<script>
+  const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Las cosas aparecen al entrar en pantalla.
+  if (!quieto && "IntersectionObserver" in window) {
+    document.documentElement.classList.add("js");
+    const io = new IntersectionObserver(
+      (entradas) => {
+        for (const e of entradas) {
+          if (!e.isIntersecting) continue;
+          e.target.classList.add("visible");
+          io.unobserve(e.target);
+        }
+      },
+      { threshold: 0.3 },
+    );
+    document.querySelectorAll(".aparece").forEach((el) => io.observe(el));
+
+    // Cada Armiño que presenta algo mueve la boca un ratito al aparecer.
+    const habla = new IntersectionObserver((entradas) => {
+      for (const e of entradas) {
+        if (!e.isIntersecting) continue;
+        const a = e.target as HTMLElement;
+        setTimeout(() => (a.dataset.hablando = "true"), 300);
+        setTimeout(() => (a.dataset.hablando = "false"), 1900);
+        habla.unobserve(a);
+      }
+    }, { threshold: 0.6 });
+    document.querySelectorAll(".charla .armino-vivo, .dice .armino-vivo").forEach((el) => habla.observe(el));
+  }
+
+  // El Armiño se asoma al llegar al final de la página y se esconde al subir.
+  const asomo = document.querySelector(".asomo")!;
+  const chau = asomo.querySelector<HTMLElement>(".armino-vivo")!;
+  new IntersectionObserver(([e]) => {
+    asomo.classList.toggle("visible", e.isIntersecting);
+    if (e.isIntersecting && !quieto) {
+      chau.dataset.hablando = "true";
+      setTimeout(() => (chau.dataset.hablando = "false"), 1600);
+    }
+  }, { threshold: 0.5 }).observe(asomo);
+</script>
