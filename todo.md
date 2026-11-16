@@ -74,3 +74,16 @@ punteada **EJEMPLO**, **IDEA** o **HISTORIA SUPUESTA**.
 - [ ] Sacar todas las etiquetas EJEMPLO, IDEA o HISTORIA SUPUESTA que queden.
 - [x] `npm run check && npm run build` y merge a `master`.
 - [ ] Subir `master` a GitHub y revisar en Cloudflare.
+
+# Tierlist de GW2 (`/gw2/tierlist/`)
+
+Se eligió la versión 4 (la del directo). Rama `feature/gw2-tierlist`.
+
+- [x] Dejarla en `/gw2/tierlist/` sin `noindex` ni pestañas de versiones, y sumarla a la cabecera.
+- [ ] Sumarla también a "Herramientas" en la portada (hoy solo está la tarjeta de Mensajes con EDM señalando).
+- [ ] Nombres de las élites: van en inglés (como se dicen en el chat). ¿Pasarlos al castellano del cliente?
+- [ ] Reacciones de EDM (`reaccionesEdm` en `src/data/tierlist.ts`): revisar frases y poses. Con más o menos
+      de cinco filas se reparten con `nivelDeFila` (la primera es S, la última D).
+- [ ] Votación del chat (IDEA, oculta con `MOSTRAR_VOTACION` en `TierList.astro`): leer el chat de Twitch y
+      mover la ficha a la fila ganadora.
+- [ ] Íconos: `npm run gw2:iconos` los vuelve a importar desde `RecursosCC/GW2/Profesiones`.
