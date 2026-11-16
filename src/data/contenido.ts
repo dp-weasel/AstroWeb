@@ -11,7 +11,6 @@ import edmHiss from "../assets/brand/edm/hiss.png";
 import edmGritando from "../assets/brand/edm/gritando.png";
 import edmSorprendida from "../assets/brand/edm/sorprendida.png";
 import edmApuntando from "../assets/brand/edm/apuntando.png";
-import edmBrazosArriba from "../assets/brand/edm/brazos-arriba.png";
 import edmArrodillada from "../assets/brand/edm/arrodillada.png";
 import edmCabizbaja from "../assets/brand/edm/triste-mirando-al-suelo.png";
 import miniMarca from "../assets/brand/miniaturas/01-marca.png";
@@ -137,7 +136,6 @@ export const emotes: { nombre: string; img: ImageMetadata; uso: string }[] = [
   { nombre: "edmGRITO", img: edmGritando, uso: "jefe al 1 %" },
   { nombre: "edmQue", img: edmSorprendida, uso: "plot twist" },
   { nombre: "edmMira", img: edmApuntando, uso: "¡ahí está el cofre!" },
-  { nombre: "edmWiii", img: edmBrazosArriba, uso: "subieron de nivel" },
   { nombre: "edmPorfa", img: edmArrodillada, uso: "pedir un mate" },
   { nombre: "edmSad", img: edmCabizbaja, uso: "se terminó el directo" },
 ];
