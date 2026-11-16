@@ -4,7 +4,14 @@
 // entero al final de la página.
 import { Image } from "astro:assets";
 import VarianteLayout from "../../layouts/VarianteLayout.astro";
-import "@fontsource-variable/exo-2/wght-italic.css";
+// Tipografías candidatas para el nombre (solo para esta revisión).
+import "@fontsource-variable/unbounded";
+import "@fontsource/bebas-neue";
+import "@fontsource/luckiest-guy";
+import "@fontsource/bungee";
+import "@fontsource/righteous";
+import "@fontsource/dela-gothic-one";
+import "@fontsource-variable/bricolage-grotesque";
 import Numeros from "../../components/secciones/Numeros.astro";
 import ArminoVivo from "../../components/marca/ArminoVivo.astro";
 import Bocadillo from "../../components/marca/Bocadillo.astro";
@@ -31,10 +38,13 @@ import { preguntasExtra, franja } from "../../data/contenido";
 
 /** Tipografías para probar en el nombre (solo para esta revisión). */
 const letras = [
-  { id: "montserrat", nombre: "Montserrat Black Italic" },
-  { id: "exo", nombre: "Exo 2 Italic" },
-  { id: "lilita", nombre: "Lilita One" },
-  { id: "russo", nombre: "Russo One (la de antes)" },
+  { id: "unbounded", nombre: "Unbounded", corto: "Unbounded" },
+  { id: "luckiest", nombre: "Luckiest Guy", corto: "Luckiest" },
+  { id: "bungee", nombre: "Bungee", corto: "Bungee" },
+  { id: "bebas", nombre: "Bebas Neue", corto: "Bebas" },
+  { id: "dela", nombre: "Dela Gothic One", corto: "Dela" },
+  { id: "righteous", nombre: "Righteous", corto: "Righteous" },
+  { id: "bricolage", nombre: "Bricolage Grotesque", corto: "Bricolage" },
 ];
 
 const faq = [...preguntas, ...preguntasExtra];
@@ -79,7 +89,7 @@ const usoStickers = [
       <Image class="marca-agua" src={armino} alt="" width={640} widths={[320, 640]} sizes="40vw" />
       <div class="texto">
         <p class="eyebrow titulo-marca">Directos de Guild Wars 2 · y lo que pinte</p>
-        <h1 class="nombre" data-letra="montserrat">WEASEL</h1>
+        <h1 class="nombre" data-letra="unbounded">WEASEL</h1>
         <p class="lead">{intro}</p>
         <Ctas />
       </div>
@@ -87,7 +97,7 @@ const usoStickers = [
       <div class="probar-letra" role="group" aria-label="Probar tipografía del nombre">
         <span>Letra del nombre:</span>
         {letras.map((l, i) => (
-          <button type="button" data-letra={l.id} aria-pressed={i === 0 ? "true" : "false"} title={l.nombre}>{l.nombre.split(" ")[0]}</button>
+          <button type="button" data-letra={l.id} aria-pressed={i === 0 ? "true" : "false"} title={l.nombre}>{l.corto}</button>
         ))}
       </div>
     </section>
@@ -240,25 +250,41 @@ const usoStickers = [
   }
   .texto { padding: 3rem 2rem 3rem 0; max-width: 34rem; }
   .eyebrow { margin: 0 0 .5rem; color: var(--amber); font-size: .9rem; }
-  /* Nombre en blanco. Cada data-letra es una opción para comparar. */
+  /* Nombre en blanco. Cada data-letra es una tipografía candidata, con el
+     tratamiento que mejor le queda. --escala compensa que unas son más
+     anchas o más altas que otras, para que ocupen un ancho parecido. */
   .nombre {
-    margin: 0 0 1rem; line-height: .95; color: var(--snow);
-    font-size: clamp(3.25rem, 10vw, 6.5rem); font-weight: 400;
+    --escala: 1;
+    margin: 0 0 1rem; line-height: .95; color: var(--snow); font-weight: 400;
+    font-size: calc(clamp(3rem, 9vw, 6rem) * var(--escala));
   }
-  .nombre[data-letra="montserrat"] {
-    font-family: var(--font-title); font-weight: 900; font-style: italic; letter-spacing: -.01em;
-    text-shadow: .05em .05em 0 var(--vermilion);
+  /* Moderna y ancha: limpia, con un subrayado naranja inclinado. */
+  .nombre[data-letra="unbounded"] { --escala: .8; font-family: "Unbounded Variable", sans-serif; font-weight: 900; letter-spacing: -.03em; }
+  .nombre[data-letra="unbounded"]::after { content: ""; display: block; width: 1.4em; height: .12em; margin-top: .12em; background: var(--amber); transform: skewX(-25deg); }
+  /* De dibujito, como la mascota: contorno oscuro y sombra naranja "sticker". */
+  .nombre[data-letra="luckiest"] {
+    --escala: 1.05; font-family: "Luckiest Guy", sans-serif; letter-spacing: .06em; line-height: 1.1;
+    padding-top: .08em;
+    text-shadow: .05em .06em 0 var(--vermilion), .09em .1em 0 rgb(0 0 0 / .35);
   }
-  .nombre[data-letra="exo"] {
-    font-family: "Exo 2 Variable", var(--font-title); font-weight: 800; font-style: italic; letter-spacing: .02em;
-    text-shadow: 0 .04em 0 var(--vermilion), 0 .2em .5em rgb(0 0 0 / .45);
+  /* Cartel / arcade: sombra en capas que le da volumen. */
+  .nombre[data-letra="bungee"] {
+    --escala: .85; font-family: "Bungee", sans-serif;
+    text-shadow: .03em .03em 0 var(--amber), .06em .06em 0 var(--vermilion), .09em .09em 0 rgb(0 0 0 / .45);
   }
-  .nombre[data-letra="lilita"] {
-    font-family: var(--font-label); letter-spacing: .02em;
-    -webkit-text-stroke: .08em var(--charcoal); paint-order: stroke fill;
-    text-shadow: .06em .07em 0 var(--amber);
+  /* Alta y angosta: elegante, con aire a póster o título de película. */
+  .nombre[data-letra="bebas"] { --escala: 1.5; font-family: "Bebas Neue", sans-serif; letter-spacing: .06em; line-height: .9; }
+  .nombre[data-letra="bebas"]::first-letter { color: var(--amber); }
+  /* Pesadísima y compacta: mucha presencia. */
+  .nombre[data-letra="dela"] { --escala: .8; font-family: "Dela Gothic One", sans-serif; letter-spacing: -.01em; text-shadow: 0 .06em 0 var(--vermilion); }
+  /* Retro redondeada, con algo de neón (la música del canal). */
+  .nombre[data-letra="righteous"] {
+    --escala: 1.05; font-family: "Righteous", sans-serif; letter-spacing: .04em;
+    text-shadow: 0 0 .12em rgb(255 145 3 / .8), 0 0 .4em rgb(230 74 25 / .55);
   }
-  .nombre[data-letra="russo"] { font-family: var(--font-brand); }
+  /* Editorial moderna, con carácter: apretada y con el punto naranja. */
+  .nombre[data-letra="bricolage"] { --escala: 1.05; font-family: "Bricolage Grotesque Variable", sans-serif; font-weight: 800; letter-spacing: -.045em; }
+  .nombre[data-letra="bricolage"]::after { content: "."; color: var(--amber); }
 
   .probar-letra {
     position: absolute; right: 1rem; top: .9rem; z-index: 3;
@@ -377,7 +403,7 @@ const usoStickers = [
   const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // Selector de tipografía del nombre (solo para la revisión). Se recuerda en
-  // la URL (?letra=exo) para poder compartir la opción elegida.
+  // la URL (?letra=bebas) para poder compartir la opción elegida.
   const nombre = document.querySelector<HTMLElement>(".nombre")!;
   const botones = document.querySelectorAll<HTMLButtonElement>(".probar-letra button");
   function usarLetra(id: string) {
@@ -385,7 +411,7 @@ const usoStickers = [
     nombre.dataset.letra = id;
     botones.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.letra === id)));
   }
-  usarLetra(new URLSearchParams(location.search).get("letra") ?? "montserrat");
+  usarLetra(new URLSearchParams(location.search).get("letra") ?? "unbounded");
   botones.forEach((b) =>
     b.addEventListener("click", () => {
       usarLetra(b.dataset.letra!);
