@@ -29,13 +29,6 @@ import edmRiendo from "../../assets/brand/edm/riendo-en-el-suelo.png";
 import { intro, preguntas } from "../../data/variantes-marca";
 import { preguntasExtra, franja } from "../../data/contenido";
 
-/** Versiones del Armiño para comparar en el banner (solo para esta revisión). */
-const versiones = [
-  { id: "auris", nombre: "pngTuber con auriculares" },
-  { id: "pngtuber", nombre: "pngTuber sin auriculares" },
-  { id: "silueta", nombre: "Logo en silueta" },
-  { id: "actual", nombre: "Logo actual" },
-];
 
 const faq = [...preguntas, ...preguntasExtra];
 
@@ -72,30 +65,21 @@ const usoStickers = [
 <VarianteLayout slug="mezcla">
   <main data-escena>
     <!-- 1. Banner (de la variante 2) -->
-    <section class="banner" data-armino="auris">
+    <!-- Logo actual con auriculares. Pendiente: reemplazarlo por un logo nuevo
+         en el estilo del pngTuber (ver todo.md). <ArminoVivo auriculares /> sirve
+         de referencia de cómo quedaría. -->
+    <section class="banner">
       <div class="naranja" aria-hidden="true">
-        <ArminoVivo size="min(30rem, 32vw)" auriculares class="op op-auris" />
-        <ArminoVivo size="min(30rem, 32vw)" class="op op-pngtuber" />
-        <Image class="op op-logo" src={armino} alt="" width={640} widths={[320, 480, 640]} sizes="(max-width: 48rem) 70vw, 34vw" loading="eager" />
+        <Image src={armino} alt="" width={640} widths={[320, 480, 640]} sizes="(max-width: 48rem) 70vw, 34vw" loading="eager" />
       </div>
-      <!-- Marca de agua: la misma versión del Armiño, en gris y gigante -->
       <div class="marca-agua" aria-hidden="true">
-        <ArminoVivo size="100%" auriculares class="op op-auris" />
-        <ArminoVivo size="100%" class="op op-pngtuber" />
-        <Image class="op op-logo" src={armino} alt="" width={640} widths={[320, 640]} sizes="40vw" />
+        <Image src={armino} alt="" width={640} widths={[320, 640]} sizes="40vw" />
       </div>
       <div class="texto">
         <p class="eyebrow titulo-marca">Directos de Guild Wars 2 · y lo que pinte</p>
         <h1 class="nombre">WEASEL</h1>
         <p class="lead">{intro}</p>
         <Ctas />
-      </div>
-      <!-- Solo para la revisión: comparar versiones del Armiño. -->
-      <div class="probar" role="group" aria-label="Probar versión del Armiño">
-        <span>Armiño:</span>
-        {versiones.map((v, i) => (
-          <button type="button" data-armino={v.id} aria-pressed={i === 0 ? "true" : "false"}>{v.nombre}</button>
-        ))}
       </div>
     </section>
 
@@ -239,9 +223,7 @@ const usoStickers = [
     clip-path: polygon(0 0, 100% 0, 78% 100%, 0 100%);
   }
   .naranja img { width: min(80%, 26rem); height: auto; margin-right: 18%; filter: drop-shadow(0 .5rem 0 rgb(0 0 0 / .2)); }
-  /* El pngTuber termina en un corte recto: lo apoyamos en el borde de abajo. */
-  .naranja :global(.armino-vivo) { margin-right: 14%; margin-bottom: -3%; filter: drop-shadow(0 .5rem 0 rgb(0 0 0 / .2)); }
-  .marca-agua :global(img), .marca-agua :global(.armino-vivo) { width: 100%; height: auto; }
+  .marca-agua :global(img) { display: block; width: 100%; height: auto; }
   .marca-agua {
     position: absolute; z-index: -1; right: -6%; top: 50%;
     width: min(42rem, 55vw); height: auto;
@@ -258,28 +240,7 @@ const usoStickers = [
   }
   .nombre::after { content: ""; display: block; width: 1.4em; height: .12em; margin-top: .12em; background: var(--amber); transform: skewX(-25deg); }
 
-  /* Versiones del Armiño: se muestra la que diga data-armino. */
-  .banner :global(.op) { display: none !important; }
-  .banner[data-armino="auris"] :global(.op-auris),
-  .banner[data-armino="pngtuber"] :global(.op-pngtuber),
-  .banner[data-armino="silueta"] :global(.op-logo),
-  .banner[data-armino="actual"] :global(.op-logo) { display: block !important; }
-  /* Silueta: el logo como un esténcil carbón sobre el naranja. */
-  .banner[data-armino="silueta"] .naranja :global(.op-logo) { filter: brightness(0) opacity(.85); }
 
-  .probar {
-    position: absolute; right: 1rem; top: .9rem; z-index: 3;
-    display: flex; flex-wrap: wrap; align-items: center; gap: .35rem;
-    padding: .35rem .5rem; border-radius: .75rem;
-    background: rgb(0 0 0 / .55); border: 1px dashed #777;
-    font-family: var(--font-body); font-size: .75rem; color: #ccc;
-  }
-  @media (max-width: 48rem) { .probar { position: relative; top: auto; right: auto; margin: -1.5rem 1rem 3.5rem; } }
-  .probar button {
-    padding: .2rem .55rem; border: 1px solid #555; border-radius: 999px;
-    background: #2b2b2b; color: #eee; font: inherit; font-weight: 700; cursor: pointer;
-  }
-  .probar button[aria-pressed="true"] { background: var(--amber); border-color: var(--amber); color: var(--charcoal); }
 
   /* Franja: naranja inclinada debajo del banner, como en la variante 2. */
   .franja {
@@ -367,8 +328,7 @@ const usoStickers = [
     .banner { grid-template-columns: 1fr; }
     .naranja { height: 15rem; clip-path: polygon(0 0, 100% 0, 100% 75%, 0 100%); }
     .naranja img { width: 13rem; margin: 0; }
-    .naranja :global(.armino-vivo) { width: 13rem !important; margin-right: 0; }
-    .texto { padding: 1.5rem 1rem 3rem; }
+      .texto { padding: 1.5rem 1rem 3rem; }
     .marca-agua { width: 90vw; top: 70%; }
   }
   @media (max-width: 44rem) {
@@ -384,33 +344,6 @@ const usoStickers = [
 <script>
   const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // Selector de versión del Armiño (solo para la revisión). Se recuerda en la
-  // URL (?armino=silueta) para poder compartir la opción elegida.
-  const banner = document.querySelector<HTMLElement>(".banner")!;
-  const botones = document.querySelectorAll<HTMLButtonElement>(".probar button");
-  function usarArmino(id: string) {
-    if (![...botones].some((b) => b.dataset.armino === id)) return;
-    banner.dataset.armino = id;
-    botones.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.armino === id)));
-  }
-  usarArmino(new URLSearchParams(location.search).get("armino") ?? "auris");
-  botones.forEach((b) =>
-    b.addEventListener("click", () => {
-      usarArmino(b.dataset.armino!);
-      const url = new URL(location.href);
-      url.searchParams.set("armino", b.dataset.armino!);
-      history.replaceState(null, "", url);
-    }),
-  );
-
-  // Al pasar por "Ver en vivo", el Armiño del banner habla.
-  const cta = banner.querySelector('[data-cta="twitch"]');
-  const hablar = (si: boolean) =>
-    banner.querySelectorAll<HTMLElement>(".naranja .armino-vivo").forEach((a) => (a.dataset.hablando = String(si)));
-  cta?.addEventListener("mouseenter", () => hablar(true));
-  cta?.addEventListener("mouseleave", () => hablar(false));
-  cta?.addEventListener("focus", () => hablar(true));
-  cta?.addEventListener("blur", () => hablar(false));
 
   // Las cosas aparecen al entrar en pantalla.
   if (!quieto && "IntersectionObserver" in window) {
