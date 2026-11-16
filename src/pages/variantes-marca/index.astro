@@ -13,12 +13,23 @@ import { variantes } from "../../data/variantes-marca";
       escenas de OBS. Dentro de cada una, la barra de abajo (o ← →) pasa a la siguiente. La
       <a href="/">portada actual</a> queda igual.
     </p>
+    <p class="intro">
+      Además del diseño, cada una suma <strong>secciones nuevas</strong> para que la portada no quede vacía.
+      Las secciones son intercambiables: se pueden mover de una variante a otra. Lo marcado como
+      <span class="ej">EJEMPLO</span> es una suposición: cambialo por lo real o quitá la sección. Todo el
+      contenido nuevo está en <code>src/data/contenido.ts</code>.
+    </p>
     <ol class="list">
       {variantes.map((v) => (
         <li>
           <a href={`/variantes-marca/${v.slug}/`}>
             <strong>{v.nombre}</strong>
             <span class="idea">{v.idea}</span>
+            <span class="rotulo">Secciones nuevas</span>
+            <ul class="recursos nuevas">
+              {v.secciones.map((r) => <li>{r}</li>)}
+            </ul>
+            <span class="rotulo">Recursos</span>
             <ul class="recursos">
               {v.recursos.map((r) => <li>{r}</li>)}
             </ul>
@@ -49,5 +60,8 @@ import { variantes } from "../../data/variantes-marca";
   strong { font-size: 1.15rem; }
   .idea { display: block; color: var(--muted); margin: .25rem 0 .75rem; }
   .recursos { display: flex; flex-wrap: wrap; gap: .4rem; list-style: none; margin: 0; padding: 0; }
+  .rotulo { display: block; margin: .6rem 0 .3rem; font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .nuevas li { border-color: var(--accent) !important; }
+  .ej { padding: 0 .35rem; border: 1px dashed currentColor; border-radius: .3rem; font-size: .75em; font-weight: 700; }
   .recursos li { font-size: .8rem; padding: .15rem .6rem; border-radius: 999px; background: var(--bg); border: 1px solid var(--border); }
 </style>

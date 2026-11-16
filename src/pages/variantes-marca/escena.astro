@@ -14,6 +14,20 @@ import edmShrug from "../../assets/brand/edm/shrug.png";
 import edmApuntando from "../../assets/brand/edm/apuntando.png";
 import edmArriba from "../../assets/brand/edm/feliz-apuntando-arriba.png";
 import edmRiendo from "../../assets/brand/edm/riendo-en-el-suelo.png";
+import edmGritando from "../../assets/brand/edm/gritando.png";
+import edmHiss from "../../assets/brand/edm/hiss.png";
+import edmSorprendida from "../../assets/brand/edm/sorprendida.png";
+import edmBrazosArriba from "../../assets/brand/edm/brazos-arriba.png";
+import ProximoDirecto from "../../components/secciones/ProximoDirecto.astro";
+import Horario from "../../components/secciones/Horario.astro";
+import Juegos from "../../components/secciones/Juegos.astro";
+import Emotes from "../../components/secciones/Emotes.astro";
+import Comandos from "../../components/secciones/Comandos.astro";
+import Numeros from "../../components/secciones/Numeros.astro";
+import Metas from "../../components/secciones/Metas.astro";
+import Videos from "../../components/secciones/Videos.astro";
+import Reglas from "../../components/secciones/Reglas.astro";
+import Apoyar from "../../components/secciones/Apoyar.astro";
 
 const barras = Array.from({ length: 28 }, (_, i) => i);
 
@@ -27,7 +41,18 @@ const chat = [
   { de: "Armiño", quien: "armino", texto: "Mensajes listos para copiar y pegar en el chat del juego: LFG, jefes, etc. Están en Herramientas 👇" },
   { de: "yerba_suave", color: "#f06292", texto: "¿Juega otras cosas?" },
   { de: "EDM", quien: "edm", texto: "Guild Wars 2 es el principal, pero se anima a otros. Tirá sugerencias, que se aburre." },
+  { de: "lurker_feliz", color: "#ba68c8", texto: "¿Puedo jugar con Weasel?" },
+  { de: "Armiño", quien: "armino", texto: "En los directos de fractales y mundo abierto se arman grupos con el chat. ¡Preguntá en vivo!" },
 ];
+
+/** Quién presenta cada sección nueva: [personaje, pose de EDM, texto]. */
+const presenta = {
+  horario: { edm: edmGritando, texto: "¡Anotalo! Si no, después no digas que no te avisé." },
+  emotes: { edm: edmSorprendida, texto: "¿Esa soy yo? ¿Y por qué tengo doce caras? Bueno, usalas en el chat." },
+  comandos: { edm: edmHiss, texto: "Si escribís !edm, contesto. Si nombrás el mate, opino. No me provoques." },
+  metas: { edm: edmBrazosArriba, texto: "Cuando seamos Afiliados quiero mis emotes en Twitch. Es un trato." },
+  reglas: { edm: edmShrug, texto: "Son pocas. Hasta Weasel las cumple. Casi siempre." },
+};
 ---
 
 <VarianteLayout slug="escena">
@@ -52,6 +77,8 @@ const chat = [
       </figure>
     </section>
 
+    <div class="proximo-wrap"><ProximoDirecto /></div>
+
     <!-- 2. Cómo es el canal, contado por los dos -->
     <section class="charla" aria-labelledby="valores">
       <h2 id="valores" class="titulo-marca">Cómo es el canal</h2>
@@ -74,6 +101,43 @@ const chat = [
       </div>
     </section>
 
+    <!-- Números del canal sobre una banda oscura con el ecualizador -->
+    <section class="banda aparece" aria-label="El canal en números"><Numeros /></section>
+
+    <section class="bloque" aria-labelledby="horario">
+      <h2 id="horario" class="titulo-marca">Cuándo hay directo</h2>
+      <div class="dice aparece"><Image src={presenta.horario.edm} alt="" width={160} /><Bocadillo quien="edm"><p>{presenta.horario.texto}</p></Bocadillo></div>
+      <Horario />
+    </section>
+
+    <section class="bloque" aria-labelledby="juegos">
+      <h2 id="juegos" class="titulo-marca">Qué se juega</h2>
+      <Juegos />
+    </section>
+
+    <section class="bloque" aria-labelledby="emotes">
+      <h2 id="emotes" class="titulo-marca">Los stickers de EDM</h2>
+      <div class="dice aparece"><Image src={presenta.emotes.edm} alt="" width={160} /><Bocadillo quien="edm"><p>{presenta.emotes.texto}</p></Bocadillo></div>
+      <Emotes />
+    </section>
+
+    <section class="bloque angosto" aria-labelledby="comandos">
+      <h2 id="comandos" class="titulo-marca">Escribí y pasa algo</h2>
+      <div class="dice aparece"><Image src={presenta.comandos.edm} alt="" width={160} /><Bocadillo quien="edm"><p>{presenta.comandos.texto}</p></Bocadillo></div>
+      <Comandos />
+    </section>
+
+    <section class="bloque angosto" aria-labelledby="metas">
+      <h2 id="metas" class="titulo-marca">Camino a Afiliado</h2>
+      <div class="dice aparece"><Image src={presenta.metas.edm} alt="" width={160} /><Bocadillo quien="edm"><p>{presenta.metas.texto}</p></Bocadillo></div>
+      <Metas />
+    </section>
+
+    <section class="bloque" aria-labelledby="videos">
+      <h2 id="videos" class="titulo-marca">Lo último en YouTube</h2>
+      <Videos cantidad={3} />
+    </section>
+
     <!-- 3. Preguntas frecuentes como un chat de Twitch -->
     <section class="chat-wrap" aria-labelledby="faq">
       <h2 id="faq" class="titulo-marca">Preguntas del chat</h2>
@@ -87,6 +151,12 @@ const chat = [
       </ol>
     </section>
 
+    <section class="bloque angosto" aria-labelledby="reglas">
+      <h2 id="reglas" class="titulo-marca">Reglas de la casa</h2>
+      <div class="dice aparece"><Image src={presenta.reglas.edm} alt="" width={160} /><Bocadillo quien="edm"><p>{presenta.reglas.texto}</p></Bocadillo></div>
+      <Reglas />
+    </section>
+
     <!-- 4. Herramientas: EDM señala la tarjeta -->
     <section class="herramientas" aria-labelledby="herramientas">
       <h2 id="herramientas" class="titulo-marca">Herramientas</h2>
@@ -97,6 +167,12 @@ const chat = [
         </a>
         <Image class="edm-apunta" src={edmApuntando} alt="EDM señalando la herramienta" width={240} />
       </div>
+    </section>
+
+    <section class="bloque" aria-labelledby="apoyar">
+      <h2 id="apoyar" class="titulo-marca">¿Querés dar una mano?</h2>
+      <div class="dice aparece"><ArminoVivo size="5rem" /><Bocadillo quien="armino"><p>Todo suma, y casi todo es gratis. EDM igual prefiere los cafecitos.</p></Bocadillo></div>
+      <Apoyar />
     </section>
 
     <!-- 5. Cierre -->
@@ -151,6 +227,20 @@ const chat = [
   /* Al pasar por el botón de Twitch, EDM festeja. */
   .escenario:has([data-cta="twitch"]:hover, [data-cta="twitch"]:focus-visible) .saludando { opacity: 0; }
   .escenario:has([data-cta="twitch"]:hover, [data-cta="twitch"]:focus-visible) .festejando { opacity: 1; transform: none; }
+
+  /* ---------- Secciones nuevas ---------- */
+  .proximo-wrap { max-width: 40rem; margin: -1.5rem auto 0; padding: 0 1rem; position: relative; z-index: 2; }
+  .bloque { max-width: 60rem; margin: 5rem auto 0; padding: 0 1rem; }
+  .bloque.angosto { max-width: 46rem; }
+  .dice { display: flex; align-items: center; gap: 1rem; max-width: 34rem; margin: -.75rem auto 1.75rem; }
+  .dice img { width: 4.5rem; height: auto; flex: none; }
+  .dice :global(.bocadillo) { flex: 1; }
+  .banda {
+    margin-top: 5rem; padding: 2rem 1rem;
+    background: repeating-linear-gradient(90deg, rgb(255 145 3 / .08) 0 .6rem, transparent .6rem 1.4rem), var(--charcoal);
+    border-block: 4px solid var(--amber);
+  }
+  .banda :global(dt) { color: #bdbdbd; }
 
   /* ---------- Charla de los personajes ---------- */
   .charla { max-width: 46rem; margin: 5rem auto 0; padding: 0 1rem; display: grid; gap: 1.5rem; }
@@ -223,7 +313,7 @@ const chat = [
           const el = e.target as HTMLElement;
           const enChat = el.classList.contains("msg");
           const i = enChat ? [...el.parentElement!.children].indexOf(el) : 0;
-          setTimeout(() => el.classList.add("visible"), enChat ? (i % 8) * 450 : 0);
+          setTimeout(() => el.classList.add("visible"), enChat ? (i % 10) * 400 : 0);
           io.unobserve(el);
         }
       },

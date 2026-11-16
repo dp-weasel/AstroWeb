@@ -8,6 +8,11 @@ import Wordmark from "../../components/marca/Wordmark.astro";
 import ArminoVivo from "../../components/marca/ArminoVivo.astro";
 import Ctas from "../../components/marca/Ctas.astro";
 import tira from "../../assets/brand/fondos/manchas-tira.png";
+import ProximoDirecto from "../../components/secciones/ProximoDirecto.astro";
+import Rincon from "../../components/secciones/Rincon.astro";
+import Reglas from "../../components/secciones/Reglas.astro";
+import Emotes from "../../components/secciones/Emotes.astro";
+import Metas from "../../components/secciones/Metas.astro";
 import { intro, valores, preguntas } from "../../data/variantes-marca";
 
 // Tira de manchas recortada de back-chillchat-002.png; se usa como fondo CSS.
@@ -29,6 +34,7 @@ const manchas = await getImage({ src: tira, format: "webp", width: 275 });
         <h1 class="titulo-marca">Pasá, que hay lugar</h1>
         <p class="lead">{intro}</p>
         <Ctas />
+        <ProximoDirecto class="proximo-hero" />
       </div>
     </section>
 
@@ -44,6 +50,28 @@ const manchas = await getImage({ src: tira, format: "webp", width: 275 });
             </article>
           ))}
         </div>
+      </section>
+
+      <section class="ventana" aria-labelledby="rincon">
+        <h2 id="rincon" class="titulo-marca">El rincón</h2>
+        <p class="bajada">Desde dónde se transmite. Todo armado de a poco, como el canal.</p>
+        <Rincon />
+      </section>
+
+      <div class="dos parejo">
+        <section class="ventana" aria-labelledby="reglas">
+          <h2 id="reglas" class="titulo-marca">Las reglas de la casa</h2>
+          <Reglas />
+        </section>
+        <section class="ventana" aria-labelledby="metas">
+          <h2 id="metas" class="titulo-marca">Metas</h2>
+          <Metas />
+        </section>
+      </div>
+
+      <section class="ventana" aria-labelledby="emotes">
+        <h2 id="emotes" class="titulo-marca">Los stickers de EDM</h2>
+        <Emotes />
       </section>
 
       <div class="dos">
@@ -130,6 +158,10 @@ const manchas = await getImage({ src: tira, format: "webp", width: 275 });
   .values h3 { margin: .5rem 0 .25rem; font-weight: 800; }
   .values p { margin: 0; color: var(--muted); }
 
+  .bajada { margin: -.5rem 0 1rem; color: var(--muted); }
+  .texto :global(.proximo-hero) { margin-top: 1.5rem; }
+  .ventana :global(li), .ventana :global(.ficha) { background: var(--bg); }
+  .dos.parejo { grid-template-columns: 1fr 1fr; }
   .dos { display: grid; grid-template-columns: 1.6fr 1fr; gap: 1.25rem; align-items: start; }
   details + details { border-top: 1px solid var(--border); }
   summary { padding: .75rem 0; font-weight: 700; cursor: pointer; }
@@ -146,7 +178,7 @@ const manchas = await getImage({ src: tira, format: "webp", width: 275 });
     .escena { grid-template-columns: 1fr; justify-items: center; text-align: center; gap: 3.5rem; padding-inline: clamp(3.25rem, 9vw, 9rem); }
     .marco { width: 100%; max-width: 18rem; }
     .escena :global(.ctas) { justify-content: center; }
-    .dos { grid-template-columns: 1fr; }
+    .dos, .dos.parejo { grid-template-columns: 1fr; }
     .contenido { padding: 0 clamp(3.25rem, 9vw, 9rem); }
   }
 </style>

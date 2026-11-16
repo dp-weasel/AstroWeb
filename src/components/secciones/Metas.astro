@@ -1,0 +1,43 @@
+---
+// Metas del canal: los requisitos de Afiliado de Twitch como barras de progreso.
+import { metas } from "../../data/contenido";
+import Ejemplo from "./Ejemplo.astro";
+---
+
+<div class="metas">
+  <ul>
+    {metas.items.map((m) => {
+      const pct = Math.min(100, Math.round((m.actual / m.meta) * 100));
+      return (
+        <li class:list={{ lista: pct >= 100 }}>
+          <div class="fila">
+            <span>{m.nombre}</span>
+            <strong>{m.actual}{m.unidad} / {m.meta}{m.unidad} {pct >= 100 && "✔"}</strong>
+          </div>
+          <div class="barra" role="progressbar" aria-valuenow={pct} aria-valuemin="0" aria-valuemax="100" aria-label={m.nombre}>
+            <span style={`--pct: ${pct}%`}></span>
+          </div>
+        </li>
+      );
+    })}
+  </ul>
+  <p class="premio">🎉 {metas.premio}</p>
+  <p class="nota">Los requisitos son los reales de Twitch; el progreso es inventado. <Ejemplo /></p>
+</div>
+
+<style>
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+  .fila { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: .35rem; font-weight: 600; }
+  .fila strong { font-family: var(--font-brand); font-weight: 400; color: var(--accent); white-space: nowrap; }
+  .barra { height: .9rem; border-radius: 999px; background: var(--surface); border: 2px solid var(--charcoal); overflow: hidden; }
+  .barra span {
+    display: block; height: 100%; width: var(--pct);
+    background: repeating-linear-gradient(-45deg, var(--amber) 0 10px, var(--vermilion) 10px 20px);
+    background-size: 28px 28px; animation: avanzar 1s linear infinite;
+  }
+  .lista .barra span { background: #43a047; animation: none; }
+  @keyframes avanzar { to { background-position: 28px 0; } }
+  .premio { margin: 1.25rem 0 .25rem; padding: .75rem 1rem; border-radius: .75rem; background: color-mix(in srgb, var(--amber) 14%, transparent); font-weight: 600; }
+  .nota { margin: 0; color: var(--muted); font-size: .8rem; }
+  @media (prefers-reduced-motion: reduce) { .barra span { animation: none; } }
+</style>

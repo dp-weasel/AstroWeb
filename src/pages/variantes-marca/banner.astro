@@ -7,7 +7,16 @@ import VarianteLayout from "../../layouts/VarianteLayout.astro";
 import Wordmark from "../../components/marca/Wordmark.astro";
 import Ctas from "../../components/marca/Ctas.astro";
 import armino from "../../assets/brand/weasel-mouth-closed-headphones.png";
+import Numeros from "../../components/secciones/Numeros.astro";
+import Horario from "../../components/secciones/Horario.astro";
+import Juegos from "../../components/secciones/Juegos.astro";
+import Videos from "../../components/secciones/Videos.astro";
+import Comandos from "../../components/secciones/Comandos.astro";
+import ProximoDirecto from "../../components/secciones/ProximoDirecto.astro";
 import { intro, valores, preguntas } from "../../data/variantes-marca";
+import { preguntasExtra } from "../../data/contenido";
+
+const faq = [...preguntas, ...preguntasExtra];
 ---
 
 <VarianteLayout slug="banner">
@@ -25,7 +34,11 @@ import { intro, valores, preguntas } from "../../data/variantes-marca";
       </div>
     </section>
 
+    <div class="banda-numeros"><Numeros /></div>
+
     <div class="contenido">
+      <div><ProximoDirecto /></div>
+
       <section aria-labelledby="valores">
         <h2 id="valores" class="titulo-marca">Cómo es el canal</h2>
         <div class="values">
@@ -39,15 +52,35 @@ import { intro, valores, preguntas } from "../../data/variantes-marca";
         </div>
       </section>
 
+      <section aria-labelledby="horario">
+        <h2 id="horario" class="titulo-marca">Cuándo hay directo</h2>
+        <Horario />
+      </section>
+
+      <section aria-labelledby="juegos">
+        <h2 id="juegos" class="titulo-marca">Qué se juega</h2>
+        <Juegos />
+      </section>
+
+      <section aria-labelledby="videos">
+        <h2 id="videos" class="titulo-marca">Lo último en YouTube</h2>
+        <Videos cantidad={3} />
+      </section>
+
       <a class="franja" href="/gw2/mensajes/">
         <span class="titulo-marca">Mensajes de GW2</span>
         <span>Listos para copiar y pegar en el chat del juego →</span>
       </a>
 
+      <section aria-labelledby="chat">
+        <h2 id="chat" class="titulo-marca">Escribí en el chat y pasa algo</h2>
+        <Comandos />
+      </section>
+
       <section class="narrow" aria-labelledby="faq">
         <h2 id="faq" class="titulo-marca">Preguntas frecuentes</h2>
         <div class="faq">
-          {preguntas.map((p, i) => (
+          {faq.map((p, i) => (
             <details open={i === 0}>
               <summary>{p.q}</summary>
               <p>{p.a}</p>
@@ -96,6 +129,16 @@ import { intro, valores, preguntas } from "../../data/variantes-marca";
   .banner :global(.btn:not(.primary):not(.youtube)) { background: #2b2b2b; border-color: #3d3d3d; color: var(--brand, var(--snow)); }
   .banner :global(.btn[aria-label^="X"]) { color: var(--snow); }
 
+  /* Banda de números: naranja inclinada, como el bloque del banner. */
+  .banda-numeros {
+    margin-top: -2.5rem; position: relative; z-index: 2;
+    padding: 1.5rem max(1rem, calc((100vw - 60rem) / 2)) 1rem;
+    background: linear-gradient(135deg, var(--vermilion), var(--amber));
+    clip-path: polygon(0 1.5rem, 100% 0, 100% calc(100% - 1.5rem), 0 100%);
+    color: var(--charcoal);
+  }
+  .banda-numeros :global(dd) { color: var(--charcoal); }
+  .banda-numeros :global(dt), .banda-numeros :global(.ejemplo) { color: rgb(33 33 33 / .75); }
   .contenido { max-width: 60rem; margin: 0 auto; padding: 4rem 1rem 0; }
   .contenido > * + * { margin-top: 4rem; }
   .narrow { max-width: 44rem; margin-inline: auto; }

@@ -5,7 +5,14 @@ import VarianteLayout from "../../layouts/VarianteLayout.astro";
 import Logo from "../../components/Logo.astro";
 import Wordmark from "../../components/marca/Wordmark.astro";
 import Ctas from "../../components/marca/Ctas.astro";
+import ProximoDirecto from "../../components/secciones/ProximoDirecto.astro";
+import SobreMi from "../../components/secciones/SobreMi.astro";
+import Horario from "../../components/secciones/Horario.astro";
+import Apoyar from "../../components/secciones/Apoyar.astro";
 import { intro, valores, preguntas } from "../../data/variantes-marca";
+import { preguntasExtra } from "../../data/contenido";
+
+const faq = [...preguntas, ...preguntasExtra];
 ---
 
 <VarianteLayout slug="logotipo">
@@ -16,8 +23,14 @@ import { intro, valores, preguntas } from "../../data/variantes-marca";
         <h1><Wordmark size="clamp(3rem, 11vw, 5.5rem)" /><span class="sr-only"> Shiro</span></h1>
         <p class="lead">{intro}</p>
         <Ctas />
+        <ProximoDirecto class="proximo-hero" />
       </div>
       <div class="hero-art"><Logo size="min(17rem, 60vw)" /></div>
+    </section>
+
+    <section aria-labelledby="sobre-mi">
+      <h2 id="sobre-mi" class="titulo-marca">Sobre mí</h2>
+      <SobreMi />
     </section>
 
     <section aria-labelledby="valores">
@@ -33,6 +46,11 @@ import { intro, valores, preguntas } from "../../data/variantes-marca";
       </div>
     </section>
 
+    <section aria-labelledby="horario">
+      <h2 id="horario" class="titulo-marca">Horario de directos</h2>
+      <Horario />
+    </section>
+
     <section class="narrow" aria-labelledby="herramientas">
       <h2 id="herramientas" class="titulo-marca">Herramientas</h2>
       <a class="tool-card" href="/gw2/mensajes/">
@@ -41,10 +59,15 @@ import { intro, valores, preguntas } from "../../data/variantes-marca";
       </a>
     </section>
 
+    <section aria-labelledby="apoyar">
+      <h2 id="apoyar" class="titulo-marca">¿Querés dar una mano?</h2>
+      <Apoyar />
+    </section>
+
     <section class="narrow" aria-labelledby="faq">
       <h2 id="faq" class="titulo-marca">Preguntas frecuentes</h2>
       <div class="faq">
-        {preguntas.map((p, i) => (
+        {faq.map((p, i) => (
           <details open={i === 0}>
             <summary>{p.q}</summary>
             <p>{p.a}</p>
@@ -67,6 +90,7 @@ import { intro, valores, preguntas } from "../../data/variantes-marca";
   @keyframes pulse { 50% { opacity: .3; } }
   h1 { margin: .5rem 0 1rem; line-height: 1; }
   .lead { color: var(--muted); font-size: 1.1rem; font-weight: 500; margin: 0 0 1.5rem; max-width: 32rem; }
+  .hero-text :global(.proximo-hero) { margin-top: 1.5rem; max-width: 30rem; }
 
   h2 { text-align: center; font-size: 1.6rem; margin: 0 0 1.5rem; }
   .values { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1rem; }

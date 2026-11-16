@@ -7,12 +7,31 @@ import ArminoVivo from "../../components/marca/ArminoVivo.astro";
 import Bocadillo from "../../components/marca/Bocadillo.astro";
 import Wordmark from "../../components/marca/Wordmark.astro";
 import Ctas from "../../components/marca/Ctas.astro";
+import Personajes from "../../components/secciones/Personajes.astro";
+import SobreMi from "../../components/secciones/SobreMi.astro";
+import Horario from "../../components/secciones/Horario.astro";
+import Metas from "../../components/secciones/Metas.astro";
+import Apoyar from "../../components/secciones/Apoyar.astro";
+import ProximoDirecto from "../../components/secciones/ProximoDirecto.astro";
 import { valores, preguntas } from "../../data/variantes-marca";
+import { preguntasExtra } from "../../data/contenido";
+
+const faq = [...preguntas, ...preguntasExtra];
+
+/** Lo que dice el Armiño antes de cada sección. */
+const presenta = {
+  equipo: "Somos tres. Bueno, dos y medio: EDM dice que yo no cuento porque no juego.",
+  historia: "¿Querés saber cómo empezó todo esto? Te cuento, que yo estaba ahí.",
+  horario: "Estos son los días que Weasel prende la cámara. Yo aviso si se atrasa.",
+  metas: "Estamos juntando para ser Afiliados. Cada seguidor nuevo me pone las orejas para arriba.",
+  apoyar: "No hace falta plata para ayudar. De verdad. Mirá todo lo que podés hacer gratis:",
+};
 
 const lineas = [
   "¡Ey, hola! Soy el Armiño, la mascota de Weasel. Pasá, ponete cómodo.",
   "Weasel streamea Guild Wars 2 (y lo que pinte) y aprende sobre la marcha. Yo superviso. Desde acá.",
   "¿Querés ver el directo? El botón naranja te lleva. Andá, que ya puso la pava.",
+  "Y si bajás, te presento a EDM, te cuento la historia del canal y te paso el horario. Yo me quedo acá.",
 ];
 ---
 
@@ -29,7 +48,20 @@ const lineas = [
           <button class="seguir" type="button" aria-label="Siguiente">▸</button>
         </Bocadillo>
         <Ctas />
+        <ProximoDirecto class="proximo-hero" />
       </div>
+    </section>
+
+    <section class="contenido ancho" aria-labelledby="equipo">
+      <h2 id="equipo" class="titulo-marca">Te presento al equipo</h2>
+      <div class="presenta"><ArminoVivo size="5rem" /><Bocadillo quien="armino"><p>{presenta.equipo}</p></Bocadillo></div>
+      <Personajes />
+    </section>
+
+    <section class="contenido ancho" aria-labelledby="historia">
+      <h2 id="historia" class="titulo-marca">Cómo empezó todo</h2>
+      <div class="presenta"><ArminoVivo size="5rem" /><Bocadillo quien="armino"><p>{presenta.historia}</p></Bocadillo></div>
+      <SobreMi />
     </section>
 
     <section class="contenido" aria-labelledby="valores">
@@ -44,10 +76,28 @@ const lineas = [
       </div>
     </section>
 
+    <section class="contenido ancho" aria-labelledby="horario">
+      <h2 id="horario" class="titulo-marca">Cuándo encontrarnos</h2>
+      <div class="presenta"><ArminoVivo size="5rem" /><Bocadillo quien="armino"><p>{presenta.horario}</p></Bocadillo></div>
+      <Horario />
+    </section>
+
+    <section class="contenido" aria-labelledby="metas">
+      <h2 id="metas" class="titulo-marca">Las metas</h2>
+      <div class="presenta"><ArminoVivo size="5rem" /><Bocadillo quien="armino"><p>{presenta.metas}</p></Bocadillo></div>
+      <Metas />
+    </section>
+
+    <section class="contenido ancho" aria-labelledby="apoyar">
+      <h2 id="apoyar" class="titulo-marca">¿Querés dar una mano?</h2>
+      <div class="presenta"><ArminoVivo size="5rem" /><Bocadillo quien="armino"><p>{presenta.apoyar}</p></Bocadillo></div>
+      <Apoyar />
+    </section>
+
     <section class="contenido" aria-labelledby="faq">
       <h2 id="faq" class="titulo-marca">Lo que más me preguntan</h2>
       <div class="faq">
-        {preguntas.map((p, i) => (
+        {faq.map((p, i) => (
           <details open={i === 0}>
             <summary>{p.q}</summary>
             <Bocadillo quien="armino" cola="izquierda" class="respuesta"><p>{p.a}</p></Bocadillo>
@@ -89,7 +139,11 @@ const lineas = [
   #linea.escribiendo::after { content: "▍"; color: var(--vermilion); animation: pulse .8s steps(1) infinite; }
   @keyframes pulse { 50% { opacity: 0; } }
 
-  .contenido { max-width: 46rem; margin: 4rem auto 0; padding: 0 1rem; }
+  .contenido { max-width: 46rem; margin: 5rem auto 0; padding: 0 1rem; }
+  .contenido.ancho { max-width: 60rem; }
+  .lado :global(.proximo-hero) { margin-top: 1.25rem; }
+  .presenta { display: flex; align-items: center; gap: 1rem; max-width: 38rem; margin: -.5rem auto 1.75rem; }
+  .presenta :global(.bocadillo) { flex: 1; }
   h2 { font-size: 1.5rem; margin: 0 0 1.5rem; text-align: center; }
   .values { display: grid; gap: .75rem; }
   .values article { display: flex; gap: 1rem; align-items: center; padding: 1rem 1.25rem; border-radius: 1rem; background: var(--surface); }

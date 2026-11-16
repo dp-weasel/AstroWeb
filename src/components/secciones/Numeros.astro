@@ -1,0 +1,22 @@
+---
+// Números del canal en una banda.
+import { numeros } from "../../data/contenido";
+import Ejemplo from "./Ejemplo.astro";
+---
+
+<div class="numeros">
+  <dl>
+    {numeros.map((n) => (
+      <div><dd>{n.valor}</dd><dt>{n.etiqueta}</dt></div>
+    ))}
+  </dl>
+  <Ejemplo />
+</div>
+
+<style>
+  .numeros { text-align: center; }
+  dl { margin: 0 0 .5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: 1rem; }
+  dl div { padding: 1rem .5rem; }
+  dd { margin: 0; font-family: var(--font-brand); font-size: clamp(2.2rem, 6vw, 3.25rem); line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+  dt { margin-top: .35rem; font-family: var(--font-title); font-weight: 900; font-style: italic; text-transform: uppercase; font-size: .8rem; color: var(--muted); }
+</style>

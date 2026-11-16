@@ -1,0 +1,62 @@
+---
+// Semana de directos: siete días, los que tienen directo se destacan.
+import { dias, horario, zonaHoraria } from "../../data/contenido";
+import Ejemplo from "./Ejemplo.astro";
+
+// La semana empieza el lunes.
+const orden = [1, 2, 3, 4, 5, 6, 0];
+---
+
+<div class="horario">
+  <ol>
+    {orden.map((d) => {
+      const s = horario.find((h) => h.dia === d);
+      return (
+        <li class:list={{ hay: s }} data-dia={d}>
+          <span class="dia">{dias[d].slice(0, 3)}</span>
+          {s ? (
+            <>
+              <span class="emoji" aria-hidden="true">{s.emoji}</span>
+              <strong class="hora">{s.hora}</strong>
+              <span class="plan">{s.plan}</span>
+            </>
+          ) : (
+            <span class="libre">—</span>
+          )}
+        </li>
+      );
+    })}
+  </ol>
+  <p class="nota">Horarios en {zonaHoraria}. <Ejemplo /></p>
+</div>
+
+<style>
+  ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(7, 1fr); gap: .5rem; }
+  li {
+    display: flex; flex-direction: column; align-items: center; gap: .25rem;
+    min-height: 9rem; padding: .9rem .4rem; border-radius: 1rem;
+    background: var(--surface); color: var(--muted); text-align: center;
+  }
+  li.hay { background: linear-gradient(160deg, color-mix(in srgb, var(--amber) 22%, var(--surface)), var(--surface)); color: var(--text); box-shadow: inset 0 0 0 2px var(--amber); }
+  li.hoy { outline: 3px solid var(--vermilion); outline-offset: 2px; }
+  .dia { font-family: var(--font-title); font-weight: 900; font-style: italic; text-transform: uppercase; }
+  .emoji { font-size: 1.5rem; }
+  .hora { font-family: var(--font-brand); font-weight: 400; font-size: 1.15rem; color: var(--accent); }
+  .plan { font-size: .8rem; line-height: 1.25; }
+  .libre { margin-top: auto; margin-bottom: auto; opacity: .5; }
+  .nota { margin: .75rem 0 0; color: var(--muted); font-size: .85rem; text-align: center; }
+
+  @media (max-width: 40rem) {
+    ol { grid-template-columns: 1fr; }
+    li { min-height: 0; flex-direction: row; padding: .6rem 1rem; text-align: left; }
+    li:not(.hay) { display: none; }
+    .dia { width: 3rem; }
+    .hora { margin-left: auto; order: 3; }
+  }
+</style>
+
+<script>
+  // Marca el día de hoy (según Argentina).
+  const hoy = new Date(Date.now() - 3 * 3600e3).getUTCDay();
+  document.querySelectorAll(`.horario li[data-dia="${hoy}"]`).forEach((li) => li.classList.add("hoy"));
+</script>
