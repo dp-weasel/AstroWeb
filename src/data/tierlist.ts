@@ -93,9 +93,12 @@ export type PoseEdm =
   | "hiss";
 
 export interface ReaccionEdm {
-  /** Se elige una al azar. `espejo` la da vuelta para que mire hacia la tierlist. */
+  /**
+   * Se elige una al azar, pero ninguna sale más de dos veces seguidas si hay otra
+   * para elegir. `espejo` la da vuelta para que mire hacia la tierlist.
+   */
   poses: { pose: PoseEdm; espejo?: boolean }[];
-  /** Se elige una al azar. {n} es la especialización y {t} la fila. */
+  /** Se elige una al azar, con la misma regla que las poses. {n} es la especialización y {t} la fila. */
   frases: string[];
 }
 
@@ -122,7 +125,7 @@ export const reaccionesEdm: Record<Nivel, ReaccionEdm> = {
     frases: ["¿{n} en {t}? Por fin una decisión con sentido.", "{n} arriba de todo. Respeto.", "¡Eso! {n} se lo merece."],
   },
   a: {
-    poses: [{ pose: "apuntando" }], // 013
+    poses: [{ pose: "shrug" }], // 015
     frases: [
       "A {n} le faltó farmear más aura.",
       "Casi S. {n} se quedó sin aura en la última curva.",
@@ -134,11 +137,11 @@ export const reaccionesEdm: Record<Nivel, ReaccionEdm> = {
     frases: ["{n} en {t}… bueno, no voy a discutir. Hoy.", "Mmm, {n} en {t}. Aceptable.", "¿{t}? Le pondría una más. O una menos. Ya fue."],
   },
   c: {
-    poses: [{ pose: "triste" }, { pose: "triste-mirando-al-suelo" }], // 008 y 014
+    poses: [{ pose: "shrug" }, { pose: "triste" }, { pose: "triste-mirando-al-suelo" }, { pose: "apuntando" }], // 015, 008, 014 y 013
     frases: ["¿{n} en {t}? Bueno… tiene sus días.", "Pobre {n}, merecía un poquito más.", "{n} en {t}. No lloro, me entró yerba en el ojo."],
   },
   d: {
-    poses: [{ pose: "hiss" }, { pose: "triste" }, { pose: "triste-mirando-al-suelo" }], // 005, 008 y 014
+    poses: [{ pose: "hiss" }, { pose: "triste" }, { pose: "triste-mirando-al-suelo" }, { pose: "apuntando" }], // 005, 008, 014 y 013
     frases: ["¿¡{n} en {t}!? Quiero hablar con el gerente.", "Pobre {n}. ¿Qué te hizo?", "{n} en {t}. El chat no va a estar de acuerdo."],
   },
   banco: {

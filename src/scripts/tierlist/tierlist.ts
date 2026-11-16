@@ -15,6 +15,24 @@ interface Config {
 
 const azar = <T>(xs: T[]) => xs[Math.floor(Math.random() * xs.length)];
 
+/**
+ * Elige al azar sin que la misma opción salga tres veces seguidas: si en alguno
+ * de los historiales las dos últimas fueron iguales, esa queda afuera (salvo que
+ * sea la única que hay). Los historiales guardan claves y se actualizan acá.
+ */
+function azarSinRepetir<T>(xs: T[], historiales: string[][], clave: (x: T) => string): T {
+  const cansadas = new Set(
+    historiales.map((h) => h.slice(-2)).filter(([a, b]) => a !== undefined && a === b).map(([a]) => a),
+  );
+  const opciones = xs.filter((x) => !cansadas.has(clave(x)));
+  const elegida = azar(opciones.length ? opciones : xs);
+  for (const h of historiales) {
+    h.push(clave(elegida));
+    if (h.length > 2) h.shift();
+  }
+  return elegida;
+}
+
 export function iniciarTierlist(raiz: HTMLElement): void {
   const { plantillas, reacciones, poses } = JSON.parse(raiz.dataset.config!) as Config;
   const $ = <T extends Element = HTMLElement>(sel: string) => raiz.querySelector<T>(sel);
@@ -335,16 +353,27 @@ export function iniciarTierlist(raiz: HTMLElement): void {
   const edmTexto = $("[data-edm-texto]");
   const edmCaja = $(".tl-edm");
 
+  // Las dos últimas poses y frases de EDM: en general y en cada nivel de fila
+  // (devolver fichas al banco intercala reacciones y no debe cortar la cuenta).
+  const historial = () => ({ poses: [] as string[], frases: [] as string[] });
+  const general = historial();
+  const porNivel = new Map<string, ReturnType<typeof historial>>();
+
   function reaccionar(ficha: HTMLElement): void {
     if (!edmImg || !edmTexto || !edmCaja || raiz.classList.contains("sin-edm")) return;
     const zona = ficha.closest<HTMLElement>("[data-zona]")!.dataset.zona!;
     const i = estado.filas.findIndex((f) => f.id === zona);
-    const r = reacciones[i < 0 ? "banco" : nivelDeFila(i, estado.filas.length)];
-    const { pose, espejo } = azar(r.poses);
+    const nivel = i < 0 ? "banco" : nivelDeFila(i, estado.filas.length);
+    const r = reacciones[nivel];
+    if (!porNivel.has(nivel)) porNivel.set(nivel, historial());
+    const propio = porNivel.get(nivel)!;
+    // Lo que dice al volver al banco no cuenta para la racha de las filas.
+    const hist = (k: "poses" | "frases") => (nivel === "banco" ? [propio[k]] : [general[k], propio[k]]);
+    const { pose, espejo } = azarSinRepetir(r.poses, hist("poses"), (p) => p.pose + (p.espejo ? "-espejo" : ""));
     const fila = estado.filas[i]?.nombre ?? "";
     edmImg.src = poses[pose];
     edmImg.classList.toggle("espejo", !!espejo);
-    edmTexto.textContent = azar(r.frases).replaceAll("{n}", ficha.dataset.nombre!).replaceAll("{t}", fila);
+    edmTexto.textContent = azarSinRepetir(r.frases, hist("frases"), (f) => f).replaceAll("{n}", ficha.dataset.nombre!).replaceAll("{t}", fila);
     edmCaja.classList.remove("reacciona");
     void edmCaja.offsetWidth; // reinicia la animación
     edmCaja.classList.add("reacciona");
