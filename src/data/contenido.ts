@@ -203,8 +203,7 @@ export const apoyar = {
     { emoji: "🔁", que: "Compartir", detalle: "Un clip, un video o esta página con alguien a quien le pueda gustar." },
     { emoji: "👑", que: "Sub con Prime", detalle: "Si tenés Amazon Prime, tenés una sub gratis por mes para regalar." },
   ],
-  /** EJEMPLO: Cafecito aparece en las alertas de las escenas. Falta el enlace real. */
-  cafecito: { url: "https://cafecito.app/", texto: "Invitame un cafecito", nota: "Aunque acá se toma mate 🧉" },
+  cafecito: { url: "https://cafecito.app/weasel_shiro", texto: "Invitame un cafecito", nota: "Aunque acá se toma mate 🧉" },
 };
 
 /* ------------------------------------------------------------------ */

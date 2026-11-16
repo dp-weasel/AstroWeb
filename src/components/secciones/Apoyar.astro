@@ -1,7 +1,6 @@
 ---
 // Formas de apoyar al canal: gratis primero, después Cafecito.
 import { apoyar } from "../../data/contenido";
-import Ejemplo from "./Ejemplo.astro";
 ---
 
 <div class="apoyar">
@@ -13,7 +12,6 @@ import Ejemplo from "./Ejemplo.astro";
   <a class="cafecito" href={apoyar.cafecito.url} target="_blank" rel="noopener">
     <span class="taza" aria-hidden="true">☕</span>
     <span><strong>{apoyar.cafecito.texto}</strong><small>{apoyar.cafecito.nota}</small></span>
-    <Ejemplo texto="Falta tu enlace" />
   </a>
   <p class="nota">Todo lo de arriba es gratis y ayuda igual que una donación. En serio.</p>
 </div>
@@ -34,6 +32,5 @@ import Ejemplo from "./Ejemplo.astro";
   .taza { font-size: 2rem; }
   .cafecito strong { display: block; font-family: var(--font-bubble); font-size: 1.2rem; }
   .cafecito small { font-family: var(--font-bubble); font-weight: 600; color: #6b5f50; }
-  .cafecito :global(.ejemplo) { margin-left: auto; color: #6b5f50; }
   .nota { margin: .75rem 0 0; text-align: center; color: var(--muted); font-size: .9rem; }
 </style>

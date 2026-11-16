@@ -107,7 +107,7 @@ const usoStickers = [
     <section class="bloque" aria-labelledby="historia">
       <h2 id="historia" class="titulo-marca">Cómo empezó todo</h2>
       <div class="dice aparece"><ArminoVivo size="5rem" /><Bocadillo quien="armino"><p>{dice.historia}</p></Bocadillo></div>
-      <SobreMi />
+      <SobreMi ficha={false} />
     </section>
 
     <!-- 4. Stickers y chat, presentados por EDM -->
@@ -187,17 +187,16 @@ const usoStickers = [
       <Bocadillo quien="edm" cola="izquierda"><p>¡Nos vemos en el próximo directo! Traé el mate.</p></Bocadillo>
     </section>
 
-    <!-- El Armiño se asoma al llegar al final (de la 4) -->
-    <div id="fin" aria-hidden="true"></div>
-    <div class="asomado" aria-hidden="true">
-      <Bocadillo quien="armino" cola="abajo" class="chau"><p>¿Ya te vas? Seguí a Weasel en Twitch así no te perdés nada 🧉</p></Bocadillo>
-      <ArminoVivo size="9rem" class="armino-chau" />
+    <!-- El Armiño se asoma desde la línea del pie al llegar al final (de la 4) -->
+    <div class="asomo" aria-hidden="true">
+      <Bocadillo quien="armino" cola="derecha" class="chau"><p>¿Ya te vas? Seguí a Weasel en Twitch así no te perdés nada 🧉</p></Bocadillo>
+      <div class="ventanita"><ArminoVivo size="9rem" class="armino-chau" /></div>
     </div>
   </main>
 </VarianteLayout>
 
 <style>
-  main { font-family: var(--font-text); padding-bottom: 7rem; overflow-x: clip; }
+  main { font-family: var(--font-text); overflow-x: clip; }
   h2 { text-align: center; font-size: clamp(1.5rem, 4vw, 2rem); margin: 0 0 2rem; }
 
   /* ---------- Banner (siempre oscuro, como el de Twitch) ---------- */
@@ -264,7 +263,7 @@ const usoStickers = [
   .tool-card:hover { transform: translate(-.15rem, -.15rem); box-shadow: .5rem .5rem 0 var(--amber); }
   .tool-card .emoji { font-size: 2rem; }
   .tool-card strong { font-size: 1.1rem; }
-  .edm-apunta { position: absolute; right: -1rem; top: 50%; width: 8rem; height: auto; transform: translateY(-45%) scaleX(-1); }
+  .edm-apunta { position: absolute; right: -1rem; top: 50%; width: 8rem; height: auto; transform: translateY(-45%); }
 
   /* Preguntas (estilo de la 2) */
   .faq { display: grid; gap: .5rem; }
@@ -280,17 +279,16 @@ const usoStickers = [
   .cierre { display: flex; align-items: center; justify-content: center; gap: 1rem; max-width: 40rem; margin: 5rem auto 0; padding: 0 1rem; }
   .cierre img { width: 9rem; height: auto; }
 
-  /* El Armiño se asoma desde abajo a la derecha. Entra entero: solo queda
-     tapada la base del pecho, que en el PNG termina difuminada. */
-  .asomado {
-    position: fixed; right: 1rem; bottom: 0; z-index: 60;
-    display: flex; flex-direction: column; align-items: flex-end;
-    transform: translateY(105%);
-    transition: transform .6s cubic-bezier(.3, 1.4, .5, 1);
-    pointer-events: none;
-  }
-  .asomado.visible { transform: translateY(.5rem); }
-  .asomado :global(.chau) { max-width: 15rem; margin: 0 2.5rem .5rem 0; font-size: .95rem; }
+  /* El Armiño sale desde la línea donde empieza el pie, a la derecha. La
+     ventanita recorta todo lo que queda por debajo de esa línea. */
+  .asomo { display: flex; justify-content: flex-end; align-items: center; gap: .75rem; max-width: 60rem; margin: 3rem auto 0; padding: 0 1rem; }
+  .ventanita { flex: none; width: 9rem; height: 8.5rem; overflow: hidden; }
+  .asomo :global(.armino-chau) { transform: translateY(100%); transition: transform .6s cubic-bezier(.3, 1.4, .5, 1); }
+  .asomo.visible :global(.armino-chau) { transform: translateY(4%); }
+  .asomo :global(.chau) { max-width: 15rem; font-size: .95rem; opacity: 0; transform: scale(.8); transform-origin: right center; transition: opacity .3s .4s, transform .3s .4s; }
+  .asomo.visible :global(.chau) { opacity: 1; transform: none; }
+  /* Lugar para la barra de variantes debajo del pie (solo en esta revisión). */
+  :global(.site-footer) { padding-bottom: 6rem; }
 
   /* Aparición al hacer scroll */
   :global(.js) .aparece { opacity: 0; transform: translateY(1.5rem); transition: opacity .5s, transform .5s; }
@@ -307,10 +305,9 @@ const usoStickers = [
     .turno :global(.avatar) { width: 4.5rem !important; }
     .señala { padding-right: 4.5rem; }
     .edm-apunta { width: 6rem; }
-    /* Lugar al final para que el Armiño no tape a EDM. */
-    main { padding-bottom: 15rem; }
-    .asomado :global(.armino-chau) { width: 7rem !important; }
-    .asomado :global(.chau) { max-width: 12rem; margin-right: 1.5rem; font-size: .85rem; }
+    .ventanita { width: 7rem; height: 6.6rem; }
+    .asomo :global(.armino-chau) { width: 7rem !important; }
+    .asomo :global(.chau) { max-width: 12rem; font-size: .85rem; }
   }
 </style>
 
@@ -346,13 +343,13 @@ const usoStickers = [
   }
 
   // El Armiño se asoma al llegar al final de la página y se esconde al subir.
-  const asomado = document.querySelector(".asomado")!;
-  const chau = asomado.querySelector<HTMLElement>(".armino-vivo")!;
+  const asomo = document.querySelector(".asomo")!;
+  const chau = asomo.querySelector<HTMLElement>(".armino-vivo")!;
   new IntersectionObserver(([e]) => {
-    asomado.classList.toggle("visible", e.isIntersecting);
+    asomo.classList.toggle("visible", e.isIntersecting);
     if (e.isIntersecting && !quieto) {
       chau.dataset.hablando = "true";
       setTimeout(() => (chau.dataset.hablando = "false"), 1600);
     }
-  }).observe(document.querySelector("#fin")!);
+  }, { threshold: 0.5 }).observe(asomo);
 </script>
