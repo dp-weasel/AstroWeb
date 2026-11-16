@@ -1,0 +1,66 @@
+---
+// Bocadillo de las escenas: crema, borde carbón, sombra naranja y etiqueta con
+// el nombre (naranja para el Armiño, magenta para EDM).
+interface Props {
+  quien: "armino" | "edm";
+  /** Hacia dónde apunta la colita. */
+  cola?: "izquierda" | "derecha" | "abajo";
+  class?: string;
+}
+const { quien, cola = "izquierda", class: extra } = Astro.props;
+const nombre = quien === "edm" ? "EDM" : "Armiño";
+---
+
+<div class:list={["bocadillo", quien, `cola-${cola}`, extra]}>
+  <span class="etiqueta">{nombre}</span>
+  <div class="texto"><slot /></div>
+</div>
+
+<style>
+  .bocadillo {
+    position: relative;
+    padding: 1.1rem 1.25rem 1rem;
+    border: 3px solid var(--charcoal);
+    border-radius: 1.25rem;
+    background: var(--cream);
+    color: var(--charcoal);
+    font-family: var(--font-bubble);
+    font-weight: 600;
+    font-size: 1.05rem;
+    line-height: 1.4;
+    box-shadow: .35rem .35rem 0 var(--amber);
+  }
+  .bocadillo.edm { box-shadow: .35rem .35rem 0 var(--magenta); }
+  .etiqueta {
+    position: absolute;
+    top: -.85rem;
+    left: 1rem;
+    padding: .05rem .6rem;
+    border: 3px solid var(--charcoal);
+    border-radius: .5rem;
+    background: var(--amber);
+    color: var(--charcoal);
+    font-family: var(--font-label);
+    font-weight: 400;
+    font-size: .95rem;
+    letter-spacing: .03em;
+  }
+  .edm .etiqueta { background: var(--magenta); color: #fff; }
+  .texto :global(p) { margin: 0; }
+  .texto :global(p + p) { margin-top: .5rem; }
+
+  /* Colita: un cuadrado girado con dos bordes. */
+  .bocadillo::after {
+    content: "";
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    background: var(--cream);
+    border: 3px solid var(--charcoal);
+    border-top: 0;
+    border-right: 0;
+  }
+  .cola-izquierda::after { left: -.62rem; top: 1.6rem; transform: rotate(45deg); }
+  .cola-derecha::after { right: -.62rem; top: 1.6rem; transform: rotate(-135deg); }
+  .cola-abajo::after { left: 2.5rem; bottom: -.62rem; transform: rotate(-45deg); }
+</style>

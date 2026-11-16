@@ -1,0 +1,17 @@
+---
+// Etiqueta para marcar contenido supuesto, que hay que reemplazar por el real.
+interface Props { texto?: string }
+const { texto = "EJEMPLO" } = Astro.props;
+---
+
+<span class="ejemplo" title="Contenido supuesto: cambialo por el real o quitá la sección">{texto}</span>
+
+<style>
+  .ejemplo {
+    display: inline-block; vertical-align: middle;
+    padding: .1rem .45rem; border-radius: .3rem;
+    border: 1px dashed currentColor; color: var(--muted);
+    font-family: var(--font-body); font-size: .65rem; font-weight: 700; font-style: normal;
+    letter-spacing: .08em; text-transform: uppercase;
+  }
+</style>

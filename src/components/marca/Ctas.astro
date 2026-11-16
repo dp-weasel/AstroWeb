@@ -1,0 +1,54 @@
+---
+// Botones de las redes: Twitch destacado con el degradado de la marca, el resto
+// como íconos. Igual que en la portada actual.
+import { socials } from "../../data/profile";
+
+interface Props {
+  class?: string;
+}
+const { class: extra } = Astro.props;
+const [twitch, ...resto] = socials;
+const brandColor = (hex: string) => (hex === "000000" ? "currentColor" : `#${hex}`);
+---
+
+<div class:list={["ctas", extra]}>
+  <a class="btn primary" href={twitch.url} target="_blank" rel="noopener me" data-cta="twitch">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d={twitch.icon.path} /></svg>
+    {twitch.cta}
+  </a>
+  {resto.map((s) => (
+    <a
+      class:list={["btn", { youtube: s.icon.slug === "youtube" }]}
+      href={s.url}
+      target="_blank"
+      rel="noopener me"
+      aria-label={s.name}
+      style={`--brand: ${brandColor(s.icon.hex)}`}
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d={s.icon.path} /></svg>
+    </a>
+  ))}
+</div>
+
+<style>
+  .ctas { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+    min-width: 3rem; height: 3rem; padding: 0 1rem;
+    border: 1px solid var(--border); border-radius: .75rem;
+    background: var(--surface); color: var(--brand, var(--text));
+    font-family: var(--font-text);
+    font-weight: 800; text-decoration: none;
+    transition: border-color .15s, transform .15s;
+  }
+  .btn:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .btn svg { width: 1.25rem; height: 1.25rem; fill: currentColor; }
+  .btn.youtube { background: #e0e0e0; border-color: #e0e0e0; }
+  :global(:root[data-theme="light"]) .btn.youtube { background: #fff; border-color: var(--border); }
+  .btn.youtube:hover { border-color: var(--accent); }
+  .btn.primary {
+    padding: 0 1.5rem; border: 0; color: #fff;
+    background: linear-gradient(135deg, var(--vermilion), var(--amber));
+    font-style: italic; text-transform: uppercase; letter-spacing: .02em;
+  }
+</style>
