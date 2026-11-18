@@ -3,10 +3,10 @@
 // una según data-ojos / data-boca. Parpadea solo; mueve la boca mientras el
 // contenedor tenga data-hablando="true" (lo pone quien lo hace hablar).
 import { Image } from "astro:assets";
-import ojosAbiertos from "../../assets/brand/armino/ojos-abiertos.png";
-import hablando from "../../assets/brand/armino/hablando.png";
-import ojosCerrados from "../../assets/brand/armino/ojos-cerrados.png";
-import hablandoCerrados from "../../assets/brand/armino/hablando-ojos-cerrados.png";
+import ojosAbiertos from "../../assets/brand/armino/ojos-abiertos.svg";
+import hablando from "../../assets/brand/armino/hablando.svg";
+import ojosCerrados from "../../assets/brand/armino/ojos-cerrados.svg";
+import hablandoCerrados from "../../assets/brand/armino/hablando-ojos-cerrados.svg";
 
 interface Props {
   /** Ancho en CSS (la imagen es cuadrada). */
@@ -17,7 +17,8 @@ interface Props {
   auriculares?: boolean;
 }
 const { size = "16rem", id, class: extra, auriculares = false } = Astro.props;
-// Vincha de los auriculares (coordenadas del PNG de 1024×1024).
+// Vincha de los auriculares, en un lienzo de 1024×1024. Los SVG de las caras tienen
+// un viewBox con el mismo encuadre cuadrado que los PNG originales, así que coinciden.
 const vincha = "M292 425 C 300 245, 460 170, 600 192 C 690 207, 752 270, 772 345";
 const caras = [
   { src: ojosAbiertos, cara: "abiertos-cerrada" },
@@ -47,9 +48,8 @@ const caras = [
       src={c.src}
       alt=""
       data-cara={c.cara}
-      width={512}
-      widths={[256, 512]}
-      sizes={size}
+      width={1024}
+      height={1024}
       loading={i === 0 ? "eager" : "lazy"}
     />
   ))}
