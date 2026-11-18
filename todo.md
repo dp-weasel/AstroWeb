@@ -29,7 +29,7 @@ punteada **EJEMPLO**, **IDEA** o **HISTORIA SUPUESTA**.
 - [ ] **Preguntas frecuentes** (`preguntasExtra`): confirmar las respuestas de "¿Puedo jugar con
       Weasel?" (¿se arman grupos con el chat?) y "¿Qué música suena?".
 - [x] La portada vieja (con tú) se reemplazó por los textos en voseo de la variante 6.
-- [ ] `/gw2/mensajes/` todavía usa tú en el subtítulo ("Haz clic… y pégalo").
+- [x] `/gw2/mensajes/` pasó a voseo (subtítulo, editor y aviso de la pestaña Personalizado).
 
 ## Datos
 

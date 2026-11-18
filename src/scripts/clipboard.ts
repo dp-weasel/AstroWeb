@@ -17,14 +17,17 @@ export async function copyText(text: string): Promise<void> {
   if (!ok) throw new Error("No se pudo copiar");
 }
 
-/** Copia el contenido de data-copy al hacer clic en cualquier botón que lo tenga. */
+/** Copia el contenido de data-copy al hacer clic en cualquier botón que lo tenga.
+ *  Avisa con el evento `mensaje:copiado` (detail: { texto, boton }) para que otros reaccionen. */
 export function initCopyButtons(root: ParentNode = document): void {
   root.addEventListener("click", async (e) => {
     const btn = (e.target as Element).closest<HTMLElement>("[data-copy]");
     if (!btn) return;
     const label = btn.querySelector<HTMLElement>("[data-copy-label]");
     try {
-      await copyText(btn.dataset.copy ?? "");
+      const texto = btn.dataset.copy ?? "";
+      await copyText(texto);
+      document.dispatchEvent(new CustomEvent("mensaje:copiado", { detail: { texto, boton: btn } }));
       btn.classList.add("copied");
       if (label) label.textContent = "¡Copiado!";
       showToast("Mensaje copiado");
