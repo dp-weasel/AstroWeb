@@ -44,11 +44,10 @@ const poses = {
       agregar los tuyos, y se guardan solos en tu navegador.
     </p>
 
-    <div class="columnas">
-      <div class="zona">
-        <SearchBox />
-        <Tabs categories={categories} conteo />
-      </div>
+    <!-- Buscador y categorías a todo el ancho; debajo, los mensajes y EDM a la misma altura. -->
+    <div class="zona">
+      <SearchBox />
+      <Tabs categories={categories} conteo />
 
       <aside class="lado" aria-label="EDM te ayuda">
         <button type="button" class="ver-edm" data-ver-edm aria-pressed="true" aria-controls="edm">🙈 Ocultar a EDM</button>
@@ -87,13 +86,15 @@ const poses = {
   h1 { margin: 0 0 .25rem; font-size: clamp(1.6rem, 5vw, 2.4rem); }
   .idea { margin: 0 0 1.5rem; max-width: 46rem; color: var(--muted); }
 
-  .columnas { display: grid; grid-template-columns: minmax(0, 1fr) 19rem; gap: 2rem; align-items: start; }
-  /* Las pestañas van debajo del buscador, a lo ancho. */
-  .columnas .zona { grid-template-columns: 1fr; }
-  .columnas .zona :global(.search) { margin-bottom: 1rem; }
-  .columnas .zona :global(.tabs) { justify-content: flex-start; }
+  /* Filas: 1 buscador, 2 categorías (las dos a todo el ancho), 3 mensajes | EDM, 4 nota.
+     Tabs usa display: contents, así que sus pestañas y paneles son celdas de esta grilla. */
+  .mm .zona { grid-template-columns: minmax(0, 1fr) 19rem; column-gap: 2rem; }
+  .mm .zona :global(.search) { grid-column: 1 / -1; grid-row: 1; margin-bottom: 1rem; }
+  .mm .zona :global(.tabs) { grid-column: 1 / -1; grid-row: 2; justify-content: flex-start; }
+  .mm .zona :global([role="tabpanel"]) { grid-column: 1; grid-row: 3; }
+  .mm .zona :global(.storage-note) { grid-column: 1; grid-row: 4; }
 
-  .lado { position: sticky; top: 1rem; display: grid; gap: 1.25rem; }
+  .lado { grid-column: 2; grid-row: 3 / span 2; align-self: start; position: sticky; top: 1rem; display: grid; gap: 1.25rem; }
 
   /* Botón para mostrar u ocultar a EDM, igual al de la tierlist. */
   .ver-edm {
@@ -130,9 +131,11 @@ const poses = {
   .lado .pasos { flex-direction: column; gap: .4rem; margin: 0; }
 
   @media (max-width: 56rem) {
-    .columnas { grid-template-columns: 1fr; }
-    /* En el celular EDM va arriba de la lista, chiquita y al lado del bocadillo. */
-    .lado { grid-row: 1; position: static; }
+    /* En el celular, una columna: buscador, categorías, EDM chiquita al lado del bocadillo y la lista. */
+    .mm .zona { grid-template-columns: 1fr; }
+    .mm .zona :global([role="tabpanel"]) { grid-row: 4; }
+    .mm .zona :global(.storage-note) { grid-row: 5; }
+    .lado { grid-column: 1; grid-row: 3; position: static; margin-bottom: 1rem; }
     .edm { grid-template-columns: 4.5rem 1fr; align-items: center; padding: .75rem; gap: .75rem; }
     .edm :global(.bocadillo) { grid-column: 2; grid-row: 1; min-height: 0; font-size: .95rem; }
     .edm :global(.bocadillo::after) { left: -.62rem; top: 1.6rem; bottom: auto; transform: rotate(45deg); }
