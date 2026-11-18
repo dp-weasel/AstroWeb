@@ -1,0 +1,19 @@
+# Franja naranja debajo del banner: cuatro datos.
+#   Con `valor`, se muestra tal cual.
+#   Con `auto`, el valor se calcula solo:
+#     dia                  → "Día N" desde inicio_canal (se actualiza cada día en el navegador)
+#     directos-por-semana  → cantidad de directos de horario.yaml
+#     seguidores           → la primera meta de metas.yaml, como "31/50"
+
+etiqueta: EJEMPLO          # Borrá esta línea cuando los datos sean reales
+inicio_canal: "2026-09-28" # Fecha del primer directo (AAAA-MM-DD)
+
+datos:
+  - auto: dia
+    etiqueta: de la aventura
+  - auto: directos-por-semana
+    etiqueta: directos por semana
+  - auto: seguidores
+    etiqueta: seguidores para Afiliado
+  - valor: "∞"
+    etiqueta: veces que EDM tuvo razón

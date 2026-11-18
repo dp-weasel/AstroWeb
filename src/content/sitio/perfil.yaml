@@ -1,0 +1,30 @@
+# Nombre y redes. Se usan en la cabecera, el pie, los botones del banner y la vista previa al compartir.
+nombre: Weasel Shiro
+
+# Las redes van en orden: la primera es el botón grande del banner.
+#   red:     elige el ícono. Puede ser twitch, youtube, x, kick, tiktok, instagram, discord, bluesky o threads.
+#   boton:   texto del botón (en el banner solo se ve el de la primera red; las demás son íconos).
+redes:
+  - red: twitch
+    nombre: Twitch
+    usuario: weasel_shiro
+    url: https://www.twitch.tv/weasel_shiro
+    boton: Ver en vivo
+  - red: youtube
+    nombre: YouTube
+    usuario: "@Weasel_shiro"
+    url: https://www.youtube.com/@Weasel_shiro
+    boton: Ver videos
+  - red: x
+    nombre: X (Twitter)
+    usuario: "@weasel_shiro"
+    url: https://x.com/weasel_shiro
+    boton: Seguir
+
+# Hoy no se muestran en la web. Quedan acá a mano (p. ej. para copiarlos a la bio de Twitch).
+frase: Streamer · Guild Wars 2 y lo que venga
+bio:
+  - "🎧 ¡Hola! Soy Weasel, un streamer nuevo aprendiendo sobre la marcha."
+  - "🎮 Me gusta jugar Guild Wars 2, aunque también estoy abierto a probar otros juegos."
+  - "💬 El objetivo del canal es pasarla bien, compartir buenas charlas y crecer junto a la comunidad."
+  - "Gracias por pasar y ser parte 💜"

@@ -9,8 +9,9 @@ import "@fontsource-variable/fredoka";
 import "@fontsource/lilita-one";
 import "../styles/global.css";
 import "../styles/marca.css";
-import SiteHeader from "../components/SiteHeader.astro";
-import SiteFooter from "../components/SiteFooter.astro";
+import SiteHeader from "../components/layout/SiteHeader.astro";
+import SiteFooter from "../components/layout/SiteFooter.astro";
+import { leer } from "../lib/contenido";
 
 interface Props {
   title: string;
@@ -21,7 +22,7 @@ interface Props {
   noindex?: boolean;
 }
 
-const SITE_NAME = "Weasel Shiro";
+const { nombre: SITE_NAME } = await leer("perfil");
 const { title, description = "", image = "og.png", noindex = false } = Astro.props;
 
 // Las redes sociales solo aceptan URLs absolutas, que dependen de SITE_URL

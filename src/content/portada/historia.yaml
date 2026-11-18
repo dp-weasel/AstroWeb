@@ -1,0 +1,23 @@
+# "Cómo empezó todo": la historia del canal.
+
+titulo: Cómo empezó todo
+
+presenta:
+  quien: armino
+  texto: "¿Querés saber cómo empezó todo esto? Te cuento, que yo estaba ahí."
+
+etiqueta: Historia supuesta   # Borrá esta línea cuando la historia sea la real
+
+parrafos:
+  - "Soy Weasel, argentino, y un día me animé a prender la cámara. Empecé a streamear en 2026 casi sin saber nada de OBS, y fui armando el canal de a poco: las escenas, la música, los personajes… todo hecho a mano."
+  - "¿Por qué Weasel Shiro? Weasel es comadreja en inglés, y shiro es blanco en japonés: un armiño blanco, como la mascota. Lo de los auriculares es porque la música es parte de cada directo."
+  - "Juego Guild Wars 2 sin ser un experto: me pierdo en los mapas, muero en los fractales y pregunto todo. La idea es aprender juntos, con buena onda y un mate siempre a mano."
+
+# Ficha de datos al costado de la historia. Hoy no se muestra: sacale los # para que aparezca.
+# ficha:
+#   - { dato: Desde, valor: "Argentina 🇦🇷" }
+#   - { dato: Juego principal, valor: Guild Wars 2 }
+#   - { dato: Clase favorita, valor: "Guardián (EJEMPLO)" }
+#   - { dato: Mate, valor: "Amargo, con palo" }
+#   - { dato: Música, valor: Siempre algo sonando }
+#   - { dato: Streameando desde, valor: "2026" }

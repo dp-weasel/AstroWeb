@@ -1,0 +1,27 @@
+# "Lo último en YouTube".
+#   miniatura: nombre de un archivo de src/assets/brand/miniaturas/ (sin .png)
+#   url:       enlace al video (opcional; sin él, enlaza al canal de YouTube de perfil.yaml)
+
+titulo: Lo último en YouTube
+cantidad: 3        # Cuántos videos se muestran, de arriba hacia abajo
+
+videos:
+  - titulo: "Cómo empezar en Guild Wars 2 (sin morir en el intento)"
+    miniatura: 08-guia
+    duracion: "12:40"
+  - titulo: "La aventura sigue · Día 12"
+    miniatura: 05-serie
+    duracion: "1:58:03"
+  - titulo: "¿¡QUÉ!? Lo mejor del mes"
+    miniatura: 09-reaccion
+    duracion: "8:15"
+  - titulo: "Tier list de clases según alguien que recién empieza"
+    miniatura: 06-tierlist
+    duracion: "15:22"
+  - titulo: "Directo completo: juegos, mate y charla"
+    miniatura: 01-marca
+    duracion: "2:31:10"
+
+nota: "Miniaturas reales de tus plantillas; títulos inventados."
+etiqueta: EJEMPLO
+ver_canal: Ver el canal →

@@ -1,0 +1,49 @@
+# Textos de /gw2/mensajes/. Los mensajes en sí están en la carpeta gw2/mensajes/ (un archivo por pestaña).
+
+pestana: "Mensajes de GW2 · Weasel Shiro"   # Título de la pestaña del navegador
+descripcion: "Mensajes de Guild Wars 2 listos para copiar con un clic y pegar en el chat del juego."
+
+titulo: Mensajes de GW2
+intro: "Mensajes listos para el chat del juego: metas, grupos de fractales, raids. Tocá uno y se copia. Podés editarlos o agregar los tuyos, y se guardan solos en tu navegador."
+
+# Lo que dice EDM al costado, y con qué pose (archivos de src/assets/brand/edm/, sin .png).
+edm:
+  # Al abrir la página.
+  inicio:
+    pose: saludando
+    frase: "Elegí una categoría y tocá un mensaje. Yo superviso."
+
+  # Al copiar un mensaje: una frase y una pose al azar.
+  copiado:
+    poses: [cheer, apuntando, riendo-en-el-suelo]
+    frases:
+      - "Copiado. Ahora pegalo, que no muerde."
+      - "¿Ese? Bueno, vos sabrás."
+      - "Enter, Ctrl+V, Enter. No es tan difícil, Weasel."
+      - "¡Listo! Que se entere todo el mapa."
+      - "Lo copié yo. Bueno, el navegador. Pero yo miré."
+
+  # Al copiar un mensaje de más de 199 caracteres.
+  largo:
+    pose: gritando
+    frase: "¡Te pasaste de 199! El juego lo va a cortar a la mitad. Editalo con el lápiz."
+
+  # Al elegir una pestaña, por nombre de archivo de gw2/mensajes/ (personalizado es la de mensajes propios).
+  categorias:
+    mundo-abierto:
+      pose: shrug
+      frase: "¿Otra vez el tren de champions? Bueno, dale."
+    fractales:
+      pose: sorprendida
+      frase: "Fractales con Weasel. Llevá comida extra, por las dudas."
+    raids:
+      pose: hiss
+      frase: "Raids. Respirá hondo y leé las mecánicas."
+    personalizado:
+      pose: feliz-apuntando-arriba
+      frase: "¿Mensajes propios? Mirá vos, qué organizado."
+
+  # Al elegir una pestaña que no está en la lista de arriba.
+  otra:
+    pose: saludando
+    frase: "Buena elección. Creo."

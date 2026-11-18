@@ -1,0 +1,19 @@
+# "Preguntas frecuentes". La primera aparece abierta.
+
+titulo: Preguntas frecuentes
+
+preguntas:
+  - pregunta: ¿Cuándo hay directo?
+    respuesta: "Los avisos salen en X. Si me seguís en Twitch, te llega la notificación apenas arranco."
+  - pregunta: Soy nuevo en Guild Wars 2, ¿puedo pasar igual?
+    respuesta: "¡Obvio! El canal también aprende sobre la marcha. Preguntá lo que quieras en el chat."
+  - pregunta: ¿Para qué son los mensajes de GW2?
+    respuesta: "Son mensajes listos para copiar y pegar en el chat del juego: LFG, explicaciones de jefes, etc."
+  - pregunta: ¿Jugás otras cosas?
+    respuesta: "Guild Wars 2 es el principal, pero estoy abierto a probar otros juegos. ¿Alguna sugerencia?"
+  - pregunta: ¿Tengo que jugar Guild Wars 2 para pasar?
+    respuesta: "Para nada. La mitad del directo es charla. Y si te dan ganas de probarlo, el juego base es gratis."
+  - pregunta: ¿Puedo jugar con Weasel?
+    respuesta: "En los directos de fractales y mundo abierto se arman grupos con el chat. Preguntá en el directo."
+  - pregunta: ¿Qué música suena en los directos?
+    respuesta: "Música libre de derechos y temas que no traigan problemas con Twitch. Si te gusta uno, preguntá: aparece en pantalla."

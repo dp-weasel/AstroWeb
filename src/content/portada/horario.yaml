@@ -1,0 +1,8 @@
+# Horario de los directos. Hoy solo se usa para contar los directos por semana en la franja.
+
+zona_horaria: hora de Argentina   # UTC−3, sin horario de verano
+
+directos:
+  - { dia: martes, hora: "21:00", duracion_horas: 3, plan: Fractales con el chat, emoji: ⚔️ }
+  - { dia: jueves, hora: "21:00", duracion_horas: 3, plan: Mundo abierto y charla, emoji: 🗺️ }
+  - { dia: sábado, hora: "17:00", duracion_horas: 4, plan: Sábado de lo que pinte, emoji: 🎲 }

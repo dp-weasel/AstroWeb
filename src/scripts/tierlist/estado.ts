@@ -1,6 +1,6 @@
 // Estado de la tierlist: qué ficha está en qué fila, nombres y colores de las
 // filas y título. Se guarda en el navegador y se puede pasar en un enlace.
-import { tiersBase, type Tier } from "../../data/tierlist";
+import { tiersBase, type Tier } from "../../lib/gw2/tierlist";
 
 export interface Fila extends Tier {
   /** Ids de las fichas en orden. */

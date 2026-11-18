@@ -1,0 +1,31 @@
+# "Escribí y pasa algo": lo que pasa en pantalla según lo que se escriba en el chat.
+#   etiqueta: opcional; marca los que todavía no existen (p. ej. idea).
+# Ojo: los comandos que empiezan con ! van entre comillas.
+
+titulo: Escribí y pasa algo
+
+presenta:
+  quien: edm
+  pose: hiss
+  texto: "Si escribís !edm, contesto. Si nombrás el mate, opino. No me provoques."
+
+comandos:
+  - comando: "!edm"
+    que_hace: "EDM te contesta en pantalla con una frase al azar."
+  - comando: mate
+    que_hace: "Nombrá el mate en cualquier mensaje y EDM opina al respecto."
+  - comando: armiño
+    que_hace: "Nombrá al Armiño y se asoma desde abajo de la pantalla."
+  - comando: jaja
+    que_hace: "Si el chat se ríe, EDM se tira al piso de la risa."
+  - comando: tu primer mensaje
+    que_hace: "EDM te saluda por tu nombre la primera vez que hablás."
+  - comando: "!horario"
+    que_hace: "Te dice cuándo es el próximo directo."
+    etiqueta: idea
+  - comando: "!redes"
+    que_hace: "YouTube, X y esta web."
+    etiqueta: idea
+  - comando: "!lurk"
+    que_hace: "Avisá que mirás de fondo. Cuenta igual, y mucho."
+    etiqueta: idea

@@ -1,0 +1,21 @@
+# "Camino a Afiliado": barras de progreso.
+#   actual / meta: números (con punto decimal: 6.5). unidad: lo que va pegado al número (opcional).
+# La primera meta también aparece en la franja debajo del banner (si usa auto: seguidores).
+
+titulo: Camino a Afiliado
+
+presenta:
+  quien: edm
+  pose: cheer
+  texto: "Cuando seamos Afiliados quiero mis emotes en Twitch. Es un trato."
+
+metas:
+  - { nombre: Seguidores, actual: 31, meta: 50 }
+  - { nombre: Horas en vivo (últimos 30 días), actual: 6.5, meta: 8, unidad: " h" }
+  - { nombre: Días distintos con directo, actual: 7, meta: 7 }
+  - { nombre: Promedio de espectadores, actual: 2.4, meta: 3 }
+
+premio: "Al llegar: stream especial de festejo con la pava a full y emotes de EDM para el canal."
+
+nota: "Los requisitos son los reales de Twitch; el progreso es inventado."
+etiqueta: EJEMPLO

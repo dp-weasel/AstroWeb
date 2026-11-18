@@ -4,10 +4,18 @@
 // Las filas se arman en el navegador (src/scripts/tierlist/); las fichas se
 // renderizan acá en el banco y el script las mueve a su fila.
 import { getImage } from "astro:assets";
-import { especializaciones, profesiones, expansiones } from "../../data/gw2-profesiones";
-import { plantillas, reaccionesEdm, type PoseEdm } from "../../data/tierlist";
+import { especializaciones, profesiones, expansiones } from "../../lib/gw2/profesiones";
+import type { ReaccionesEdm } from "../../lib/gw2/tierlist";
+import type { PoseEdm } from "../../lib/edm";
+import { leer } from "../../lib/contenido";
+import { imagenEdm } from "../../lib/imagenes";
 import Bocadillo from "../marca/Bocadillo.astro";
-import Ejemplo from "../secciones/Ejemplo.astro";
+import Ejemplo from "../ui/Ejemplo.astro";
+
+// Plantillas y reacciones de EDM: src/content/gw2/tierlist-plantillas.yaml y tierlist-edm.yaml.
+const { plantillas } = await leer("tierlist-plantillas");
+const reaccionesEdm: ReaccionesEdm = await leer("tierlist-edm");
+const { edm_inicio } = await leer("pagina-tierlist");
 
 /** Votación del chat: es una idea todavía sin hacer, así que no se muestra. */
 const MOSTRAR_VOTACION = false;
@@ -21,16 +29,9 @@ const fichas = await Promise.all(
 );
 
 // URL optimizada de cada pose que usan las reacciones (más la de bienvenida).
-const archivosEdm = import.meta.glob<{ default: ImageMetadata }>("../../assets/brand/edm/*.png", { eager: true });
-const usadas = new Set<PoseEdm>(["saludando", ...Object.values(reaccionesEdm).flatMap((r) => r.poses.map((p) => p.pose))]);
+const usadas = new Set<PoseEdm>([edm_inicio.pose, ...Object.values(reaccionesEdm).flatMap((r) => r.poses.map((p) => p.pose))]);
 const poses = Object.fromEntries(
-  await Promise.all(
-    [...usadas].map(async (p) => {
-      const img = archivosEdm[`../../assets/brand/edm/${p}.png`];
-      if (!img) throw new Error(`Falta la pose de EDM ${p}.png en src/assets/brand/edm/`);
-      return [p, (await getImage({ src: img.default, height: 320 })).src];
-    }),
-  ),
+  await Promise.all([...usadas].map(async (p) => [p, (await getImage({ src: imagenEdm(p), height: 320 })).src])),
 ) as Record<PoseEdm, string>;
 
 const config = { plantillas, reacciones: reaccionesEdm, poses };
@@ -71,8 +72,8 @@ const config = { plantillas, reacciones: reaccionesEdm, poses };
         <p class="titulo-marca tl-grande"><span>TIER</span> <span class="list">LIST</span></p>
         <input class="etiqueta-tema titulo-marca" data-subtitulo aria-label="Tema de la tierlist" maxlength="28" />
         <div class="tl-edm" data-edm aria-live="polite">
-          <Bocadillo quien="edm" cola="abajo" class="tl-dice"><p data-edm-texto>¡Arrastrá una ficha y te digo qué opino!</p></Bocadillo>
-          <div class="tl-edm-foto"><img data-edm-img src={poses.saludando} alt="EDM" /></div>
+          <Bocadillo quien="edm" cola="abajo" class="tl-dice"><p data-edm-texto>{edm_inicio.frase}</p></Bocadillo>
+          <div class="tl-edm-foto"><img data-edm-img src={poses[edm_inicio.pose]} alt="EDM" /></div>
         </div>
       </div>
     </aside>

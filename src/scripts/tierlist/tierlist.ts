@@ -1,15 +1,16 @@
 // Tierlist de GW2 en el navegador. Plantillas, frases e imágenes de EDM llegan
 // en data-config (ver src/components/tierlist/TierList.astro).
-import { coloresExtra, nivelDeFila, type Plantilla, type PoseEdm, type reaccionesEdm } from "../../data/tierlist";
-import { showToast } from "../toast";
-import { copyText } from "../clipboard";
+import { coloresExtra, nivelDeFila, type Plantilla, type ReaccionesEdm } from "../../lib/gw2/tierlist";
+import type { PoseEdm } from "../../lib/edm";
+import { showToast } from "../comun/toast";
+import { copyText } from "../comun/clipboard";
 import { activarArrastre } from "./arrastre";
 import { cargar, guardar, aEnlace, deEnlace, estadoInicial, type Estado } from "./estado";
 import { dibujar, aBlob } from "./exportar";
 
 interface Config {
   plantillas: Plantilla[];
-  reacciones: typeof reaccionesEdm;
+  reacciones: ReaccionesEdm;
   poses: Record<PoseEdm, string>;
 }
 
@@ -360,10 +361,11 @@ export function iniciarTierlist(raiz: HTMLElement): void {
 
   // Cómo arranca EDM, para volver a eso al vaciar o restablecer la lista.
   const saludoInicial = edmTexto?.textContent ?? "";
+  const poseInicial = edmImg?.getAttribute("src") ?? "";
 
   function edmDeInicio(): void {
     if (!edmImg || !edmTexto) return;
-    edmImg.src = poses.saludando;
+    edmImg.src = poseInicial;
     edmImg.classList.remove("espejo");
     edmTexto.textContent = saludoInicial;
   }

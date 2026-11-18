@@ -1,0 +1,37 @@
+# "Los stickers de EDM": las poses de EDM como emotes, y cómo se usarían.
+#   pose: nombre de un archivo de src/assets/brand/edm/ (sin .png)
+
+titulo: Los stickers de EDM
+
+presenta:
+  quien: edm
+  pose: sorprendida
+  texto: "¿Esa soy yo? ¿Y por qué tengo once caras? Bueno, usalas en el chat."
+
+stickers:
+  - { nombre: edmHola, pose: saludando, uso: para saludar }
+  - { nombre: edmHype, pose: cheer, uso: cuando sale el loot }
+  - { nombre: edmLOL, pose: riendo-en-el-suelo, uso: cuando Weasel se cae }
+  - { nombre: edmShrug, pose: shrug, uso: "“ni idea”" }
+  - { nombre: edmF, pose: triste, uso: wipe en el fractal }
+  - { nombre: edmHiss, pose: hiss, uso: backseat no pedido }
+  - { nombre: edmGRITO, pose: gritando, uso: jefe al 1 % }
+  - { nombre: edmQue, pose: sorprendida, uso: plot twist }
+  - { nombre: edmMira, pose: apuntando, uso: "¡ahí está el cofre!" }
+  - { nombre: edmPorfa, pose: arrodillada, uso: pedir un mate }
+  - { nombre: edmSad, pose: triste-mirando-al-suelo, uso: se terminó el directo }
+
+nota: "Las poses existen; los nombres y que estén en Twitch son una idea."
+etiqueta: Próximamente
+
+# Pasos numerados debajo de los stickers. `etiqueta` es opcional.
+usos:
+  - cuando: En el directo
+    texto: "Escribí el nombre de un sticker en el chat y EDM aparece en pantalla con esa pose."
+    etiqueta: Idea
+  - cuando: En el chat, ya
+    texto: "Con la extensión 7TV (gratis), los stickers se ven como emotes en el chat de Twitch."
+    etiqueta: Idea
+  - cuando: Al ser Afiliados
+    texto: "Pasan a ser emotes oficiales del canal, con el prefijo de Twitch (por ejemplo weaselHola)."
+    etiqueta: Con Afiliado

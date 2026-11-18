@@ -7,17 +7,18 @@ Se publica en Cloudflare: cada push a `master` (rama de producción) compila y p
 | :---------------- | :------------------------------------------------------------- |
 | `/`               | Portada: presentación, redes, cómo es el canal, herramientas y preguntas frecuentes |
 | `/gw2/mensajes/`  | Mensajes de Guild Wars 2 que se copian con un clic             |
+| `/gw2/tierlist/`  | Tierlist de profesiones de GW2, con EDM opinando              |
 
-## Editar los textos de la portada y las redes
+## Editar los textos
 
-Están en [`src/data/profile.ts`](src/data/profile.ts): nombre, frase, bio, el texto de
-presentación de la portada (`intro`), las tarjetas de "Cómo es el canal" (`valores`), las
-preguntas frecuentes (`preguntas`) y la lista de redes. La primera red de la lista es el botón
-destacado de la portada. Los íconos salen del paquete `simple-icons`.
+Todo el contenido está en archivos YAML dentro de [`src/content/`](src/content/): uno por
+sección de la portada, el perfil y las redes, el menú, y los textos de las páginas de GW2.
+La guía [`src/content/LEEME.md`](src/content/LEEME.md) dice qué archivo cambia qué y cómo
+escribirlos. Al compilar se valida cada archivo contra su esquema (`src/content.config.ts`).
 
 ## Editar los mensajes de GW2
 
-Cada archivo de [`src/content/mensajes/`](src/content/mensajes/) es **una pestaña**: agregar un
+Cada archivo de [`src/content/gw2/mensajes/`](src/content/gw2/mensajes/) es **una pestaña**: agregar un
 archivo `.yaml` agrega una pestaña y borrarlo la quita. El nombre del archivo es el que aparece en
 la URL (`/gw2/mensajes/#fractales`).
 
@@ -51,46 +52,48 @@ El editor no deja guardar textos vacíos ni de más de 199 caracteres.
 Se guarda en `localStorage` (clave `gw2-mensajes:v1`) solo la diferencia con lo publicado:
 textos editados, claves eliminadas y mensajes agregados. Por eso los mensajes nuevos que publiques
 le aparecen a todo el mundo, y si una persona editó un mensaje, conserva su versión aunque cambies
-el original. Ver `src/scripts/messages-store.ts` y `src/scripts/messages-editor.ts`.
+el original. Ver `src/scripts/mensajes/messages-store.ts` y `src/scripts/mensajes/messages-editor.ts`.
 
 ## Estructura
 
 ```text
 src/
-├── assets/brand/             Imágenes de la marca (logo y variantes); Astro las optimiza al compilar
-├── data/
-│   └── profile.ts              Textos de la portada y redes sociales
-├── content/mensajes/*.yaml   Pestañas y mensajes de GW2 (un archivo por pestaña)
-├── content.config.ts         Esquema de los YAML de mensajes (se valida al compilar)
-├── lib/
-│   ├── messages.ts             Lee y ordena las pestañas de la colección
-│   └── gw2.ts                  Límite de 199 caracteres y pestaña Personalizado
+├── content/                  TEXTOS EDITABLES (YAML). Guía: src/content/LEEME.md
+│   ├── sitio/                  perfil.yaml (nombre y redes), menu.yaml
+│   ├── portada/                Un archivo por sección de la portada
+│   └── gw2/                    Textos de las páginas de GW2, plantillas y frases de EDM
+│       └── mensajes/*.yaml       Pestañas y mensajes de GW2 (un archivo por pestaña)
+├── content.config.ts         Esquema de cada YAML (se valida al compilar)
+├── assets/                   Imágenes que Astro optimiza al compilar
+│   ├── brand/                  Logo, Armiño (SVG), poses de EDM, miniaturas de videos
+│   └── gw2/profesiones/        Íconos de la tierlist
+├── lib/                      Lógica compartida
+│   ├── contenido.ts            leer("<archivo>"): lee un YAML de src/content/
+│   ├── perfil.ts  redes.ts     Perfil con el ícono de cada red
+│   ├── edm.ts  imagenes.ts     Poses de EDM y búsqueda de imágenes por nombre
+│   └── gw2/                    Límite del chat, pestañas, profesiones y lógica de la tierlist
 ├── layouts/BaseLayout.astro  Documento base: <head>, cabecera, pie, tema sin parpadeo
 ├── components/               Una pieza de la interfaz por archivo, con sus estilos
-│   ├── SiteHeader.astro        Cabecera común: marca, navegación y tema
-│   ├── SiteFooter.astro        Pie común con las redes
-│   ├── Hero.astro              Título de cada página (con logo, o compacto)
-│   ├── Logo.astro              Logo (armiño con auriculares) en el círculo naranja
-│   ├── SocialLinks.astro       Enlaces a redes (botones o solo íconos)
-│   ├── ThemeToggle.astro       Botón de modo claro/oscuro
-│   ├── SearchBox.astro         Buscador
-│   ├── Tabs.astro              Pestañas y paneles
-│   ├── MessageCard.astro       Mensaje copiable con acciones (editar, eliminar, restaurar)
-│   ├── MessageEditor.astro     Formulario para editar/agregar con contador de caracteres
-│   └── Toast.astro             Avisos, con botón opcional («Deshacer»)
-├── scripts/                  Lógica del navegador, un módulo por funcionalidad
-│   ├── theme.ts  tabs.ts  search.ts  clipboard.ts  toast.ts
-│   ├── messages-store.ts       Cambios de la persona en localStorage
-│   ├── messages-editor.ts      Editar, eliminar, restaurar y agregar mensajes
-│   └── text.ts                 Normalización y resaltado (compartido con el build)
-├── styles/                   tokens.css (paleta y temas) y global.css
+│   ├── layout/                 Cabecera, pie, redes y botón de tema
+│   ├── marca/                  Armiño animado, bocadillos, botones de redes, logo
+│   ├── portada/                Secciones de la portada y el globo que las presenta
+│   ├── mensajes/               Buscador, pestañas, mensaje copiable y editor
+│   ├── tierlist/               La tierlist
+│   └── ui/                     Piezas genéricas: avisos (Toast), etiqueta EJEMPLO, Hero
+├── scripts/                  Lógica del navegador
+│   ├── comun/                  Tema, portapapeles, avisos, normalización de texto
+│   ├── mensajes/               Pestañas, búsqueda y edición de mensajes (localStorage)
+│   └── tierlist/               Estado, arrastre y exportación de la tierlist
+├── styles/                   tokens.css (paleta y temas), global.css, marca.css, mensajes.css
 └── pages/                    Una ruta por archivo
     ├── index.astro             Portada
-    ├── gw2/mensajes.astro      Mensajes de GW2
+    ├── gw2/mensajes/index.astro  Mensajes de GW2
+    ├── gw2/tierlist.astro      Tierlist de GW2
     └── robots.txt.ts           robots.txt con la URL del sitemap
 public/                       Archivos servidos tal cual: favicon.ico, favicon-96.png,
                               apple-touch-icon.png y og.png (vista previa al compartir)
 scripts/brand/                Generadores de los íconos y de og.png a partir del logo
+scripts/gw2/                  Importa los íconos de profesiones desde RecursosCC
 ```
 
 ### Imágenes
@@ -103,13 +106,16 @@ scripts/brand/                Generadores de los íconos y de og.png a partir de
 
 ### Cómo agregar una funcionalidad
 
-1. Crear un componente en `src/components/` con su HTML y su `<style>` (los estilos quedan
-   aislados en el componente).
-2. Si necesita interactividad, escribir la lógica en `src/scripts/<funcionalidad>.ts` e
+1. Crear un componente en la subcarpeta que corresponda de `src/components/` con su HTML y su
+   `<style>` (los estilos quedan aislados en el componente).
+2. Los textos no van en el componente: van en un YAML de `src/content/`, con su esquema en
+   `src/content.config.ts` (`archivo("<carpeta>/<nombre>.yaml", z.object(…))`), y se leen con
+   `await leer("<nombre>")`. Sumarlo a la tabla de `src/content/LEEME.md`.
+3. Si necesita interactividad, escribir la lógica en `src/scripts/<funcionalidad>/` e
    importarla desde un `<script>` del componente.
-3. Usarlo en una página de `src/pages/`. Para una página nueva, crear el archivo ahí (la ruta
-   sale de la ruta del archivo) y, si va en el menú, agregarla a `links` en `SiteHeader.astro`.
-4. Usar siempre las variables de `src/styles/tokens.css` para los colores, así funciona en ambos temas.
+4. Usarlo en una página de `src/pages/`. Para una página nueva, crear el archivo ahí (la ruta
+   sale de la ruta del archivo) y, si va en el menú, agregarla a `src/content/sitio/menu.yaml`.
+5. Usar siempre las variables de `src/styles/tokens.css` para los colores, así funciona en ambos temas.
 
 ## Comandos
 

@@ -1,48 +1,41 @@
 ---
 // Mensajes de GW2 listos para copiar. A la izquierda, el buscador, las pestañas y
 // la lista; a la derecha, EDM opinando, la vista previa del chat y los pasos.
+// Textos y frases de EDM en src/content/gw2/pagina-mensajes.yaml; los mensajes,
+// en src/content/gw2/mensajes/.
 import { getImage } from "astro:assets";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
-import SearchBox from "../../../components/SearchBox.astro";
-import Tabs from "../../../components/Tabs.astro";
-import Toast from "../../../components/Toast.astro";
+import SearchBox from "../../../components/mensajes/SearchBox.astro";
+import Tabs from "../../../components/mensajes/Tabs.astro";
+import Toast from "../../../components/ui/Toast.astro";
 import Bocadillo from "../../../components/marca/Bocadillo.astro";
-import { getCategories } from "../../../lib/messages";
-import { frasesEdm } from "../../../data/mensajes-edm";
-import { profile } from "../../../data/profile";
-import "../../../styles/mensajes-marca.css";
-import edmSaludando from "../../../assets/brand/edm/saludando.png";
-import edmApuntando from "../../../assets/brand/edm/apuntando.png";
-import edmShrug from "../../../assets/brand/edm/shrug.png";
-import edmSorprendida from "../../../assets/brand/edm/sorprendida.png";
-import edmHiss from "../../../assets/brand/edm/hiss.png";
-import edmArriba from "../../../assets/brand/edm/feliz-apuntando-arriba.png";
-import edmCheer from "../../../assets/brand/edm/cheer.png";
-import edmRiendo from "../../../assets/brand/edm/riendo-en-el-suelo.png";
-import edmGritando from "../../../assets/brand/edm/gritando.png";
+import { getCategories } from "../../../lib/gw2/mensajes";
+import { leer } from "../../../lib/contenido";
+import { imagenEdm } from "../../../lib/imagenes";
+import type { PoseEdm } from "../../../lib/edm";
+import "../../../styles/mensajes.css";
 
 const categories = await getCategories();
+const pagina = await leer("pagina-mensajes");
+const { nombre } = await leer("perfil");
+const { edm } = pagina;
 
-// Poses de EDM según lo que pasa. El navegador cambia la imagen con estas URLs.
-const pose = async (src: ImageMetadata) => (await getImage({ src, width: 360 })).src;
-const poses = {
-  inicio: await pose(edmSaludando),
-  "mundo-abierto": await pose(edmShrug),
-  fractales: await pose(edmSorprendida),
-  raids: await pose(edmHiss),
-  personalizado: await pose(edmArriba),
-  largo: await pose(edmGritando),
-  copiado: [await pose(edmCheer), await pose(edmApuntando), await pose(edmRiendo)],
+// Lo que dice EDM, con la URL de cada pose: el navegador cambia la imagen y el texto.
+const pose = async (p: PoseEdm) => (await getImage({ src: imagenEdm(p), width: 360 })).src;
+const dicho = async (d: { pose: PoseEdm; frase: string }) => ({ pose: await pose(d.pose), frase: d.frase });
+const frases = {
+  inicio: await dicho(edm.inicio),
+  largo: await dicho(edm.largo),
+  otra: await dicho(edm.otra),
+  copiado: { poses: await Promise.all(edm.copiado.poses.map(pose)), frases: edm.copiado.frases },
+  categorias: Object.fromEntries(await Promise.all(Object.entries(edm.categorias).map(async ([id, d]) => [id, await dicho(d)]))),
 };
 ---
 
-<BaseLayout title="Mensajes de GW2 · Weasel Shiro" description="Mensajes de Guild Wars 2 listos para copiar con un clic y pegar en el chat del juego.">
+<BaseLayout title={pagina.pestana} description={pagina.descripcion}>
   <main class="mm">
-    <h1 class="titulo-marca">Mensajes de GW2</h1>
-    <p class="idea">
-      Mensajes listos para el chat del juego: metas, grupos de fractales, raids. Tocá uno y se copia. Podés editarlos o
-      agregar los tuyos, y se guardan solos en tu navegador.
-    </p>
+    <h1 class="titulo-marca">{pagina.titulo}</h1>
+    <p class="idea">{pagina.intro}</p>
 
     <!-- Buscador y categorías a todo el ancho; debajo, los mensajes y EDM a la misma altura. -->
     <div class="zona">
@@ -58,14 +51,14 @@ const poses = {
           } catch (_) {}
         </script>
         <div class="edm" id="edm">
-          <Bocadillo quien="edm" cola="abajo"><p data-dice aria-live="polite">{frasesEdm.inicio}</p></Bocadillo>
-          <img class="pose" data-pose src={poses.inicio} alt="EDM" width="180" height="240" />
-          <data id="poses" value={JSON.stringify(poses)} hidden></data>
+          <Bocadillo quien="edm" cola="abajo"><p data-dice aria-live="polite">{frases.inicio.frase}</p></Bocadillo>
+          <img class="pose" data-pose src={frases.inicio.pose} alt="EDM" width="180" height="240" />
+          <data id="frases-edm" value={JSON.stringify(frases)} hidden></data>
         </div>
         <figure class="chat">
           <figcaption>Así se va a ver en el chat</figcaption>
           <p class="linea">
-            <span class="autor">{profile.name}:</span>
+            <span class="autor">{nombre}:</span>
             <span data-vista-texto class="vacio">Tocá un mensaje para verlo acá.</span>
           </p>
           <p class="largo" data-vista-largo hidden>Lo tachado no entra: el chat admite 199 caracteres.</p>
@@ -145,11 +138,17 @@ const poses = {
 </style>
 
 <script>
-  import { frasesEdm } from "../../../data/mensajes-edm";
-  import { GW2_CHAT_LIMIT } from "../../../lib/gw2";
+  import { GW2_CHAT_LIMIT } from "../../../lib/gw2/chat";
 
-  type Poses = Record<string, string> & { copiado: string[] };
-  const poses = JSON.parse((document.getElementById("poses") as HTMLDataElement).value) as Poses;
+  type Dicho = { pose: string; frase: string };
+  type Frases = {
+    inicio: Dicho;
+    largo: Dicho;
+    otra: Dicho;
+    copiado: { poses: string[]; frases: string[] };
+    categorias: Record<string, Dicho>;
+  };
+  const frases = JSON.parse((document.getElementById("frases-edm") as HTMLDataElement).value) as Frases;
   const dice = document.querySelector<HTMLElement>("[data-dice]")!;
   const pose = document.querySelector<HTMLImageElement>("[data-pose]")!;
   const vista = document.querySelector<HTMLElement>("[data-vista-texto]")!;
@@ -157,7 +156,8 @@ const poses = {
   const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // Precarga las poses para que el cambio sea instantáneo.
-  for (const v of Object.values(poses).flat()) new Image().src = v;
+  const urls = [frases.inicio, frases.largo, frases.otra, ...Object.values(frases.categorias)].map((d) => d.pose);
+  for (const v of new Set([...urls, ...frases.copiado.poses])) new Image().src = v;
 
   const alAzar = <T,>(lista: T[], antes?: T) => {
     const opciones = lista.length > 1 ? lista.filter((x) => x !== antes) : lista;
@@ -185,8 +185,8 @@ const poses = {
       vista.append(resto);
     }
     largo.hidden = !pasado;
-    if (pasado) decir(frasesEdm.largo, poses.largo);
-    else decir(alAzar(frasesEdm.copiado, dice.textContent ?? ""), alAzar(poses.copiado, pose.getAttribute("src") ?? ""));
+    if (pasado) decir(frases.largo.frase, frases.largo.pose);
+    else decir(alAzar(frases.copiado.frases, dice.textContent ?? ""), alAzar(frases.copiado.poses, pose.getAttribute("src") ?? ""));
   });
 
   // Mostrar u ocultar a EDM. Es una preferencia de quien mira y se recuerda en el navegador.
@@ -213,7 +213,8 @@ const poses = {
   document.querySelectorAll<HTMLElement>('[role="tab"]').forEach((tab) =>
     tab.addEventListener("click", () => {
       const id = tab.dataset.tabId!;
-      decir(frasesEdm.categorias[id] ?? frasesEdm.otra, poses[id] ?? poses.inicio);
+      const d = frases.categorias[id] ?? frases.otra;
+      decir(d.frase, d.pose);
     }),
   );
 </script>

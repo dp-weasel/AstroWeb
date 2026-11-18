@@ -1,0 +1,36 @@
+---
+// "Sobre mí": la historia del canal y, si está en el YAML, una ficha rápida.
+// Textos en src/content/portada/historia.yaml.
+import { leer } from "../../lib/contenido";
+import Ejemplo from "../ui/Ejemplo.astro";
+
+const { parrafos, ficha, etiqueta } = await leer("historia");
+const conFicha = !!ficha?.length;
+---
+
+<div class:list={["sobre-mi", { "solo-texto": !conFicha }]}>
+  <div class="historia">
+    {parrafos.map((p) => <p>{p}</p>)}
+  </div>
+  {conFicha && <dl class="ficha">
+    {ficha!.map((f) => (
+      <div><dt>{f.dato}</dt><dd>{f.valor}</dd></div>
+    ))}
+    {etiqueta && <div class="nota"><Ejemplo texto={etiqueta} /></div>}
+  </dl>}
+  {!conFicha && etiqueta && <Ejemplo texto={etiqueta} />}
+</div>
+
+<style>
+  .sobre-mi { display: grid; grid-template-columns: 1.6fr 1fr; gap: 2rem; align-items: start; }
+  .solo-texto { grid-template-columns: 1fr; max-width: 42rem; margin-inline: auto; gap: 0; }
+  .solo-texto :global(.ejemplo) { justify-self: start; }
+  .historia p { margin: 0 0 1rem; color: var(--muted); font-size: 1.05rem; }
+  .historia p:first-child::first-letter { float: left; margin: .1rem .5rem 0 0; font-family: var(--font-brand); font-size: 3.2rem; line-height: .9; color: var(--accent); }
+  .ficha { margin: 0; padding: 1.25rem; border-radius: 1rem; background: var(--surface); display: grid; gap: .6rem; }
+  .ficha div { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 1px dashed var(--border); padding-bottom: .5rem; }
+  .ficha .nota { border: 0; padding: 0; }
+  dt { color: var(--muted); font-size: .9rem; }
+  dd { margin: 0; font-weight: 700; text-align: right; }
+  @media (max-width: 44rem) { .sobre-mi { grid-template-columns: 1fr; } }
+</style>

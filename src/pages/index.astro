@@ -1,70 +1,48 @@
 ---
 // Portada: banner diagonal, charla entre el Armiño y EDM, equipo, historia,
 // stickers, comandos, metas, videos, reglas, herramientas, apoyo y preguntas.
-// Casi todos los textos están en src/data/contenido.ts. Lo que falta definir
-// lleva la etiqueta EJEMPLO, IDEA o HISTORIA SUPUESTA (ver todo.md).
+// Todos los textos están en src/content/portada/ (un YAML por sección; ver
+// src/content/LEEME.md). Lo que falta definir lleva una `etiqueta` (EJEMPLO,
+// Idea…) en su YAML (ver todo.md).
 import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import "@fontsource-variable/unbounded";
-import Numeros from "../components/secciones/Numeros.astro";
 import ArminoVivo from "../components/marca/ArminoVivo.astro";
 import Bocadillo from "../components/marca/Bocadillo.astro";
 import Ctas from "../components/marca/Ctas.astro";
-import Personajes from "../components/secciones/Personajes.astro";
-import SobreMi from "../components/secciones/SobreMi.astro";
-import Emotes from "../components/secciones/Emotes.astro";
-import Comandos from "../components/secciones/Comandos.astro";
-import Metas from "../components/secciones/Metas.astro";
-import Videos from "../components/secciones/Videos.astro";
-import Reglas from "../components/secciones/Reglas.astro";
-import Apoyar from "../components/secciones/Apoyar.astro";
-import Ejemplo from "../components/secciones/Ejemplo.astro";
+import Numeros from "../components/portada/Numeros.astro";
+import Presenta from "../components/portada/Presenta.astro";
+import Personajes from "../components/portada/Personajes.astro";
+import SobreMi from "../components/portada/SobreMi.astro";
+import Emotes from "../components/portada/Emotes.astro";
+import Comandos from "../components/portada/Comandos.astro";
+import Metas from "../components/portada/Metas.astro";
+import Videos from "../components/portada/Videos.astro";
+import Reglas from "../components/portada/Reglas.astro";
+import Apoyar from "../components/portada/Apoyar.astro";
+import Ejemplo from "../components/ui/Ejemplo.astro";
 import armino from "../assets/brand/weasel-mouth-closed-headphones.png";
-import edmShrug from "../assets/brand/edm/shrug.png";
-import edmArriba from "../assets/brand/edm/feliz-apuntando-arriba.png";
-import edmSorprendida from "../assets/brand/edm/sorprendida.png";
-import edmHiss from "../assets/brand/edm/hiss.png";
-import edmCheer from "../assets/brand/edm/cheer.png";
 import edmApuntando from "../assets/brand/edm/apuntando.png";
-import edmRiendo from "../assets/brand/edm/riendo-en-el-suelo.png";
-import { intro, preguntas, preguntasExtra, franja } from "../data/contenido";
+import { leer, conNegritas } from "../lib/contenido";
+import { imagenEdm } from "../lib/imagenes";
+import { descripcionPose } from "../lib/edm";
 
-const faq = [...preguntas, ...preguntasExtra];
-
-/** Quién presenta cada sección. */
-const dice = {
-  equipo: "Somos tres. Bueno, dos y medio: EDM dice que yo no cuento porque no juego.",
-  historia: "¿Querés saber cómo empezó todo esto? Te cuento, que yo estaba ahí.",
-  emotes: { edm: edmSorprendida, texto: "¿Esa soy yo? ¿Y por qué tengo once caras? Bueno, usalas en el chat." },
-  comandos: { edm: edmHiss, texto: "Si escribís !edm, contesto. Si nombrás el mate, opino. No me provoques." },
-  metas: { edm: edmCheer, texto: "Cuando seamos Afiliados quiero mis emotes en Twitch. Es un trato." },
-  reglas: { edm: edmShrug, texto: "Son pocas. Hasta Weasel las cumple. Casi siempre." },
-};
-
-/** Cómo se usarían los stickers, de hoy a cuando el canal sea Afiliado. */
-const usoStickers = [
-  {
-    cuando: "En el directo",
-    texto: "Escribí el nombre de un sticker en el chat y EDM aparece en pantalla con esa pose.",
-    estado: "idea",
-  },
-  {
-    cuando: "En el chat, ya",
-    texto: "Con la extensión 7TV (gratis), los stickers se ven como emotes en el chat de Twitch.",
-    estado: "idea",
-  },
-  {
-    cuando: "Al ser Afiliados",
-    texto: "Pasan a ser emotes oficiales del canal, con el prefijo de Twitch (por ejemplo weaselHola).",
-    estado: "meta",
-  },
-];
+const banner = await leer("banner");
+const canal = await leer("como-es-el-canal");
+const equipo = await leer("equipo");
+const historia = await leer("historia");
+const stickers = await leer("stickers");
+const comandos = await leer("comandos");
+const metas = await leer("metas");
+const videos = await leer("videos");
+const reglas = await leer("reglas");
+const herramientas = await leer("herramientas");
+const apoyar = await leer("apoyar");
+const preguntas = await leer("preguntas");
+const despedida = await leer("despedida");
 ---
 
-<BaseLayout
-  title="Weasel Shiro · Streamer"
-  description="Directos de Guild Wars 2 (y lo que pinte) con mate, el Armiño y EDM. Twitch, YouTube y herramientas para el juego."
->
+<BaseLayout title={banner.pestana} description={banner.descripcion}>
   <main data-escena>
     <!-- 1. Banner (de la variante 2) -->
     <!-- Logo actual con auriculares. Pendiente: reemplazarlo por un logo nuevo
@@ -78,130 +56,131 @@ const usoStickers = [
         <Image src={armino} alt="" width={640} widths={[320, 640]} sizes="40vw" />
       </div>
       <div class="texto">
-        <p class="eyebrow titulo-marca">Directos de Guild Wars 2 · y lo que pinte</p>
-        <h1 class="nombre">WEASEL</h1>
-        <p class="lead">{intro}</p>
+        <p class="eyebrow titulo-marca">{banner.antetitulo}</p>
+        <h1 class="nombre">{banner.nombre}</h1>
+        <p class="lead">{banner.intro}</p>
         <Ctas />
       </div>
     </section>
 
     <!-- Franja debajo del banner (de la variante 2) -->
-    <div class="franja"><Numeros items={franja} /></div>
+    <div class="franja"><Numeros /></div>
 
     <!-- 2. Cómo es el canal, charlado (de la 5) -->
     <section class="charla" aria-labelledby="valores">
-      <h2 id="valores" class="titulo-marca">Cómo es el canal</h2>
-      <div class="turno aparece">
-        <ArminoVivo size="7rem" class="avatar" />
-        <Bocadillo quien="armino"><p><strong>Jugamos sin presión.</strong> Weasel aprende sobre la marcha y equivocarse es parte del directo.</p></Bocadillo>
-      </div>
-      <div class="turno edm aparece">
-        <Bocadillo quien="edm" cola="derecha"><p>Y se equivoca seguido, eh.</p></Bocadillo>
-        <Image class="avatar" src={edmShrug} alt="EDM encogiéndose de hombros" width={200} />
-      </div>
-      <div class="turno aparece">
-        <ArminoVivo size="7rem" class="avatar" />
-        <Bocadillo quien="armino"><p><strong>Buenas charlas.</strong> El chat es parte del juego: preguntá, aconsejá, contá tu anécdota.</p></Bocadillo>
-      </div>
-      <div class="turno edm aparece">
-        <Bocadillo quien="edm" cola="derecha"><p><strong>¡Y crecemos juntos!</strong> Es un canal nuevo. Sumate, que la pava ya está puesta 🧉</p></Bocadillo>
-        <Image class="avatar" src={edmArriba} alt="EDM feliz, señalando hacia arriba" width={200} />
-      </div>
+      <h2 id="valores" class="titulo-marca">{canal.titulo}</h2>
+      {canal.charla.map((t) =>
+        t.quien === "armino" ? (
+          <div class="turno aparece">
+            <ArminoVivo size="7rem" class="avatar" />
+            <Bocadillo quien="armino"><p set:html={conNegritas(t.texto)} /></Bocadillo>
+          </div>
+        ) : (
+          <div class="turno edm aparece">
+            <Bocadillo quien="edm" cola="derecha"><p set:html={conNegritas(t.texto)} /></Bocadillo>
+            <Image class="avatar" src={imagenEdm(t.pose)} alt={descripcionPose[t.pose]} width={200} />
+          </div>
+        ),
+      )}
     </section>
 
     <!-- 3. Equipo e historia (de la 4), presentados por el Armiño -->
     <section class="bloque" aria-labelledby="equipo">
-      <h2 id="equipo" class="titulo-marca">Te presento al equipo</h2>
-      <div class="dice aparece"><ArminoVivo size="5rem" /><Bocadillo quien="armino"><p>{dice.equipo}</p></Bocadillo></div>
+      <h2 id="equipo" class="titulo-marca">{equipo.titulo}</h2>
+      <Presenta {...equipo.presenta} />
       <Personajes />
     </section>
 
     <section class="bloque" aria-labelledby="historia">
-      <h2 id="historia" class="titulo-marca">Cómo empezó todo</h2>
-      <div class="dice aparece"><ArminoVivo size="5rem" /><Bocadillo quien="armino"><p>{dice.historia}</p></Bocadillo></div>
-      <SobreMi ficha={false} />
+      <h2 id="historia" class="titulo-marca">{historia.titulo}</h2>
+      <Presenta {...historia.presenta} />
+      <SobreMi />
     </section>
 
     <!-- 4. Stickers y chat, presentados por EDM -->
     <section class="bloque" aria-labelledby="emotes">
-      <h2 id="emotes" class="titulo-marca">Los stickers de EDM</h2>
-      <div class="dice aparece"><Image src={dice.emotes.edm} alt="" width={160} /><Bocadillo quien="edm"><p>{dice.emotes.texto}</p></Bocadillo></div>
+      <h2 id="emotes" class="titulo-marca">{stickers.titulo}</h2>
+      <Presenta {...stickers.presenta} />
       <Emotes />
       <ol class="uso">
-        {usoStickers.map((u, i) => (
+        {stickers.usos.map((u, i) => (
           <li>
             <span class="paso">{i + 1}</span>
             <strong>{u.cuando}</strong>
             <p>{u.texto}</p>
-            <Ejemplo texto={u.estado === "meta" ? "Con Afiliado" : "Idea"} />
+            {u.etiqueta && <Ejemplo texto={u.etiqueta} />}
           </li>
         ))}
       </ol>
     </section>
 
     <section class="bloque angosto" aria-labelledby="comandos">
-      <h2 id="comandos" class="titulo-marca">Escribí y pasa algo</h2>
-      <div class="dice aparece"><Image src={dice.comandos.edm} alt="" width={160} /><Bocadillo quien="edm"><p>{dice.comandos.texto}</p></Bocadillo></div>
+      <h2 id="comandos" class="titulo-marca">{comandos.titulo}</h2>
+      <Presenta {...comandos.presenta} />
       <Comandos />
     </section>
 
     <section class="bloque angosto" aria-labelledby="metas">
-      <h2 id="metas" class="titulo-marca">Camino a Afiliado</h2>
-      <div class="dice aparece"><Image src={dice.metas.edm} alt="" width={160} /><Bocadillo quien="edm"><p>{dice.metas.texto}</p></Bocadillo></div>
+      <h2 id="metas" class="titulo-marca">{metas.titulo}</h2>
+      <Presenta {...metas.presenta} />
       <Metas />
     </section>
 
     <section class="bloque" aria-labelledby="videos">
-      <h2 id="videos" class="titulo-marca">Lo último en YouTube</h2>
-      <Videos cantidad={3} />
+      <h2 id="videos" class="titulo-marca">{videos.titulo}</h2>
+      <Videos />
     </section>
 
     <section class="bloque angosto" aria-labelledby="reglas">
-      <h2 id="reglas" class="titulo-marca">Reglas de la casa</h2>
-      <div class="dice aparece"><Image src={dice.reglas.edm} alt="" width={160} /><Bocadillo quien="edm"><p>{dice.reglas.texto}</p></Bocadillo></div>
+      <h2 id="reglas" class="titulo-marca">{reglas.titulo}</h2>
+      <Presenta {...reglas.presenta} />
       <Reglas />
     </section>
 
-    <!-- 5. Herramientas: EDM señala la tarjeta -->
+    <!-- 5. Herramientas: EDM señala las tarjetas -->
     <section class="bloque angosto" aria-labelledby="herramientas">
-      <h2 id="herramientas" class="titulo-marca">Herramientas</h2>
+      <h2 id="herramientas" class="titulo-marca">{herramientas.titulo}</h2>
       <div class="señala aparece">
-        <a class="tool-card" href="/gw2/mensajes/">
-          <span class="emoji" aria-hidden="true">💬</span>
-          <span><strong>Mensajes de GW2 →</strong><br />Listos para copiar y pegar en el chat del juego.</span>
-        </a>
-        <Image class="edm-apunta" src={edmApuntando} alt="EDM señalando la herramienta" width={240} />
+        <div class="tarjetas">
+          {herramientas.herramientas.map((h) => (
+            <a class="tool-card" href={h.url}>
+              <span class="emoji" aria-hidden="true">{h.emoji}</span>
+              <span><strong>{h.titulo} →</strong><br />{h.texto}</span>
+            </a>
+          ))}
+        </div>
+        <Image class="edm-apunta" src={edmApuntando} alt="EDM señalando las herramientas" width={240} />
       </div>
     </section>
 
     <section class="bloque" aria-labelledby="apoyar">
-      <h2 id="apoyar" class="titulo-marca">¿Querés dar una mano?</h2>
-      <div class="dice aparece"><ArminoVivo size="5rem" /><Bocadillo quien="armino"><p>Todo suma, y casi todo es gratis. EDM igual prefiere los cafecitos.</p></Bocadillo></div>
+      <h2 id="apoyar" class="titulo-marca">{apoyar.titulo}</h2>
+      <Presenta {...apoyar.presenta} />
       <Apoyar />
     </section>
 
     <!-- 6. Preguntas frecuentes (de la 2) -->
     <section class="bloque angosto" aria-labelledby="faq">
-      <h2 id="faq" class="titulo-marca">Preguntas frecuentes</h2>
+      <h2 id="faq" class="titulo-marca">{preguntas.titulo}</h2>
       <div class="faq">
-        {faq.map((p, i) => (
+        {preguntas.preguntas.map((p, i) => (
           <details open={i === 0}>
-            <summary>{p.q}</summary>
-            <p>{p.a}</p>
+            <summary>{p.pregunta}</summary>
+            <p>{p.respuesta}</p>
           </details>
         ))}
       </div>
     </section>
 
-    <!-- 7. Cierre: EDM tirada de la risa -->
+    <!-- 7. Cierre: EDM -->
     <section class="cierre aparece">
-      <Image src={edmRiendo} alt="EDM tirada en el suelo, muerta de risa" width={260} />
-      <Bocadillo quien="edm" cola="izquierda"><p>¡Nos vemos en el próximo directo! Traé el mate.</p></Bocadillo>
+      <Image src={imagenEdm(despedida.edm.pose)} alt={descripcionPose[despedida.edm.pose]} width={260} />
+      <Bocadillo quien="edm" cola="izquierda"><p>{despedida.edm.texto}</p></Bocadillo>
     </section>
 
     <!-- El Armiño se asoma desde la línea del pie al llegar al final (de la 4) -->
     <div class="asomo" aria-hidden="true">
-      <Bocadillo quien="armino" cola="derecha" class="chau"><p>¿Ya te vas? Seguí a Weasel en Twitch así no te perdés nada 🧉</p></Bocadillo>
+      <Bocadillo quien="armino" cola="derecha" class="chau"><p>{despedida.armino_al_final}</p></Bocadillo>
       <div class="ventanita"><ArminoVivo size="9rem" class="armino-chau" /></div>
     </div>
   </main>
@@ -268,9 +247,6 @@ const usoStickers = [
   /* ---------- Secciones ---------- */
   .bloque { max-width: 60rem; margin: 5rem auto 0; padding: 0 1rem; }
   .bloque.angosto { max-width: 46rem; }
-  .dice { display: flex; align-items: center; gap: 1rem; max-width: 34rem; margin: -.75rem auto 1.75rem; }
-  .dice img { width: 4.5rem; height: auto; flex: none; }
-  .dice :global(.bocadillo) { flex: 1; }
 
   /* Cómo se usan los stickers: tres pasos */
   .uso { list-style: none; margin: 1.5rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: .75rem; }
@@ -285,6 +261,7 @@ const usoStickers = [
 
   /* Herramientas */
   .señala { position: relative; padding-right: 7rem; }
+  .tarjetas { display: grid; gap: .75rem; }
   .tool-card {
     display: flex; gap: 1rem; align-items: center; padding: 1.25rem;
     border: 3px solid var(--charcoal); border-radius: 1.25rem; background: var(--cream);
@@ -320,8 +297,9 @@ const usoStickers = [
   .asomo.visible :global(.chau) { opacity: 1; transform: none; }
 
   /* Aparición al hacer scroll */
-  :global(.js) .aparece { opacity: 0; transform: translateY(1.5rem); transition: opacity .5s, transform .5s; }
-  :global(.js) .aparece.visible { opacity: 1; transform: none; }
+  /* Global: también la usan los componentes de la sección (p. ej. Presenta). */
+  :global(.js .aparece) { opacity: 0; transform: translateY(1.5rem); transition: opacity .5s, transform .5s; }
+  :global(.js .aparece.visible) { opacity: 1; transform: none; }
 
   @media (max-width: 48rem) {
     .banner { grid-template-columns: 1fr; }
