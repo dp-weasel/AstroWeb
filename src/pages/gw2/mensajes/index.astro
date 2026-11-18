@@ -1,44 +1,180 @@
 ---
-// Índice de las versiones de la página de mensajes, para compararlas y elegir una.
+// Mensajes de GW2 listos para copiar. A la izquierda, el buscador, las pestañas y
+// la lista; a la derecha, EDM opinando, la vista previa del chat y los pasos.
+import { getImage } from "astro:assets";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
-import VersionesNav from "../../../components/mensajes/VersionesNav.astro";
-import { versiones } from "../../../data/mensajes-versiones";
+import SearchBox from "../../../components/SearchBox.astro";
+import Tabs from "../../../components/Tabs.astro";
+import Toast from "../../../components/Toast.astro";
+import Bocadillo from "../../../components/marca/Bocadillo.astro";
+import { getCategories } from "../../../lib/messages";
+import { frasesEdm } from "../../../data/mensajes-edm";
+import { profile } from "../../../data/profile";
+import "../../../styles/mensajes-marca.css";
+import edmSaludando from "../../../assets/brand/edm/saludando.png";
+import edmApuntando from "../../../assets/brand/edm/apuntando.png";
+import edmShrug from "../../../assets/brand/edm/shrug.png";
+import edmSorprendida from "../../../assets/brand/edm/sorprendida.png";
+import edmHiss from "../../../assets/brand/edm/hiss.png";
+import edmArriba from "../../../assets/brand/edm/feliz-apuntando-arriba.png";
+import edmCheer from "../../../assets/brand/edm/cheer.png";
+import edmRiendo from "../../../assets/brand/edm/riendo-en-el-suelo.png";
+import edmGritando from "../../../assets/brand/edm/gritando.png";
+
+const categories = await getCategories();
+
+// Poses de EDM según lo que pasa. El navegador cambia la imagen con estas URLs.
+const pose = async (src: ImageMetadata) => (await getImage({ src, width: 360 })).src;
+const poses = {
+  inicio: await pose(edmSaludando),
+  "mundo-abierto": await pose(edmShrug),
+  fractales: await pose(edmSorprendida),
+  raids: await pose(edmHiss),
+  personalizado: await pose(edmArriba),
+  largo: await pose(edmGritando),
+  copiado: [await pose(edmCheer), await pose(edmApuntando), await pose(edmRiendo)],
+};
 ---
 
-<BaseLayout title="Mensajes de GW2 · Versiones" description="Versiones de la página de mensajes de Guild Wars 2, de la más simple a la más completa." noindex>
-  <VersionesNav />
-  <main>
+<BaseLayout title="Mensajes de GW2 · Weasel Shiro" description="Mensajes de Guild Wars 2 listos para copiar con un clic y pegar en el chat del juego.">
+  <main class="mm">
     <h1 class="titulo-marca">Mensajes de GW2</h1>
     <p class="idea">
-      Tres versiones de la misma página, de la más simple a la más completa. Cada una suma lo de la anterior. Los
-      mensajes que edites o agregues se guardan en el navegador y son los mismos en las tres.
+      Mensajes listos para el chat del juego: metas, grupos de fractales, raids. Tocá uno y se copia. Podés editarlos o
+      agregar los tuyos, y se guardan solos en tu navegador.
     </p>
-    <ol class="lista">
-      {versiones.map((v) => (
-        <li>
-          <a href={`/gw2/mensajes/${v.slug}/`}>
-            <strong>{v.nombre} →</strong>
-            <span>{v.idea}</span>
-            <ul>{v.suma.map((s) => <li>{s}</li>)}</ul>
-          </a>
-        </li>
-      ))}
-    </ol>
+
+    <div class="columnas">
+      <div class="zona">
+        <SearchBox />
+        <Tabs categories={categories} conteo />
+      </div>
+
+      <aside class="lado" aria-label="EDM te ayuda">
+        <div class="edm">
+          <Bocadillo quien="edm" cola="abajo"><p data-dice aria-live="polite">{frasesEdm.inicio}</p></Bocadillo>
+          <img class="pose" data-pose src={poses.inicio} alt="EDM" width="180" height="240" />
+          <data id="poses" value={JSON.stringify(poses)} hidden></data>
+        </div>
+        <figure class="chat">
+          <figcaption>Así se va a ver en el chat</figcaption>
+          <p class="linea">
+            <span class="autor">{profile.name}:</span>
+            <span data-vista-texto class="vacio">Tocá un mensaje para verlo acá.</span>
+          </p>
+          <p class="largo" data-vista-largo hidden>Lo tachado no entra: el chat admite 199 caracteres.</p>
+        </figure>
+        <ol class="pasos">
+          <li><b>1</b> Tocá el mensaje</li>
+          <li><b>2</b> En el juego: <kbd>Enter</kbd></li>
+          <li><b>3</b> <kbd>Ctrl</kbd>+<kbd>V</kbd> y <kbd>Enter</kbd></li>
+        </ol>
+      </aside>
+    </div>
   </main>
+  <Toast />
 </BaseLayout>
 
 <style>
-  main { max-width: 52rem; margin: 0 auto; padding: 1rem 1rem 4rem; }
-  h1 { margin: 0 0 .5rem; font-size: clamp(1.6rem, 5vw, 2.4rem); }
-  .idea { margin: 0 0 1.5rem; color: var(--muted); }
-  .lista { display: grid; gap: .75rem; margin: 0; padding: 0; list-style: none; }
-  .lista > li > a {
-    display: grid; gap: .35rem; padding: 1.1rem 1.25rem; border: 3px solid var(--charcoal); border-radius: 1rem;
-    background: var(--cream); color: var(--charcoal); text-decoration: none; box-shadow: .3rem .3rem 0 var(--amber);
-    transition: transform .15s, box-shadow .15s;
+  main { max-width: 72rem; margin: 0 auto; padding: 1rem 1rem 4rem; }
+  h1 { margin: 0 0 .25rem; font-size: clamp(1.6rem, 5vw, 2.4rem); }
+  .idea { margin: 0 0 1.5rem; max-width: 46rem; color: var(--muted); }
+
+  .columnas { display: grid; grid-template-columns: minmax(0, 1fr) 19rem; gap: 2rem; align-items: start; }
+  /* Las pestañas van debajo del buscador, a lo ancho. */
+  .columnas .zona { grid-template-columns: 1fr; }
+  .columnas .zona :global(.search) { margin-bottom: 1rem; }
+  .columnas .zona :global(.tabs) { justify-content: flex-start; }
+
+  .lado { position: sticky; top: 1rem; display: grid; gap: 1.25rem; }
+
+  /* EDM en su escenario, como en la tierlist. */
+  .edm {
+    display: grid; justify-items: center; gap: .9rem; padding: 1.25rem 1rem 1rem; border-radius: 1.25rem;
+    background: radial-gradient(circle at 50% 60%, rgb(214 36 159 / .2), transparent 65%), var(--surface);
   }
-  .lista > li > a:hover { transform: translate(-.15rem, -.15rem); box-shadow: .45rem .45rem 0 var(--amber); }
-  strong { font-size: 1.15rem; }
-  ul { display: flex; flex-wrap: wrap; gap: .3rem; margin: .25rem 0 0; padding: 0; list-style: none; }
-  ul li { padding: .1rem .55rem; border-radius: 999px; background: rgb(0 0 0 / .08); font-size: .82rem; font-weight: 600; }
+  .edm :global(.bocadillo) { width: 100%; min-height: 5.5rem; }
+  .pose { width: 10rem; height: 13rem; object-fit: contain; object-position: bottom; }
+  .pose.salta { animation: salta .4s cubic-bezier(.3, 1.6, .5, 1); }
+  @keyframes salta { from { transform: translateY(.75rem) scale(.95); } }
+
+  /* Vista previa con el aspecto del chat del juego. */
+  .chat {
+    margin: 0; padding: .75rem .9rem 1rem; border-radius: .6rem;
+    background: rgb(10 10 12 / .88); border: 1px solid #000; box-shadow: inset 0 0 0 1px rgb(255 255 255 / .06);
+    color: #e8d5a6; font: 500 .9rem/1.45 var(--font-body);
+  }
+  figcaption { margin-bottom: .4rem; color: #8a8a8a; font: 700 .7rem var(--font-body); text-transform: uppercase; letter-spacing: .08em; }
+  .linea { margin: 0; overflow-wrap: anywhere; text-shadow: 0 1px 1px #000; }
+  .autor { margin-right: .3em; color: #ffb347; font-weight: 700; }
+  .vacio { color: #777; font-style: italic; }
+  .largo { margin: .4rem 0 0; color: #ff7a5c; font-size: .8rem; font-weight: 700; }
+  :global(.cortado) { color: #777; text-decoration: line-through; }
+
+  .lado .pasos { flex-direction: column; gap: .4rem; margin: 0; }
+
+  @media (max-width: 56rem) {
+    .columnas { grid-template-columns: 1fr; }
+    /* En el celular EDM va arriba de la lista, chiquita y al lado del bocadillo. */
+    .lado { grid-row: 1; position: static; }
+    .edm { grid-template-columns: 4.5rem 1fr; align-items: center; padding: .75rem; gap: .75rem; }
+    .edm :global(.bocadillo) { grid-column: 2; grid-row: 1; min-height: 0; font-size: .95rem; }
+    .edm :global(.bocadillo::after) { left: -.62rem; top: 1.6rem; bottom: auto; transform: rotate(45deg); }
+    .pose { grid-column: 1; grid-row: 1; width: 4.5rem; height: 6rem; }
+    .chat, .lado .pasos { display: none; }
+  }
 </style>
+
+<script>
+  import { frasesEdm } from "../../../data/mensajes-edm";
+  import { GW2_CHAT_LIMIT } from "../../../lib/gw2";
+
+  type Poses = Record<string, string> & { copiado: string[] };
+  const poses = JSON.parse((document.getElementById("poses") as HTMLDataElement).value) as Poses;
+  const dice = document.querySelector<HTMLElement>("[data-dice]")!;
+  const pose = document.querySelector<HTMLImageElement>("[data-pose]")!;
+  const vista = document.querySelector<HTMLElement>("[data-vista-texto]")!;
+  const largo = document.querySelector<HTMLElement>("[data-vista-largo]")!;
+  const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Precarga las poses para que el cambio sea instantáneo.
+  for (const v of Object.values(poses).flat()) new Image().src = v;
+
+  const alAzar = <T,>(lista: T[], antes?: T) => {
+    const opciones = lista.length > 1 ? lista.filter((x) => x !== antes) : lista;
+    return opciones[Math.floor(Math.random() * opciones.length)];
+  };
+  const decir = (texto: string, src: string) => {
+    dice.textContent = texto;
+    if (pose.src !== new URL(src, location.href).href) pose.src = src;
+    if (!quieto) {
+      pose.classList.remove("salta");
+      void pose.offsetWidth;
+      pose.classList.add("salta");
+    }
+  };
+
+  document.addEventListener("mensaje:copiado", (e) => {
+    const { texto } = (e as CustomEvent<{ texto: string }>).detail;
+    const pasado = texto.length > GW2_CHAT_LIMIT;
+    vista.classList.remove("vacio");
+    vista.textContent = texto.slice(0, GW2_CHAT_LIMIT);
+    if (pasado) {
+      const resto = document.createElement("span");
+      resto.className = "cortado";
+      resto.textContent = texto.slice(GW2_CHAT_LIMIT);
+      vista.append(resto);
+    }
+    largo.hidden = !pasado;
+    if (pasado) decir(frasesEdm.largo, poses.largo);
+    else decir(alAzar(frasesEdm.copiado, dice.textContent ?? ""), alAzar(poses.copiado, pose.getAttribute("src") ?? ""));
+  });
+
+  // Al cambiar de categoría, EDM opina y cambia de pose.
+  document.querySelectorAll<HTMLElement>('[role="tab"]').forEach((tab) =>
+    tab.addEventListener("click", () => {
+      const id = tab.dataset.tabId!;
+      decir(frasesEdm.categorias[id] ?? frasesEdm.otra, poses[id] ?? poses.inicio);
+    }),
+  );
+</script>
