@@ -25,6 +25,7 @@ import armino from "../assets/brand/weasel-mouth-closed-headphones.png";
 import edmApuntando from "../assets/brand/edm/apuntando.png";
 import { leer, conNegritas } from "../lib/contenido";
 import { imagenEdm } from "../lib/imagenes";
+import { ruta } from "../lib/rutas";
 import { descripcionPose } from "../lib/edm";
 
 const banner = await leer("banner");
@@ -143,7 +144,7 @@ const despedida = await leer("despedida");
       <div class="señala aparece">
         <div class="tarjetas">
           {herramientas.herramientas.map((h) => (
-            <a class="tool-card" href={h.url}>
+            <a class="tool-card" href={ruta(h.url)}>
               <span class="emoji" aria-hidden="true">{h.emoji}</span>
               <span><strong>{h.titulo} →</strong><br />{h.texto}</span>
             </a>
