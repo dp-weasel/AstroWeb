@@ -1,0 +1,31 @@
+# "¿Querés dar una mano?": formas de apoyar al canal.
+
+titulo: ¿Querés dar una mano?
+
+presenta:
+  quien: armino
+  texto: "Todo suma, y casi todo es gratis. EDM igual prefiere los cafecitos."
+
+gratis:
+  - emoji: 💜
+    que: Seguir en Twitch
+    detalle: "Y activar la campanita para enterarte cuando arranco."
+  - emoji: 👀
+    que: Dejar el directo abierto
+    detalle: "Aunque mires de fondo, suma un montón para un canal chico."
+  - emoji: 💬
+    que: Escribir en el chat
+    detalle: "Un “hola” ya cuenta. EDM te va a saludar."
+  - emoji: 🔁
+    que: Compartir
+    detalle: "Un clip, un video o esta página con alguien a quien le pueda gustar."
+  - emoji: 👑
+    que: Sub con Prime
+    detalle: "Si tenés Amazon Prime, tenés una sub gratis por mes para regalar."
+
+cafecito:
+  url: https://cafecito.app/weasel_shiro
+  texto: Invitame un cafecito
+  nota: "Aunque acá se toma mate 🧉"
+
+nota: "Todo lo de arriba es gratis y ayuda igual que una donación. En serio."

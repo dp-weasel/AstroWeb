@@ -1,0 +1,23 @@
+---
+// Globo que presenta una sección de la portada: el Armiño (animado) o EDM con una pose.
+// Recibe el bloque `presenta` de los YAML de src/content/portada/.
+import { Image } from "astro:assets";
+import ArminoVivo from "../marca/ArminoVivo.astro";
+import Bocadillo from "../marca/Bocadillo.astro";
+import { imagenEdm } from "../../lib/imagenes";
+import type { PoseEdm } from "../../lib/edm";
+
+type Props = { quien: "armino"; texto: string } | { quien: "edm"; pose: PoseEdm; texto: string };
+const p = Astro.props;
+---
+
+<div class="dice aparece">
+  {p.quien === "armino" ? <ArminoVivo size="5rem" /> : <Image src={imagenEdm(p.pose)} alt="" width={160} />}
+  <Bocadillo quien={p.quien}><p>{p.texto}</p></Bocadillo>
+</div>
+
+<style>
+  .dice { display: flex; align-items: center; gap: 1rem; max-width: 34rem; margin: -.75rem auto 1.75rem; }
+  .dice img { width: 4.5rem; height: auto; flex: none; }
+  .dice :global(.bocadillo) { flex: 1; }
+</style>

@@ -1,0 +1,28 @@
+---
+// Reglas del chat, numeradas. Textos en src/content/portada/reglas.yaml.
+import { leer } from "../../lib/contenido";
+import Ejemplo from "../ui/Ejemplo.astro";
+
+const { reglas, etiqueta } = await leer("reglas");
+---
+
+<div class="reglas">
+  <ol>
+    {reglas.map((r) => (
+      <li><strong>{r.titulo}</strong><span>{r.texto}</span></li>
+    ))}
+  </ol>
+  {etiqueta && <Ejemplo texto={etiqueta} />}
+</div>
+
+<style>
+  ol { list-style: none; counter-reset: r; margin: 0 0 .5rem; padding: 0; display: grid; gap: .75rem; }
+  li { counter-increment: r; position: relative; display: grid; padding: .8rem 1rem .8rem 3.75rem; border-radius: .9rem; background: var(--surface); }
+  li::before {
+    content: counter(r); position: absolute; left: .9rem; top: 50%; transform: translateY(-50%);
+    display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border-radius: 50%;
+    background: var(--amber); color: var(--charcoal); font-family: var(--font-brand); font-size: 1.1rem;
+  }
+  strong { font-weight: 800; }
+  span { color: var(--muted); }
+</style>

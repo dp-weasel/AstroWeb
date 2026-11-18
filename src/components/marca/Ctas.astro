@@ -1,20 +1,20 @@
 ---
 // Botones de las redes: Twitch destacado con el degradado de la marca, el resto
 // como íconos. Igual que en la portada actual.
-import { socials } from "../../data/profile";
+import { leerPerfil } from "../../lib/perfil";
 
 interface Props {
   class?: string;
 }
 const { class: extra } = Astro.props;
-const [twitch, ...resto] = socials;
+const [principal, ...resto] = (await leerPerfil()).redes;
 const brandColor = (hex: string) => (hex === "000000" ? "currentColor" : `#${hex}`);
 ---
 
 <div class:list={["ctas", extra]}>
-  <a class="btn primary" href={twitch.url} target="_blank" rel="noopener me" data-cta="twitch">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d={twitch.icon.path} /></svg>
-    {twitch.cta}
+  <a class="btn primary" href={principal.url} target="_blank" rel="noopener me" data-cta={principal.red}>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d={principal.icon.path} /></svg>
+    {principal.boton}
   </a>
   {resto.map((s) => (
     <a
@@ -22,7 +22,7 @@ const brandColor = (hex: string) => (hex === "000000" ? "currentColor" : `#${hex
       href={s.url}
       target="_blank"
       rel="noopener me"
-      aria-label={s.name}
+      aria-label={s.nombre}
       style={`--brand: ${brandColor(s.icon.hex)}`}
     >
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d={s.icon.path} /></svg>

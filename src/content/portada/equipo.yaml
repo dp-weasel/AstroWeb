@@ -1,0 +1,25 @@
+# "Te presento al equipo": los personajes del canal.
+#   id: weasel, armino o edm. Elige la imagen de la tarjeta (la de Weasel es un hueco para una foto).
+
+titulo: Te presento al equipo
+
+presenta:
+  quien: armino
+  texto: "Somos tres. Bueno, dos y medio: EDM dice que yo no cuento porque no juego."
+
+personajes:
+  - id: weasel
+    nombre: Weasel
+    rol: El que juega
+    texto: "Pone el mate, la música y la cara. Se pierde en los mapas con una seguridad admirable."
+    dato: "Frase típica: “Esperá que ya entiendo”."
+  - id: armino
+    nombre: Armiño
+    rol: La mascota
+    texto: "Un armiño blanco con auriculares. No juega, pero opina de todo. Si alguien lo nombra en el chat, se asoma."
+    dato: "Escribí “armiño” en el chat y fijate."
+  - id: edm
+    nombre: EDM
+    rol: La co-host
+    texto: "El personaje de Guild Wars 2 de Weasel. Impaciente, curiosa y bastante sarcástica. Saluda a cada persona nueva del chat."
+    dato: "Su nombre completo es un chiste interno. No preguntes."

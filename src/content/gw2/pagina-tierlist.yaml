@@ -1,0 +1,12 @@
+# Textos de /gw2/tierlist/. Las plantillas y lo que opina EDM están en tierlist-plantillas.yaml y tierlist-edm.yaml.
+
+pestana: "Tierlist de GW2 · Weasel Shiro"
+descripcion: "Armá tu tierlist de profesiones y especializaciones de élite de Guild Wars 2, y compartila como imagen o enlace."
+
+titulo: Tierlist de GW2
+intro: "Ubicá las profesiones y élites en cada fila. EDM opina de cada una y al final la descargás como imagen o compartís el enlace. Se guarda sola en tu navegador."
+
+# EDM antes de que se mueva la primera ficha.
+edm_inicio:
+  pose: saludando
+  frase: "¡Arrastrá una ficha y te digo qué opino!"

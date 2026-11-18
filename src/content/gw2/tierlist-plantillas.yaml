@@ -1,0 +1,53 @@
+# Plantillas de la tierlist: temas listos para un video o un directo.
+#   id:         clave fija, en minúsculas y sin espacios (no la cambies si ya se compartieron enlaces)
+#   subtitulo:  texto de la etiqueta naranja debajo de TIER LIST
+#   solo_base:  true para arrancar mostrando solo las profesiones base (opcional)
+#   filas:      cada una con id, nombre y color (#rrggbb)
+
+plantillas:
+  - id: balance
+    nombre: Balance
+    subtitulo: Balance
+    filas:
+      - { id: s, nombre: S, color: "#ff5a5a" }
+      - { id: a, nombre: A, color: "#ff9103" }
+      - { id: b, nombre: B, color: "#ffd54f" }
+      - { id: c, nombre: C, color: "#93d651" }
+      - { id: d, nombre: D, color: "#5fa8ff" }
+
+  - id: empezar
+    nombre: Para empezar
+    subtitulo: Para empezar
+    solo_base: true
+    filas:
+      - { id: ideal, nombre: Ideal, color: "#93d651" }
+      - { id: facil, nombre: Fácil, color: "#ffd54f" }
+      - { id: paciencia, nombre: Con paciencia, color: "#ff9103" }
+      - { id: veteranos, nombre: Para veteranos, color: "#ff5a5a" }
+
+  - id: diversion
+    nombre: Más divertida
+    subtitulo: Diversión
+    filas:
+      - { id: amo, nombre: La amo, color: "#ff5a5a" }
+      - { id: divierte, nombre: Divierte, color: "#ff9103" }
+      - { id: meh, nombre: Meh, color: "#ffd54f" }
+      - { id: nopara, nombre: No es para mí, color: "#5fa8ff" }
+
+  - id: fashion
+    nombre: Fashion Wars
+    subtitulo: Fashion Wars
+    filas:
+      - { id: divina, nombre: Divina, color: "#d6249f" }
+      - { id: linda, nombre: Linda, color: "#b679d5" }
+      - { id: normal, nombre: Normal, color: "#90a4ae" }
+      - { id: tinte, nombre: Ni con tinte, color: "#a1887f" }
+
+  - id: sinprobar
+    nombre: ¿La probé?
+    subtitulo: Mi experiencia
+    filas:
+      - { id: main, nombre: Mi main, color: "#ff9103" }
+      - { id: jugue, nombre: La jugué, color: "#93d651" }
+      - { id: probe, nombre: La probé, color: "#ffd54f" }
+      - { id: nunca, nombre: Nunca, color: "#90a4ae" }

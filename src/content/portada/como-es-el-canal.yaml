@@ -1,0 +1,18 @@
+# "Cómo es el canal": una charla entre el Armiño y EDM, un globo por turno.
+#   quien: armino o edm
+#   pose:  solo para EDM; es el nombre de un archivo de src/assets/brand/edm/ (sin .png)
+#   texto: lo que dice. Lo que va entre **dobles asteriscos** sale en negrita.
+
+titulo: Cómo es el canal
+
+charla:
+  - quien: armino
+    texto: "**Jugamos sin presión.** Weasel aprende sobre la marcha y equivocarse es parte del directo."
+  - quien: edm
+    pose: shrug
+    texto: "Y se equivoca seguido, eh."
+  - quien: armino
+    texto: "**Buenas charlas.** El chat es parte del juego: preguntá, aconsejá, contá tu anécdota."
+  - quien: edm
+    pose: feliz-apuntando-arriba
+    texto: "**¡Y crecemos juntos!** Es un canal nuevo. Sumate, que la pava ya está puesta 🧉"

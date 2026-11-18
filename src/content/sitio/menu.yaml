@@ -1,0 +1,11 @@
+# Enlaces del menú de la cabecera, en orden.
+#   extra: texto que se agrega al lado y se oculta en pantallas chicas (opcional).
+enlaces:
+  - texto: Inicio
+    url: /
+  - texto: Mensajes
+    extra: GW2
+    url: /gw2/mensajes/
+  - texto: Tierlist
+    extra: GW2
+    url: /gw2/tierlist/

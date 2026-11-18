@@ -1,0 +1,22 @@
+# "Reglas de la casa".
+
+titulo: Reglas de la casa
+
+presenta:
+  quien: edm
+  pose: shrug
+  texto: "Son pocas. Hasta Weasel las cumple. Casi siempre."
+
+etiqueta: EJEMPLO   # Borrá esta línea cuando las reglas estén confirmadas
+
+reglas:
+  - titulo: Buena onda ante todo
+    texto: "Acá nadie sabe todo. Ni Weasel. Sobre todo Weasel."
+  - titulo: El backseat se pide, no se impone
+    texto: "Si Weasel pide ayuda, ¡a full! Si no, dejalo equivocarse en paz."
+  - titulo: Nada de spoilers
+    texto: "De historias, de juegos y de finales de temporada. Avisá antes."
+  - titulo: Cero odio
+    texto: "Sin insultos, sin discriminación, sin discusiones de política. Se banean sin aviso."
+  - titulo: Todos los idiomas, todas las experiencias
+    texto: "Recién llegados y veteranos de Tyria son igual de bienvenidos."

@@ -1,0 +1,9 @@
+# "Herramientas": tarjetas con enlaces a las páginas del sitio. EDM señala la primera.
+
+titulo: Herramientas
+
+herramientas:
+  - emoji: 💬
+    titulo: Mensajes de GW2
+    texto: Listos para copiar y pegar en el chat del juego.
+    url: /gw2/mensajes/

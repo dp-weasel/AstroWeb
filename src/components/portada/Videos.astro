@@ -1,0 +1,44 @@
+---
+// Últimos videos de YouTube. Datos en src/content/portada/videos.yaml; las
+// miniaturas están en src/assets/brand/miniaturas/.
+import { Image } from "astro:assets";
+import { leer } from "../../lib/contenido";
+import { leerPerfil } from "../../lib/perfil";
+import { miniatura } from "../../lib/imagenes";
+import Ejemplo from "../ui/Ejemplo.astro";
+
+const { videos, cantidad, nota, etiqueta, ver_canal } = await leer("videos");
+const { redes } = await leerPerfil();
+const canal = redes.find((r) => r.red === "youtube")?.url;
+---
+
+<div class="videos">
+  <ul>
+    {videos.slice(0, cantidad).map((v) => (
+      <li>
+        <a href={v.url ?? canal} target="_blank" rel="noopener">
+          <span class="mini">
+            <Image src={miniatura(v.miniatura)} alt="" width={480} widths={[320, 480]} sizes="(max-width: 40rem) 90vw, 20rem" />
+            <span class="dur">{v.duracion}</span>
+          </span>
+          <span class="titulo">{v.titulo}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+  <p class="nota">{nota} {etiqueta && <><Ejemplo texto={etiqueta} /> · </>}{canal && <a href={canal} target="_blank" rel="noopener">{ver_canal}</a>}</p>
+</div>
+
+<style>
+  ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; }
+  a { color: var(--text); text-decoration: none; }
+  li a { display: grid; gap: .5rem; }
+  .mini { position: relative; display: block; aspect-ratio: 16 / 9; border-radius: .9rem; overflow: hidden; background: #2a2a2a; }
+  .mini img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
+  li a:hover .mini img { transform: scale(1.05); }
+  .dur { position: absolute; right: .4rem; bottom: .4rem; padding: .05rem .4rem; border-radius: .3rem; background: rgb(0 0 0 / .8); color: #fff; font-size: .75rem; font-weight: 700; }
+  .titulo { font-weight: 700; line-height: 1.3; }
+  li a:hover .titulo { color: var(--accent); }
+  .nota { margin: .75rem 0 0; color: var(--muted); font-size: .85rem; text-align: center; }
+  .nota a { color: var(--accent); font-weight: 700; }
+</style>

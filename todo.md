@@ -1,8 +1,8 @@
 # Pendientes de la portada
 
 La **variante 6 · La mezcla** ya es la portada (`src/pages/index.astro`). Esto es lo que falta definir.
-Casi todo el contenido está en `src/data/contenido.ts`. En la página, lo supuesto lleva la etiqueta
-punteada **EJEMPLO**, **IDEA** o **HISTORIA SUPUESTA**.
+Todo el contenido está en los YAML de `src/content/portada/` (ver `src/content/LEEME.md`). Lo supuesto
+lleva una `etiqueta` (EJEMPLO, Idea, Historia supuesta…): al borrarla del YAML, desaparece de la página.
 
 ## Imágenes
 
@@ -19,36 +19,36 @@ punteada **EJEMPLO**, **IDEA** o **HISTORIA SUPUESTA**.
 
 ## Textos
 
-- [ ] **"Cómo empezó todo"** (`sobreMi.parrafos`): la historia es inventada. Revisar el año de inicio, el
+- [ ] **"Cómo empezó todo"** (`portada/historia.yaml`): la historia es inventada. Revisar el año de inicio, el
       porqué del nombre (¿Shiro = blanco?) y lo de la música.
-- [ ] **Personajes** (`personajes`): revisar los textos, sobre todo la frase típica de Weasel
+- [ ] **Personajes** (`portada/equipo.yaml`): revisar los textos, sobre todo la frase típica de Weasel
       ("Esperá que ya entiendo") y el dato de EDM.
-- [ ] **Intro del banner** (`intro` en `contenido.ts`) y la línea de arriba del nombre
+- [ ] **Intro del banner** (`portada/banner.yaml`) y la línea de arriba del nombre
       ("Directos de Guild Wars 2 · y lo que pinte").
-- [ ] **Reglas de la casa** (`reglas`): son una propuesta. Confirmar o ajustar.
-- [ ] **Preguntas frecuentes** (`preguntasExtra`): confirmar las respuestas de "¿Puedo jugar con
+- [ ] **Reglas de la casa** (`portada/reglas.yaml`): son una propuesta. Confirmar o ajustar.
+- [ ] **Preguntas frecuentes** (`portada/preguntas.yaml`): confirmar las respuestas de "¿Puedo jugar con
       Weasel?" (¿se arman grupos con el chat?) y "¿Qué música suena?".
 - [x] La portada vieja (con tú) se reemplazó por los textos en voseo de la variante 6.
 - [x] `/gw2/mensajes/` pasó a voseo (subtítulo, editor y aviso de la pestaña Personalizado).
 
 ## Datos
 
-- [ ] **Fecha del primer directo** (`inicioCanal`, hoy 28/09/2026): con ella se calcula el
+- [ ] **Fecha del primer directo** (`inicio_canal` en `portada/franja.yaml`, hoy 28/09/2026): con ella se calcula el
       "Día N de la aventura" de la franja.
-- [ ] **Camino a Afiliado** (`metas`): los requisitos son los reales de Twitch, pero el progreso es
+- [ ] **Camino a Afiliado** (`portada/metas.yaml`): los requisitos son los reales de Twitch, pero el progreso es
       inventado (31/50 seguidores, 6,5/8 h, 7/7 días, 2,4/3 espectadores). Hay que actualizarlo a mano
       o buscar la forma de traerlo de Twitch.
-- [ ] **Premio de la meta** (`metas.premio`): "stream especial de festejo… y emotes de EDM".
-- [ ] **Horario** (`horario`): martes y jueves 21:00, sábado 17:00, todo inventado. Hoy solo se usa para
+- [ ] **Premio de la meta** (`premio` en `portada/metas.yaml`): "stream especial de festejo… y emotes de EDM".
+- [ ] **Horario** (`portada/horario.yaml`): martes y jueves 21:00, sábado 17:00, todo inventado. Hoy solo se usa para
       "3 directos por semana" en la franja.
-- [ ] **Franja debajo del banner** (`franja`): decidir los cuatro datos. Ideas: cuenta regresiva al
+- [ ] **Franja debajo del banner** (`portada/franja.yaml`): decidir los cuatro datos. Ideas: cuenta regresiva al
       próximo directo, último logro, jugando ahora, tema del sábado o una cinta que corre.
-- [ ] **Videos de YouTube** (`videos`): títulos y duraciones inventados, y todos enlazan al canal en vez
-      de al video. Hay que agregar la URL de cada video.
+- [ ] **Videos de YouTube** (`portada/videos.yaml`): títulos y duraciones inventados, y todos enlazan al canal en vez
+      de al video. Ya se puede poner la `url` de cada video.
 
 ## Stickers de EDM y el chat
 
-- [ ] **Nombres de los stickers** (`emotes`): `edmHola`, `edmHype`… En Twitch los emotes llevan el prefijo
+- [ ] **Nombres de los stickers** (`portada/stickers.yaml`): `edmHola`, `edmHype`… En Twitch los emotes llevan el prefijo
       del canal, que se elige al ser Afiliado (por ejemplo `weaselHola`), así que conviene decidir los
       nombres pensando en eso.
 - [ ] **Stickers en pantalla (idea):** que escribir el nombre de un sticker en el chat haga aparecer a EDM
@@ -82,7 +82,7 @@ Se eligió la versión 4 (la del directo). Rama `feature/gw2-tierlist`.
 - [x] Dejarla en `/gw2/tierlist/` sin `noindex` ni pestañas de versiones, y sumarla a la cabecera.
 - [ ] Sumarla también a "Herramientas" en la portada (hoy solo está la tarjeta de Mensajes con EDM señalando).
 - [ ] Nombres de las élites: van en inglés (como se dicen en el chat). ¿Pasarlos al castellano del cliente?
-- [ ] Reacciones de EDM (`reaccionesEdm` en `src/data/tierlist.ts`): revisar frases y poses. Con más o menos
+- [ ] Reacciones de EDM (`src/content/gw2/tierlist-edm.yaml`): revisar frases y poses. Con más o menos
       de cinco filas se reparten con `nivelDeFila` (la primera es S, la última D).
 - [ ] Votación del chat (IDEA, oculta con `MOSTRAR_VOTACION` en `TierList.astro`): leer el chat de Twitch y
       mover la ficha a la fila ganadora.

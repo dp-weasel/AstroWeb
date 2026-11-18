@@ -1,0 +1,64 @@
+# Lo que hace y dice EDM en la tierlist al ubicar una ficha.
+#
+# Hay un bloque por nivel, de la mejor fila a la peor (s, a, b, c, d), más:
+#   duda:  la ficha se soltó fuera de toda fila y volvió a su lugar
+#   banco: la ficha volvió al banco
+# Con cinco filas, cada fila es un nivel. Con otra cantidad se reparten: la primera
+# fila siempre es s, la última siempre es d y las del medio caen en el más cercano.
+#
+#   poses:  se elige una al azar (nunca más de dos veces seguidas). Son archivos de
+#           src/assets/brand/edm/, sin .png. Con { pose: …, espejo: true } se da vuelta
+#           para que mire hacia la tierlist.
+#   frases: se elige una al azar. {n} es la especialización y {t} el nombre de la fila.
+# Los números de los comentarios son los de RecursosCC/edm-borde.
+
+s:
+  poses: [cheer, feliz-apuntando-arriba] # 010 y 009
+  frases:
+    - "¿{n} en {t}? Por fin una decisión con sentido."
+    - "{n} arriba de todo. Respeto."
+    - "¡Eso! {n} se lo merece."
+
+a:
+  poses: [shrug, mirando-arriba-un-brazo] # 015 y 002
+  frases:
+    - "¡Tan cerca de S! {n} casi llega."
+    - "{n} quedó a un pasito de la S."
+    - "A {n} le faltó farmear más aura."
+    - "Casi S. {n} se quedó sin aura en la última curva."
+    - "{n} en {t}: buena, pero le falta un poquito de aura."
+
+b:
+  poses: [shrug, { pose: sorprendida-mirando-a-la-izquierda, espejo: true }] # 015 y 011
+  frases:
+    - "{n} en {t}… bueno, no voy a discutir. Hoy."
+    - "Mmm, {n} en {t}. Aceptable."
+    - "¿{t}? Le pondría una más. O una menos. Ya fue."
+
+c:
+  poses: [shrug, triste, triste-mirando-al-suelo, apuntando] # 015, 008, 014 y 013
+  frases:
+    - "¿{n} en {t}? Bueno… tiene sus días."
+    - "Pobre {n}, merecía un poquito más."
+    - "{n} en {t}. No lloro, me entró yerba en el ojo."
+
+d:
+  poses: [hiss, triste, triste-mirando-al-suelo, apuntando] # 005, 008, 014 y 013
+  frases:
+    - "¿¡{n} en {t}!? Quiero hablar con el gerente."
+    - "Pobre {n}. ¿Qué te hizo?"
+    - "{n} en {t}. El chat no va a estar de acuerdo."
+
+duda:
+  poses: [brazos-cruzados] # 001
+  frases:
+    - "¿Y? ¿Dónde va {n}? Decidite."
+    - "Eso no es una fila. {n} vuelve a su lugar."
+    - "Te estoy mirando. Soltá a {n} en una fila."
+
+banco:
+  poses: [brazos-cruzados] # 001
+  frases:
+    - "¿Te arrepentiste de {n}? Pasa."
+    - "{n} vuelve al banco. Pensalo bien."
+    - "Bueno, {n} queda sin lugar por ahora."

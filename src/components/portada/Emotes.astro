@@ -1,0 +1,41 @@
+---
+// Galería de emotes/stickers de EDM con su "uso" en el chat.
+// Textos en src/content/portada/stickers.yaml.
+import { Image } from "astro:assets";
+import { leer } from "../../lib/contenido";
+import { imagenEdm } from "../../lib/imagenes";
+import Ejemplo from "../ui/Ejemplo.astro";
+
+const { stickers, nota, etiqueta } = await leer("stickers");
+interface Props { cantidad?: number }
+const { cantidad = stickers.length } = Astro.props;
+---
+
+<div class="emotes">
+  <ul>
+    {stickers.slice(0, cantidad).map((e) => (
+      <li>
+        <Image src={imagenEdm(e.pose)} alt={`EDM: ${e.nombre}`} height={180} />
+        <code>:{e.nombre}:</code>
+        <small>{e.uso}</small>
+      </li>
+    ))}
+  </ul>
+  {(nota || etiqueta) && <p class="nota">{nota} {etiqueta && <Ejemplo texto={etiqueta} />}</p>}
+</div>
+
+<style>
+  ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr)); gap: .75rem; }
+  li {
+    display: flex; flex-direction: column; align-items: center; gap: .2rem;
+    padding: .75rem .5rem; border-radius: 1rem; background: var(--surface); text-align: center;
+    transition: transform .2s;
+  }
+  li:hover { transform: translateY(-4px) rotate(-3deg); }
+  li:hover img { animation: rebote .4s; }
+  @keyframes rebote { 50% { transform: scale(1.12); } }
+  img { height: 5.5rem; width: auto; }
+  code { font-family: var(--font-label); font-size: .9rem; color: var(--magenta); }
+  small { color: var(--muted); font-size: .75rem; line-height: 1.2; }
+  .nota { margin: .75rem 0 0; text-align: center; color: var(--muted); font-size: .85rem; }
+</style>

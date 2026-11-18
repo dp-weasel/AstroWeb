@@ -1,0 +1,9 @@
+# Cierre de la portada.
+
+# EDM al final de la página.
+edm:
+  pose: riendo-en-el-suelo
+  texto: "¡Nos vemos en el próximo directo! Traé el mate."
+
+# Lo que dice el Armiño cuando se asoma desde el pie de la página.
+armino_al_final: "¿Ya te vas? Seguí a Weasel en Twitch así no te perdés nada 🧉"
