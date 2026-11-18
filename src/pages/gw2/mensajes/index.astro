@@ -51,7 +51,14 @@ const poses = {
       </div>
 
       <aside class="lado" aria-label="EDM te ayuda">
-        <div class="edm">
+        <button type="button" class="ver-edm" data-ver-edm aria-pressed="true" aria-controls="edm">🙈 Ocultar a EDM</button>
+        <script is:inline>
+          // Aplica la preferencia antes de pintar, para que EDM no aparezca y desaparezca.
+          try {
+            if (localStorage.getItem("gw2-mensajes-edm") === "no") document.currentScript.parentElement.classList.add("sin-edm");
+          } catch (_) {}
+        </script>
+        <div class="edm" id="edm">
           <Bocadillo quien="edm" cola="abajo"><p data-dice aria-live="polite">{frasesEdm.inicio}</p></Bocadillo>
           <img class="pose" data-pose src={poses.inicio} alt="EDM" width="180" height="240" />
           <data id="poses" value={JSON.stringify(poses)} hidden></data>
@@ -87,6 +94,15 @@ const poses = {
   .columnas .zona :global(.tabs) { justify-content: flex-start; }
 
   .lado { position: sticky; top: 1rem; display: grid; gap: 1.25rem; }
+
+  /* Botón para mostrar u ocultar a EDM, igual al de la tierlist. */
+  .ver-edm {
+    justify-self: end; height: 2.5rem; margin-bottom: -.5rem; padding: 0 1rem;
+    border: 1px solid var(--border); border-radius: .6rem;
+    background: var(--surface); color: var(--text); font: inherit; font-weight: 700; cursor: pointer;
+  }
+  .ver-edm:hover { border-color: var(--accent); }
+  .sin-edm .edm { display: none; }
 
   /* EDM en su escenario, como en la tierlist. */
   .edm {
@@ -168,6 +184,26 @@ const poses = {
     largo.hidden = !pasado;
     if (pasado) decir(frasesEdm.largo, poses.largo);
     else decir(alAzar(frasesEdm.copiado, dice.textContent ?? ""), alAzar(poses.copiado, pose.getAttribute("src") ?? ""));
+  });
+
+  // Mostrar u ocultar a EDM. Es una preferencia de quien mira y se recuerda en el navegador.
+  const lado = document.querySelector<HTMLElement>(".lado")!;
+  const botonEdm = document.querySelector<HTMLButtonElement>("[data-ver-edm]")!;
+  const CLAVE_EDM = "gw2-mensajes-edm";
+  const mostrarEdm = (si: boolean) => {
+    lado.classList.toggle("sin-edm", !si);
+    botonEdm.setAttribute("aria-pressed", String(si));
+    botonEdm.textContent = si ? "🙈 Ocultar a EDM" : "👀 Mostrar a EDM";
+  };
+  mostrarEdm(!lado.classList.contains("sin-edm"));
+  botonEdm.addEventListener("click", () => {
+    const si = lado.classList.contains("sin-edm");
+    mostrarEdm(si);
+    try {
+      localStorage.setItem(CLAVE_EDM, si ? "si" : "no");
+    } catch {
+      // Sin almacenamiento: vale solo mientras la página esté abierta.
+    }
   });
 
   // Al cambiar de categoría, EDM opina y cambia de pose.
