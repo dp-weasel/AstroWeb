@@ -6,7 +6,10 @@ import MessageEditor from "./MessageEditor.astro";
 
 interface Props {
   categories: Category[];
+  /** Muestra debajo del nombre cuántos mensajes tiene cada pestaña. */
+  conteo?: boolean;
 }
+const { conteo = false } = Astro.props;
 // Las pestañas publicadas más la de mensajes propios, que se llena en el navegador.
 const tabs: Category[] = [...Astro.props.categories, { ...CUSTOM_TAB, messages: [] }];
 ---
@@ -26,6 +29,11 @@ const tabs: Category[] = [...Astro.props.categories, { ...CUSTOM_TAB, messages: 
           tabindex={i === 0 ? 0 : -1}
         >
           <span class="tab-name">{c.name}</span>
+          {conteo && (
+            <span class="tab-detalle">
+              {c.id === CUSTOM_TAB.id ? "Los tuyos" : `${c.messages.length} ${c.messages.length === 1 ? "mensaje" : "mensajes"}`}
+            </span>
+          )}
           <span class="tab-count" data-tab-count hidden></span>
         </button>
       ))
@@ -49,7 +57,7 @@ const tabs: Category[] = [...Astro.props.categories, { ...CUSTOM_TAB, messages: 
         <p class="empty" role="status" data-empty hidden />
         <p class="empty" data-no-messages hidden={c.messages.length > 0}>
           {c.id === CUSTOM_TAB.id
-            ? "Aquí van tus propios mensajes. Se guardan solo en este navegador."
+            ? "Acá van tus propios mensajes. Se guardan solo en este navegador."
             : "No quedan mensajes en esta pestaña."}
         </p>
         <div class="panel-actions">
@@ -102,6 +110,7 @@ const tabs: Category[] = [...Astro.props.categories, { ...CUSTOM_TAB, messages: 
     border-color: var(--accent);
     color: var(--on-accent);
   }
+  .tab-detalle { display: none; }
   .tab-count {
     display: inline-block;
     min-width: 1.4em;

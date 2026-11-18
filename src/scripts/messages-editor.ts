@@ -135,7 +135,7 @@ export function initMessageEditor(root: HTMLElement): void {
       hint.textContent = over
         ? `Sobran ${text.length - GW2_CHAT_LIMIT}: el chat de GW2 admite hasta ${GW2_CHAT_LIMIT} caracteres.`
         : text.length === 0
-          ? "Escribe un mensaje."
+          ? "Escribí un mensaje."
           : "";
       save.disabled = over || text.length === 0;
     };

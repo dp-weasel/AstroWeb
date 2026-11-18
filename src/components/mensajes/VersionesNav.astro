@@ -1,0 +1,26 @@
+---
+// Pestañas para pasar de una versión de la página de mensajes a otra mientras se elige.
+import { versiones } from "../../data/mensajes-versiones";
+
+interface Props {
+  slug?: string;
+}
+const { slug } = Astro.props;
+---
+
+<nav class="versiones" aria-label="Versiones de la página de mensajes">
+  <a href="/gw2/mensajes/" aria-current={!slug ? "page" : undefined}>Todas</a>
+  {versiones.map((v) => (
+    <a href={`/gw2/mensajes/${v.slug}/`} aria-current={v.slug === slug ? "page" : undefined}>{v.nombre}</a>
+  ))}
+</nav>
+
+<style>
+  .versiones { display: flex; gap: .25rem; overflow-x: auto; max-width: 80rem; margin: 0 auto; padding: 1rem 1rem .25rem; }
+  a {
+    flex: none; padding: .45rem .9rem; border: 1px solid var(--border); border-radius: 999px;
+    color: var(--muted); text-decoration: none; font-weight: 700; font-size: .9rem;
+  }
+  a:hover { color: var(--text); border-color: var(--accent); }
+  a[aria-current="page"] { background: var(--amber); border-color: var(--amber); color: var(--charcoal); }
+</style>

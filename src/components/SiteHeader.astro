@@ -11,6 +11,8 @@ const links = [
   { href: "/gw2/tierlist/", label: "Tierlist", extra: " GW2" },
 ];
 const current = Astro.url.pathname.replace(/\/?$/, "/");
+// Las subpáginas (p. ej. las versiones de /gw2/mensajes/) marcan su sección.
+const activo = (href: string) => (href === "/" ? current === "/" : current.startsWith(href));
 ---
 
 <header class="site-header">
@@ -20,7 +22,7 @@ const current = Astro.url.pathname.replace(/\/?$/, "/");
   </a>
   <nav aria-label="Principal">
     {links.map((l) => (
-      <a href={l.href} aria-current={current === l.href ? "page" : undefined}>{l.label}<span class="extra">{l.extra}</span></a>
+      <a href={l.href} aria-current={activo(l.href) ? "page" : undefined}>{l.label}<span class="extra">{l.extra}</span></a>
     ))}
   </nav>
   <ThemeToggle />

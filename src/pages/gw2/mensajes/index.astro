@@ -1,0 +1,44 @@
+---
+// Índice de las versiones de la página de mensajes, para compararlas y elegir una.
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import VersionesNav from "../../../components/mensajes/VersionesNav.astro";
+import { versiones } from "../../../data/mensajes-versiones";
+---
+
+<BaseLayout title="Mensajes de GW2 · Versiones" description="Versiones de la página de mensajes de Guild Wars 2, de la más simple a la más completa." noindex>
+  <VersionesNav />
+  <main>
+    <h1 class="titulo-marca">Mensajes de GW2</h1>
+    <p class="idea">
+      Tres versiones de la misma página, de la más simple a la más completa. Cada una suma lo de la anterior. Los
+      mensajes que edites o agregues se guardan en el navegador y son los mismos en las tres.
+    </p>
+    <ol class="lista">
+      {versiones.map((v) => (
+        <li>
+          <a href={`/gw2/mensajes/${v.slug}/`}>
+            <strong>{v.nombre} →</strong>
+            <span>{v.idea}</span>
+            <ul>{v.suma.map((s) => <li>{s}</li>)}</ul>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </main>
+</BaseLayout>
+
+<style>
+  main { max-width: 52rem; margin: 0 auto; padding: 1rem 1rem 4rem; }
+  h1 { margin: 0 0 .5rem; font-size: clamp(1.6rem, 5vw, 2.4rem); }
+  .idea { margin: 0 0 1.5rem; color: var(--muted); }
+  .lista { display: grid; gap: .75rem; margin: 0; padding: 0; list-style: none; }
+  .lista > li > a {
+    display: grid; gap: .35rem; padding: 1.1rem 1.25rem; border: 3px solid var(--charcoal); border-radius: 1rem;
+    background: var(--cream); color: var(--charcoal); text-decoration: none; box-shadow: .3rem .3rem 0 var(--amber);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .lista > li > a:hover { transform: translate(-.15rem, -.15rem); box-shadow: .45rem .45rem 0 var(--amber); }
+  strong { font-size: 1.15rem; }
+  ul { display: flex; flex-wrap: wrap; gap: .3rem; margin: .25rem 0 0; padding: 0; list-style: none; }
+  ul li { padding: .1rem .55rem; border-radius: 999px; background: rgb(0 0 0 / .08); font-size: .82rem; font-weight: 600; }
+</style>
