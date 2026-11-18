@@ -132,3 +132,7 @@ scripts/gw2/                  Importa los íconos de profesiones desde RecursosC
 En Cloudflare hay que definir la variable de build `SITE_URL` con la URL pública (p. ej.
 `https://tu-dominio`): sin ella no se generan el sitemap ni las URLs absolutas de la vista previa
 al compartir. En local no hace falta.
+
+`BASE_PATH` (opcional) compila el sitio en una subcarpeta, p. ej. `BASE_PATH=/AstroWeb/ npm run build`
+para el servidor local (`http://fedora.lan/AstroWeb/`). Sin ella, el sitio va en la raíz. Por eso
+los enlaces internos usan `ruta()` de `src/lib/rutas.ts`.

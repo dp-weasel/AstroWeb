@@ -34,5 +34,8 @@ Consult these guides before working on related tasks:
 - Los colores salen de las variables de `src/styles/tokens.css` (temas claro y oscuro).
 - Las imágenes van en `src/assets/` y se usan con `<Image>` de `astro:assets`; `public/` solo
   para archivos con URL fija (íconos, `og.png`). Ver `scripts/brand/`.
-- El sitio vive en la raíz del dominio (Cloudflare): los enlaces internos son absolutos (`/gw2/mensajes/`).
+- El sitio vive en la raíz del dominio en Cloudflare, pero también se compila bajo una subcarpeta
+  (`BASE_PATH=/AstroWeb/`, servidor local que imita GitHub Pages). Los enlaces internos y los
+  archivos de `public/` pasan siempre por `ruta("/gw2/mensajes/")` de `src/lib/rutas.ts`.
+  En los YAML se escriben como `/gw2/mensajes/`.
 - Antes de hacer merge: `npm run check && npm run build`.

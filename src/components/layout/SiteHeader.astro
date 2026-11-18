@@ -4,23 +4,24 @@ import { Image } from "astro:assets";
 import logo from "../../assets/brand/weasel-mouth-closed-headphones.png";
 import ThemeToggle from "./ThemeToggle.astro";
 import { leer } from "../../lib/contenido";
+import { ruta } from "../../lib/rutas";
 
 // Los enlaces están en src/content/sitio/menu.yaml.
 const { nombre } = await leer("perfil");
 const { enlaces } = await leer("menu");
 const current = Astro.url.pathname.replace(/\/?$/, "/");
 // Las subpáginas (p. ej. las versiones de /gw2/mensajes/) marcan su sección.
-const activo = (href: string) => (href === "/" ? current === "/" : current.startsWith(href));
+const activo = (href: string) => (href === "/" ? current === ruta("/") : current.startsWith(ruta(href)));
 ---
 
 <header class="site-header">
-  <a class="brand" href="/">
+  <a class="brand" href={ruta("/")}>
     <span class="mini-logo"><Image src={logo} alt="" width={64} widths={[32, 64]} sizes="2rem" /></span>
     <span>{nombre}</span>
   </a>
   <nav aria-label="Principal">
     {enlaces.map((l) => (
-      <a href={l.url} aria-current={activo(l.url) ? "page" : undefined}>{l.texto}<span class="extra">{l.extra ? ` ${l.extra}` : ""}</span></a>
+      <a href={ruta(l.url)} aria-current={activo(l.url) ? "page" : undefined}>{l.texto}<span class="extra">{l.extra ? ` ${l.extra}` : ""}</span></a>
     ))}
   </nav>
   <ThemeToggle />
